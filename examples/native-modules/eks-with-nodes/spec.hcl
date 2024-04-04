@@ -21,6 +21,15 @@ node tls_certificate main {
   }
 }
 
+# node tls_certificate main {
+#   readonly = true
+
+#   attributes {
+#     url = aws_eks_cluster.main.identity[0].oidc[0].issuer
+#   }
+# }
+
+
 node aws_iam_openid_connect_provider main {
   attributes {
     url             = aws_eks_cluster.main.identity[0].oidc[0].issuer
