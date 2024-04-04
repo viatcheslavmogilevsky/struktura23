@@ -1,15 +1,21 @@
 node aws_eks_cluster main {}
 
 node aws_eks_addon main {
-  plural      = true
+  plural = true
+
   attributes {
     cluster_name = aws_eks_cluster.main.id
     addon_name   = plural.key
-    depends_on   = [aws_iam_openid_connect_provider.main]
+  }
+
+  meta {
+    depends_on = [aws_iam_openid_connect_provider.main]
   }
 }
 
-read tls_certificate main {
+node tls_certificate main {
+  readonly = true
+
   attributes {
     url = aws_eks_cluster.main.identity[0].oidc[0].issuer
   }
@@ -19,7 +25,7 @@ node aws_iam_openid_connect_provider main {
   attributes {
     url             = aws_eks_cluster.main.identity[0].oidc[0].issuer
     client_id_list  = ["sts.amazonaws.com"]
-    thumbprint_list = [read.tls_certificate.main.certificates[0].sha1_fingerprint]
+    thumbprint_list = [tls_certificate.main.certificates[0].sha1_fingerprint]
   }
 }
 

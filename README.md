@@ -11,3 +11,13 @@
 		*  (1a2) implementation :play_or_pause_button: *TBD*
 	* (1b) reuse of existing terraform/opentofu modules  :play_or_pause_button: *TBD*
 
+
+## Usage (NOT IMPLEMENTED YET)
+
+### To generate regular module:
+
+
+
+```bash
+str32 gen examples/native-modules/eks-with-nodes examples/generated-modules/eks-with-nodes
+``` 
