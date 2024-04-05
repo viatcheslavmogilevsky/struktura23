@@ -19,6 +19,7 @@ try:
             graph_node = {}
             node_content = l_value[0]
             graph_node["readonly"] = node_content["readonly"] if "readonly" in node_content else False
+            graph_node["type"] = key
 
             graph[graph_key] = graph_node
             # pass # not implemented yet
