@@ -1,36 +1,25 @@
-node aws_eks_cluster main {}
+has_one aws_eks_cluster main {}
 
-node aws_eks_addon main {
-  plural = true
-
+has_many aws_eks_addon main {
   where {
     cluster_name = aws_eks_cluster.main.id
-    addon_name   = plural.key
   }
 
   meta {
     depends_on = [aws_iam_openid_connect_provider.main]
   }
+
+  id = this.addon_name
 }
 
-node tls_certificate main {
+has_one tls_certificate main {
   readonly = true
-
   where {
     url = aws_eks_cluster.main.identity[0].oidc[0].issuer
   }
 }
 
-# node tls_certificate main {
-#   readonly = true
-
-#   where {
-#     url = aws_eks_cluster.main.identity[0].oidc[0].issuer
-#   }
-# }
-
-
-node aws_iam_openid_connect_provider main {
+has_one aws_iam_openid_connect_provider main {
   where {
     url             = aws_eks_cluster.main.identity[0].oidc[0].issuer
     client_id_list  = ["sts.amazonaws.com"]
@@ -38,20 +27,28 @@ node aws_iam_openid_connect_provider main {
   }
 }
 
-node aws_launch_template main {
-  where_true = length(
-    regexall(
-      "bootstrap\\.sh.+[\\\"\\'\\s]${aws_eks_cluster.main.id}[\\\"\\']?\\s*$",
-      base64decode(where_true.user_data)
-    )
-  ) > 0
+has_many aws_launch_template main {
+  where_true = [
+    length(
+      regexall(
+        "bootstrap\\.sh.+[\\\"\\'\\s]${aws_eks_cluster.main.id}[\\\"\\']?\\s*$",
+        base64decode(this.user_data)
+      )
+    ) > 0
+  ]
+
+  for_each_key = this.placement.availability_zone
 }
 
-node aws_eks_node_group main {
+has_many aws_eks_node_group main {
   where {
     cluster_name = aws_eks_cluster.main.id
-    launch_template {
-      name = aws_launch_template.main.name
-    }
   }
+
+  where_has_one = {
+    launch_template = [for lt in aws_launch_template.main : lt if lt.name = this.launch_template.name]
+  }
+
+  for_each_key = "${for_each_key_of(this.where_has_one.launch_template[0])}-${this.capacity_type}"
 }
+
