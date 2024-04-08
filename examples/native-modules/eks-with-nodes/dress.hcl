@@ -5,11 +5,12 @@ dress aws_eks_cluster main {
 }
 
 dress aws_eks_addon main {
-  plural = toset(["vpc-cni", "kube-proxy", "coredns"])
+  ids = toset(["vpc-cni", "kube-proxy", "coredns"])
   attributes {
     version = "1.27"
   }
 }
+
 
 dress aws_eks_addon main {
   attributes {
