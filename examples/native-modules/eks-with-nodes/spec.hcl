@@ -8,7 +8,12 @@ one_or_zero aws_iam_openid_connect_provider main {
   }
 
   force {
-    ids = ids_of(aws_iam_openid_connect_provider.main) || (length(setintersection(["vpc-cni", "aws-ebs-csi-driver"], ids_of(aws_eks_addon.main))) > 0 ? to_one() : to_zero())
+    let {
+      irsa_addons = ["vpc-cni", "aws-ebs-csi-driver"]
+      is_needed_by_addons = anytrue([for addon in ids_of(aws_eks_addon.main) : contains(let.irsa_addons, addon)])
+    }
+
+    ids = let.is_needed_by_addons ? one_ids() : ids_of(aws_iam_openid_connect_provider.main)
   }
 }
 
