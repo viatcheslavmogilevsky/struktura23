@@ -31,7 +31,6 @@ many aws_eks_addon main {
   }
 }
 
-
 one tls_certificate main {
   readonly = true
   where {
