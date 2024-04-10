@@ -1,6 +1,7 @@
 one aws_eks_cluster main {}
 
-one_or_zero aws_iam_openid_connect_provider main {
+many aws_iam_openid_connect_provider main {
+  max_count = 1
   where {
     url             = aws_eks_cluster.main.identity[0].oidc[0].issuer
     client_id_list  = ["sts.amazonaws.com"]
@@ -10,10 +11,10 @@ one_or_zero aws_iam_openid_connect_provider main {
   force {
     let {
       irsa_addons = ["vpc-cni", "aws-ebs-csi-driver"]
-      is_needed_by_addons = anytrue([for addon in ids_of(aws_eks_addon.main) : contains(let.irsa_addons, addon)])
+      is_needed_by_addons = anytrue([for addon in keys(ids_of(aws_eks_addon.main)) : contains(let.irsa_addons, addon)])
     }
 
-    ids = let.is_needed_by_addons ? one_ids() : ids_of(aws_iam_openid_connect_provider.main)
+    ids = let.is_needed_by_addons ? {"enabled" = true } : ids_of(aws_iam_openid_connect_provider.main)
   }
 }
 
