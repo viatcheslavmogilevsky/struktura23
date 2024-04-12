@@ -1,8 +1,8 @@
 require 'module-spec'
 
-cluster = :aws_eks_cluster.single
+cluster =  one :aws_eks_cluster
 
-connect_providers = :aws_iam_openid_connect_provider.many do |c|
+connect_providers = many :aws_iam_openid_connect_provider do |c|
     max_count 1
 
     c.url cluster.identity[0].oidc[0].issuer
@@ -10,16 +10,17 @@ connect_providers = :aws_iam_openid_connect_provider.many do |c|
     c.thumbprint_list [tls_certificate.certificates[0].sha1_fingerprint]
 end
 
-addons = :aws_eks_addon.many do |a|
+addons = many :aws_eks_addon do |a|
     a.cluster_name cluster.id
 end
 
-tls_certificate = :tls_certificate.single(readonly: true) do |tc|
+tls_certificate = one :tls_certificate, readonly: true do |tc|
     tc.url identity[0].oidc[0].issuer
 end
 
-templates = :aws_launch_template.many do |lt|
+templates = many :aws_launch_template do |lt|
     where do
+
         # length(
         #   regexall(
         #     "bootstrap\\.sh.+[\\\"\\'\\s]${aws_eks_cluster.main.id}[\\\"\\']?\\s*$",
