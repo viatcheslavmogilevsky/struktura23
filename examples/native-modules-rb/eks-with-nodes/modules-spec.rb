@@ -2,7 +2,8 @@ require 'module-spec'
 
 cluster = ModuleSpec::one :aws_eks_cluster
 
-tls_certificate = one :tls_certificate, readonly: true do |cert, root|
+tls_certificate = cluster.has_one :tls_certificate do |cert, root|
+    cert.readonly true
     cert.where_equal :url, root.identity[0].oidc[0].issuer
 end
 
