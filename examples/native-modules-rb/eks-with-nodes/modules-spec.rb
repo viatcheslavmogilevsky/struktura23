@@ -21,20 +21,13 @@ addons = cluster.has_many :aws_eks_addon do |addons, root|
     addons.where_equal :cluster_name, root.id
 end
 
-
-
 templates = cluster.has_many :aws_launch_template do |lt, root|
-    # TBD
-    # where do
-
-    #     # length(
-    #     #   regexall(
-    #     #     "bootstrap\\.sh.+[\\\"\\'\\s]${aws_eks_cluster.main.id}[\\\"\\']?\\s*$",
-    #     #     base64decode(aws_launch_template.main.user_data)
-    #     #   )
-    #     # ) > 0
-    # end
+    lt.where_true do |template|
+        /bootstrap\.sh.+[\"\'\s]#{root.id}[\"\']\s*$/ =~ ModuleSpec::Utils.base64decode(lt.user_data)
+    end
 end
+
+# templates.each.has_many TBD
 
 
 
