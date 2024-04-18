@@ -13,7 +13,7 @@ class EksWithNodes < ModuleSpec::Base
 
   cluster.has_many :aws_iam_openid_connect_provider do |providers, root|
     providers.max_count 1
-    providers.keys {|_| "enabled"}
+    providers.import_to_key {|_| "enabled"}
 
     providers.where {
       :url => root.identity[0].oidc[0].issuer,
@@ -24,11 +24,11 @@ class EksWithNodes < ModuleSpec::Base
 
   cluster.has_many :aws_eks_addon do |addons, root|
     addons.where cluster_name: root.id
-    addons.keys {|addon| addon.name}
+    addons.import_to_key {|addon| addon.name}
   end
 
   templates = cluster.has_many :aws_launch_template do |lt, root|
-    lt.keys {|template| template.name}
+    lt.import_to_key {|template| template.name}
     lt.where_true do |template|
       /bootstrap\.sh.+[\"\'\s]#{root.id}[\"\'\s]\s*$/ =~ ModuleSpec::Utils.base64decode(template.user_data)
     end
@@ -36,7 +36,7 @@ class EksWithNodes < ModuleSpec::Base
 
   templates.each do |template|
     template.has_many :aws_eks_node_group do |groups, root|
-      groups.keys {|group| group.node_group_name}
+      groups.import_to_key {|group| group.node_group_name}
       groups.where {
         :cluster_name => cluster.id,
         :"launch_template.name" => root.name
