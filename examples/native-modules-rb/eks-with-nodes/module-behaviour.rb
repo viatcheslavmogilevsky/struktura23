@@ -1,11 +1,11 @@
-EksWithNodes.behave do |config|
-  config.aws_eks_cluster do |cluster|
+EksWithNodes.behave do |m|
+  m.configure :aws_eks_cluster do |cluster|
     cluster.defaults {
       :version => "1.27"
     }
   end
 
-  config.aws_eks_addon do |addons|
+  m.configure :aws_eks_addon do |addons|
     addons.default_keys = ["vpc-cni", "kube-proxy", "coredns"]
 
     addons.defaults {
@@ -14,24 +14,34 @@ EksWithNodes.behave do |config|
     }
 
     addons.enforce {
-      :depends_on => [config.aws_iam_openid_connect_provider().resource_ref]
+      :depends_on => [m.get.aws_iam_openid_connect_provider]
     }
   end
 
-  config.aws_iam_openid_connect_provider do |providers|
+  m.configure :aws_iam_openid_connect_provider do |providers|
     providers.enforce_keys do
       irsa_addons = ["vpc-cni", "aws-ebs-csi-driver"]
 
-      if (config.aws_eks_addon().found_keys & irsa_addons).any?
+      if (m.found_keys_of(:aws_eks_addon) & irsa_addons).any?
         ["enabled"]
       else
-        config.aws_iam_openid_connect_provider().found_keys
+        m.found_keys_of(:aws_iam_openid_connect_provider)
       end
     end
 
     providers.enforce {
       :client_id_list => ["sts.amazonaws.com"],
-      :thumbprint_list => [config.tls_certificate(:"certificates.0.sha1_fingerprint")]
+      :thumbprint_list => [m.get.tls_certificate.certificates[0].sha1_fingerprint]
     }
+  end
+
+  # this is wery sick:
+
+  m.configure :aws_eks_node_group do |node_groups|
+    node_groups.enforce do |group|
+      {
+        :"launch_template.name" => m.get.aws_launch_template[group.launch_template.name].name
+      }
+    end
   end
 end

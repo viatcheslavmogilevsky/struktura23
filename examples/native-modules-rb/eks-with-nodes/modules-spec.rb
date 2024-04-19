@@ -17,8 +17,6 @@ class EksWithNodes < ModuleSpec::Base
 
     providers.where {
       :url => root.identity[0].oidc[0].issuer,
-      # :client_id_list => ["sts.amazonaws.com"],
-      # :thumbprint_list => [tls_certificate.call().certificates[0].sha1_fingerprint]
     }
   end
 
@@ -27,43 +25,21 @@ class EksWithNodes < ModuleSpec::Base
     addons.import_to_key {|addon| addon.name}
   end
 
-  templates = cluster.has_many :aws_launch_template do |lt, root|
-    lt.import_to_key {|template| template.name}
-    lt.where_true do |template|
-      /bootstrap\.sh.+[\"\'\s]#{root.id}[\"\'\s]\s*$/ =~ ModuleSpec::Utils.base64decode(template.user_data)
-    end
+  eks_node_groups = cluster.has_many :aws_eks_node_group do |groups, root|
+    groups.import_to_key {|group| group.node_group_name}
+    groups.where {
+      :cluster_name => root.id
+    }
   end
 
-  templates.each do |template|
-    template.has_many :aws_eks_node_group do |groups, root|
-      groups.import_to_key {|group| group.node_group_name}
-      groups.where {
-        :cluster_name => cluster.id,
-        :"launch_template.name" => root.name
-      }
-    end
+  cluster.has_many :aws_launch_template do |lt, root|
+    lt.import_to_key {|template| template.name}
+    lt.where_in {
+      :name => eks_node_groups.resources.map {|ng| ng.launch_template.name}
+    }
   end
 end
 
-
-
-EksWithNodes.scan
-
-
-
-
-
-
-
-# export for enforcing feature???
-
-
-
-
-
-
-
-
-
-
+# then this class used in bins:
+# EksWithNodes.scan
 
