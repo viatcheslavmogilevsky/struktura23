@@ -14,7 +14,7 @@ EksWithNodes.behave do |m|
     }
 
     addons.enforce {
-      :depends_on => [m.get.aws_iam_openid_connect_provider]
+      :depends_on => [m.get(:aws_iam_openid_connect_provider)]
     }
   end
 
@@ -31,16 +31,19 @@ EksWithNodes.behave do |m|
 
     providers.enforce {
       :client_id_list => ["sts.amazonaws.com"],
-      :thumbprint_list => [m.get.tls_certificate.certificates[0].sha1_fingerprint]
+      :thumbprint_list => [m.get(:tls_certificate).certificates[0].sha1_fingerprint]
     }
   end
 
-  # this is wery sick:
-
   m.configure :aws_eks_node_group do |node_groups|
-    node_groups.enforce do |group|
+    node_groups.enforce do |_, group_key_value|
       {
-        :"launch_template.name" => m.get.aws_launch_template[group.launch_template.name].name
+        :"launch_template.name" => m.get(:aws_launch_template)[group_key_value[1][:launch_template_name]].name
+      }
+    end
+    node_groups.defaults do |_, group_key_value|
+      {
+        :"launch_template.version" => m.get(:aws_launch_template)[group_key_value[1][:launch_template_name]].latest_version
       }
     end
   end

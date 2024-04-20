@@ -12,12 +12,12 @@ class EksWithNodes < ModuleSpec::Base
   end
 
   cluster.has_many :aws_iam_openid_connect_provider do |providers, root|
-    providers.max_count 1
-    providers.import_to_key {|_| "enabled"}
-
     providers.where {
       :url => root.identity[0].oidc[0].issuer,
     }
+
+    providers.max_count 1
+    providers.import_to_key {|_| "enabled"}
   end
 
   cluster.has_many :aws_eks_addon do |addons, root|
@@ -26,17 +26,32 @@ class EksWithNodes < ModuleSpec::Base
   end
 
   eks_node_groups = cluster.has_many :aws_eks_node_group do |groups, root|
-    groups.import_to_key {|group| group.node_group_name}
     groups.where {
       :cluster_name => root.id
     }
+
+    group_name_prefixes = ModuleSpec::Utils.short_ids(groups.found.map(&:node_group_name))
+    launch_template_name_prefixes = ModuleSpec::Utils.short_ids(groups.found.map {|ng| ng.launch_template.name})
+
+    groups.import_to_key do |group, found_groups|
+      {
+        group_name_prefixes[group.node_group_name] => {
+          :launch_template_name = launch_template_name_prefixes[group.launch_template.name]
+        }
+      }
+    end
   end
 
   cluster.has_many :aws_launch_template do |lt, root|
-    lt.import_to_key {|template| template.name}
     lt.where_in {
-      :name => eks_node_groups.resources.map {|ng| ng.launch_template.name}
+      :name => eks_node_groups.found.map {|ng| ng.launch_template.name}
     }
+
+    launch_template_name_prefixes = ModuleSpec::Utils.short_ids(lt.found.map(&:name))
+
+    lt.import_to_key do |template, found_templates|
+      launch_template_name_prefixes[template.name]
+    end
   end
 end
 
