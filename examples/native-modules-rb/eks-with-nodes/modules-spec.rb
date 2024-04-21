@@ -31,26 +31,28 @@ class EksWithNodes < ModuleSpec::Base
     }
 
     group_name_prefixes = ModuleSpec::Utils.short_ids(groups.found.map(&:node_group_name))
-    launch_template_name_prefixes = ModuleSpec::Utils.short_ids(groups.found.map {|ng| ng.launch_template.name})
+    launch_template_names = groups.found.map {|ng| ng.launch_template.name}
+    launch_template_name_prefixes = ModuleSpec::Utils.short_ids(launch_template_names)
 
-    groups.import_to_key do |group, found_groups|
+    groups.import_to_key do |group|
       {
         group_name_prefixes[group.node_group_name] => {
-          :launch_template_name = launch_template_name_prefixes[group.launch_template.name]
+          :launch_template = launch_template_name_prefixes[group.launch_template.name]
         }
       }
     end
+
+    groups.instance_variable_set(@launch_template_names, launch_template_names)
+    groups.instance_variable_set(@launch_template_name_prefixes, launch_template_name_prefixes)
   end
 
   cluster.has_many :aws_launch_template do |lt, root|
     lt.where_in {
-      :name => eks_node_groups.found.map {|ng| ng.launch_template.name}
+      :name => eks_node_groups.instance_variable_get(@launch_template_names)
     }
 
-    launch_template_name_prefixes = ModuleSpec::Utils.short_ids(lt.found.map(&:name))
-
-    lt.import_to_key do |template, found_templates|
-      launch_template_name_prefixes[template.name]
+    lt.import_to_key do |template|
+      eks_node_groups.instance_variable_get(@launch_template_name_prefixes)[template.name]
     end
   end
 end

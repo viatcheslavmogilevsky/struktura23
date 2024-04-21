@@ -36,14 +36,14 @@ EksWithNodes.behave do |m|
   end
 
   m.configure :aws_eks_node_group do |node_groups|
-    node_groups.enforce do |_, group_key_value|
+    node_groups.enforce do |_, _, value|
       {
-        :"launch_template.name" => m.get(:aws_launch_template)[group_key_value[1][:launch_template_name]].name
+        :"launch_template.name" => m.get(:aws_launch_template)[value[:launch_template]].name
       }
     end
-    node_groups.defaults do |_, group_key_value|
+    node_groups.defaults do |_, _, value|
       {
-        :"launch_template.version" => m.get(:aws_launch_template)[group_key_value[1][:launch_template_name]].latest_version
+        :"launch_template.version" => m.get(:aws_launch_template)[value[:launch_template]].latest_version
       }
     end
   end
