@@ -1,6 +1,6 @@
-require 'module-spec'
+require 'strucktura23'
 
-class EksWithNodes < ModuleSpec::Base
+class EksWithNodes < Struktura23::BaseSpec
   cluster = self.has_one :aws_eks_cluster
 
   # but also be specified as
