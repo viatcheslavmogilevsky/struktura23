@@ -3,7 +3,7 @@ require 'strucktura23'
 class EksWithNodes < Struktura23::BaseSpec
   provider :opentofu, :aws, source: "hashicorp/aws", version: ">= 5.46.0"
   provider :opentofu, :http, source: "hashicorp/tls", version: ">= 4.0.4"
-  query_provider :sdk, :aws, source: "aws"
+  query_provider :core_sdk_wrapper
 
   # will this work???
   cluster = has_one :aws_eks_cluster
