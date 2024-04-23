@@ -1,7 +1,12 @@
 require 'strucktura23'
 
 class EksWithNodes < Struktura23::BaseSpec
-  cluster = self.has_one :aws_eks_cluster
+  provider :opentofu, :aws, source: "hashicorp/aws", version: ">= 5.46.0"
+  provider :opentofu, :http, source: "hashicorp/tls", version: ">= 4.0.4"
+  query_provider :sdk, :aws, source: "aws"
+
+  # will this work???
+  cluster = has_one :aws_eks_cluster
 
   # but also be specified as
   # cluster = self.is_one :aws_eks_cluster, :cluster
@@ -31,13 +36,13 @@ class EksWithNodes < Struktura23::BaseSpec
     }
 
     group_name_prefixes = ModuleSpec::Utils.short_ids(groups.found.map(&:node_group_name))
-    launch_template_names = groups.found.map {|ng| ng.launch_template.name}
+    launch_template_names = groups.found.map {|ng| ng.launch_template.name}.compact
     launch_template_name_prefixes = ModuleSpec::Utils.short_ids(launch_template_names)
 
     groups.import_to_key do |group|
       {
         group_name_prefixes[group.node_group_name] => {
-          :launch_template = launch_template_name_prefixes[group.launch_template.name]
+          :launch_template = launch_template_name_prefixes[group.launch_template.name] || "none"
         }
       }
     end
