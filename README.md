@@ -1,4 +1,4 @@
-# Strucktura23
+# Struktura23
 
 ## Features
 
