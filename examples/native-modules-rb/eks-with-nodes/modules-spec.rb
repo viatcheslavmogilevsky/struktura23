@@ -5,7 +5,6 @@ class EksWithNodes < Struktura23::BaseSpec
   provider :opentofu, :http, source: "hashicorp/tls", version: ">= 4.0.4"
   query_provider :core_sdk_wrapper
 
-  # will this work???
   cluster = has_one :aws_eks_cluster
 
   # but also be specified as
@@ -30,6 +29,7 @@ class EksWithNodes < Struktura23::BaseSpec
     addons.import_to_key {|addon| addon.name}
   end
 
+  # We have some misunderstanding here: begin
   eks_node_groups = cluster.has_many :aws_eks_node_group do |groups, root|
     groups.where {
       :cluster_name => root.id
@@ -60,6 +60,7 @@ class EksWithNodes < Struktura23::BaseSpec
       eks_node_groups.instance_variable_get(@launch_template_name_prefixes)[template.name]
     end
   end
+  # We have some misunderstanding here: end
 end
 
 # then this class used in bins:
