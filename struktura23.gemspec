@@ -1,6 +1,6 @@
 # your_library.gemspec
 Gem::Specification.new do |s|
-  s.name        = 'strucktura23'
+  s.name        = 'struktura23'
   s.version     = '0.0.1'
   s.date        = '2024-04-22'
   s.summary     = "Generate, query, import and manage infra with IaaC generator."

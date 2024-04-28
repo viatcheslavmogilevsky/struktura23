@@ -1,4 +1,9 @@
+# Below is totally obfuscated
+
 EksWithNodes.behave do |m|
+
+
+
   m.configure :aws_eks_cluster do |cluster|
     cluster.defaults {
       :version => "1.27"
