@@ -49,7 +49,7 @@ class EksWithNodes < Struktura23::BaseSpec
     launch_template = compute_template.has_one :aws_launch_template
     compute_template.import_to_key launch_template.found.name
   end
-
+end
 # then this class used in bins:
 # EksWithNodes.scan
 
