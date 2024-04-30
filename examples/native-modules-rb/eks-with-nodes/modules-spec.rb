@@ -8,9 +8,8 @@ class EksWithNodes < Struktura23::BaseSpec
   eks_cores = opentofu_modules :eks_core
   compute_templates = opentofu_modules :compute_template
 
-  eks_cores.each do |eks_core|
+  eks_cores.def_each do |eks_core|
     cluster = eks_core.has_one :cluster
-    eks_core.import_to_key cluster.found.id
 
     cluster.has_one :tls_certificate do |cert, root|
       cert.data_source true
@@ -40,14 +39,26 @@ class EksWithNodes < Struktura23::BaseSpec
         if template_name
           launch_templates.where name: template_name
         end
-        templates.claim_with cluster_name: root.cluster_name, node_group_name: root.node_group_name
+        templates.claim_with cluster_name: root.cluster_name, node_group_name: root.node_group_name, template_name: :name
       end
     end
+
+    cluster.found.id
   end
 
-  compute_templates.each do |compute_template|
+  compute_templates.def_each do |compute_template|
     launch_template = compute_template.has_one :aws_launch_template
-    compute_template.import_to_key launch_template.found.name
+
+    launch_template.has_one :aws_ami do |ami, root|
+      ami.data_source true
+      ami.where {
+        :"filter.0.image-id" => [root.image_id]
+      }
+      # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami
+      # https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-images.html
+    end
+
+    launch_template.found.name
   end
 end
 # then this class used in bins:
