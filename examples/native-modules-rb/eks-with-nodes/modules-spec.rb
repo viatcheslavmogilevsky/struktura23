@@ -9,7 +9,7 @@ class EksWithNodes < Struktura23::BaseSpec
   compute_templates = opentofu_modules :compute_template
 
   eks_cores.configure do |eks_core|
-    cluster = eks_core.has_one :cluster
+    cluster = eks_core.has_root :aws_eks_cluster
 
     cluster.has_one :tls_certificate do |cert, root|
       cert.data_source true
@@ -59,7 +59,7 @@ class EksWithNodes < Struktura23::BaseSpec
   end
 
   compute_templates.configure do |compute_template|
-    launch_template = compute_template.has_one :aws_launch_template
+    launch_template = compute_template.has_root :aws_launch_template
 
     launch_template.has_many :aws_ami do |ami, root|
       ami.data_source true
