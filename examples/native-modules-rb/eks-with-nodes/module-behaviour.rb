@@ -1,6 +1,7 @@
-# Below is totally obfuscated
+# Below is totally outdated
+EksWithNodes.when_found do |found|
+  found.configure :opentofu_modules, :eks_core
 
-EksWithNodes.behave do |m|
   m.configure :aws_eks_cluster do |cluster|
     cluster.defaults {
       :version => "1.27"
