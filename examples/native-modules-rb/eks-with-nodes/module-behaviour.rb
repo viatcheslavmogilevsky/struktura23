@@ -1,5 +1,22 @@
-# Below is totally outdated
-EksWithNodes.when_found do |found|
+EksWithNodes.transform do |registry|
+  launch_template_refs = registry[:clusters].map do |cluster_module|
+    cluster_module[:aws_eks_node_group].map do |found_node_group|
+      {
+        cluster_id: found_node_group.cluster_name,
+        node_group_name: found_node_group.node_group_name,
+        template_name: found_node_group.launch_template&.name
+      }
+    end
+  end.flatten
+
+  launch_template_ids = registry[:templates].map {|t| t.id}
+
+  launch_template_ids.each do |template|
+    # ????
+  end
+
+  # Below is totally outdated
+
   found.configure :opentofu_modules, :eks_core
 
   m.configure :aws_eks_cluster do |cluster|
