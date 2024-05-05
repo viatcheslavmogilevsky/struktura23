@@ -8,9 +8,12 @@ class EksWithNodes < Struktura23::BaseSpec
   # One stupid question: how to statically generate openotfofu modules
   # from following? Special 'dry_run' mode?
 
-  clusters = has_many :aws_eks_cluster
-  registry[:clusters] = clusters.map_found do |cluster|
-    m = Struktura23::Utils.wrap(cluster)
+  clusters = has_many :aws_eks_cluster do |eks_clusters|
+    eks_clusters.identify {|found_cluster| found_cluster.id }
+  end
+
+  registry[:clusters] = clusters.module_wrap do |m|
+    # m = Struktura23::Utils.wrap(cluster)
 
     m.has_one :tls_certificate do |cert, root|
       cert.data_source true
@@ -35,13 +38,16 @@ class EksWithNodes < Struktura23::BaseSpec
       groups.identify {|found_group| found_group.node_group_name}
     end
 
-    m.id = cluster.id
-    m
+    # m.id = cluster.id
+    # m
   end
 
-  launch_templates = has_many :aws_launch_template
-  registry[:templates] = launch_templates.map_found do |template|
-    m = Struktura23::Utils.wrap(template)
+  launch_templates = has_many :aws_launch_template do |templates|
+    templates.identify {|found_template| found_template.name}
+  end
+
+  registry[:templates] = launch_templates.module_wrap do |m|
+    #cm = Struktura23::Utils.wrap(template)
 
     # it is just a stub at this stage
     m.has_many :aws_ami do |ami, _|
@@ -49,8 +55,8 @@ class EksWithNodes < Struktura23::BaseSpec
       ami.allowed_ids ["enabled"]
     end
 
-    m.id = template.name
-    m
+    # m.id = template.name
+    # m
   end
 end
 

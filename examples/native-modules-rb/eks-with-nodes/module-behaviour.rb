@@ -12,10 +12,8 @@ EksWithNodes.transform do |registry|
   launch_template_ids = registry[:templates].map {|t| t.id}
 
   launch_template_ids.each do |template|
-    # ????
+    # ???
   end
-
-  # Below is totally outdated
 
   found.configure :opentofu_modules, :eks_core
 
