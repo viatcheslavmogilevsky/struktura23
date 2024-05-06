@@ -5,16 +5,11 @@ class EksWithNodes < Struktura23::BaseSpec
   provider :opentofu, :http, source: "hashicorp/tls", version: ">= 4.0.4"
   query_provider :aws, :core_sdk_wrapper
 
-  # One stupid question: how to statically generate openotfofu modules
-  # from following? Special 'dry_run' mode?
-
   clusters = has_many :aws_eks_cluster do |eks_clusters|
     eks_clusters.identify {|found_cluster| found_cluster.id }
   end
 
   registry[:clusters] = clusters.module_wrap do |m|
-    # m = Struktura23::Utils.wrap(cluster)
-
     m.has_one :tls_certificate do |cert, root|
       cert.data_source true
       cert.where url: root.identity[0].oidc[0].issuer
@@ -37,9 +32,6 @@ class EksWithNodes < Struktura23::BaseSpec
       groups.where cluster_name: root.id
       groups.identify {|found_group| found_group.node_group_name}
     end
-
-    # m.id = cluster.id
-    # m
   end
 
   launch_templates = has_many :aws_launch_template do |templates|
@@ -47,16 +39,11 @@ class EksWithNodes < Struktura23::BaseSpec
   end
 
   registry[:templates] = launch_templates.module_wrap do |m|
-    #cm = Struktura23::Utils.wrap(template)
-
     # it is just a stub at this stage
     m.has_many :aws_ami do |ami, _|
       ami.data_source true
       ami.allowed_ids ["enabled"]
     end
-
-    # m.id = template.name
-    # m
   end
 end
 

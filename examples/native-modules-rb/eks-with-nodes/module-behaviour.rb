@@ -1,3 +1,5 @@
+# Below is totally outdated
+
 EksWithNodes.transform do |registry|
   launch_template_refs = registry[:clusters].map do |cluster_module|
     cluster_module[:aws_eks_node_group].map do |found_node_group|
