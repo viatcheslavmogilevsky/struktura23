@@ -41,8 +41,13 @@ class EksWithNodes < Struktura23::BaseSpec
       groups.identify {|found_group| found_group.node_group_name}
     end
 
-    cluster_launch_templates = m.has_many(:aws_eks_node_group, :common).module_wrap(:launch_template)
-    ng_launch_templates = m.has_many(:aws_eks_node_group, :ng).module_wrap(:launch_template)
+    m.has_many_wrappers :launch_template, :common_templates do |m|
+      m.has_many :aws_launch_template {|lt, _| lt.where false}
+    end
+
+    m.has_many_wrappers :launch_template, :ng_templates do |m|
+      m.has_many :aws_launch_template {|lt, _| lt.where false}
+    end
   end
 
   launch_templates = has_many :aws_launch_template do |templates|
