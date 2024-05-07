@@ -5,6 +5,14 @@ class EksWithNodes < Struktura23::BaseSpec
   provider :opentofu, :http, source: "hashicorp/tls", version: ">= 4.0.4"
   query_provider :aws, :core_sdk_wrapper
 
+
+  module_wrapper :launch_template do |m|
+    m.has_many :aws_ami do |ami, _|
+      ami.data_source true
+      ami.allowed_ids ["enabled"]
+    end
+  end
+
   clusters = has_many :aws_eks_cluster do |eks_clusters|
     eks_clusters.identify {|found_cluster| found_cluster.id }
   end
@@ -32,19 +40,16 @@ class EksWithNodes < Struktura23::BaseSpec
       groups.where cluster_name: root.id
       groups.identify {|found_group| found_group.node_group_name}
     end
+
+    cluster_launch_templates = m.has_many(:aws_eks_node_group, :common).module_wrap(:launch_template)
+    ng_launch_templates = m.has_many(:aws_eks_node_group, :ng).module_wrap(:launch_template)
   end
 
   launch_templates = has_many :aws_launch_template do |templates|
     templates.identify {|found_template| found_template.name}
   end
 
-  registry[:templates] = launch_templates.module_wrap do |m|
-    # it is just a stub at this stage
-    m.has_many :aws_ami do |ami, _|
-      ami.data_source true
-      ami.allowed_ids ["enabled"]
-    end
-  end
+  registry[:templates] = launch_templates.module_wrap(:launch_template)
 end
 
 # then this class used in bins:
