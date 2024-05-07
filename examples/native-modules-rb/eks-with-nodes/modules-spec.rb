@@ -13,48 +13,49 @@ class EksWithNodes < Struktura23::BaseSpec
     end
   end
 
-  clusters = has_many :aws_eks_cluster do |eks_clusters|
+  registry[:clusters] = has_many :aws_eks_cluster do |eks_clusters|
     eks_clusters.identify {|found_cluster| found_cluster.id }
+    eks_clusters.wrap do |m|
+      m.logic_name :cluster
+      m.has_one :tls_certificate do |cert, root|
+        cert.data_source true
+        cert.where url: root.identity[0].oidc[0].issuer
+      end
+
+      m.has_many :aws_iam_openid_connect_provider do |providers, root|
+        providers.where url: root.identity[0].oidc[0].issuer
+
+        providers.max_count 1
+        providers.allowed_ids ["enabled"]
+        providers.identify {|_| "enabled"}
+      end
+
+      m.has_many :aws_eks_addon do |addons, root|
+        addons.where cluster_name: root.id
+        addons.identify {|found_addon| found_addon.name}
+      end
+
+      m.has_many :aws_eks_node_group do |groups, root|
+        groups.where cluster_name: root.id
+        groups.identify {|found_group| found_group.node_group_name}
+      end
+
+      m.has_many :aws_launch_template do |lt, _|
+        lt.where false
+        lt.wrap :launch_template, :common
+      end
+
+      m.has_many :aws_launch_template do |lt, _|
+        lt.where false
+        lt.wrap :launch_template, :ng
+      end
+    end
   end
 
-  registry[:clusters] = clusters.module_wrap do |m|
-    m.has_one :tls_certificate do |cert, root|
-      cert.data_source true
-      cert.where url: root.identity[0].oidc[0].issuer
-    end
-
-    m.has_many :aws_iam_openid_connect_provider do |providers, root|
-      providers.where url: root.identity[0].oidc[0].issuer
-
-      providers.max_count 1
-      providers.allowed_ids ["enabled"]
-      providers.identify {|_| "enabled"}
-    end
-
-    m.has_many :aws_eks_addon do |addons, root|
-      addons.where cluster_name: root.id
-      addons.identify {|found_addon| found_addon.name}
-    end
-
-    m.has_many :aws_eks_node_group do |groups, root|
-      groups.where cluster_name: root.id
-      groups.identify {|found_group| found_group.node_group_name}
-    end
-
-    m.has_many_wrappers :launch_template, :common_templates do |m|
-      m.has_many :aws_launch_template {|lt, _| lt.where false}
-    end
-
-    m.has_many_wrappers :launch_template, :ng_templates do |m|
-      m.has_many :aws_launch_template {|lt, _| lt.where false}
-    end
-  end
-
-  launch_templates = has_many :aws_launch_template do |templates|
+  registry[:templates] = has_many :aws_launch_template do |templates|
     templates.identify {|found_template| found_template.name}
+    templates.wrap :launch_template
   end
-
-  registry[:templates] = launch_templates.module_wrap(:launch_template)
 end
 
 # then this class used in bins:
