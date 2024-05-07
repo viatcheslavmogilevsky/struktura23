@@ -6,17 +6,16 @@ class EksWithNodes < Struktura23::BaseSpec
   query_provider :aws, :core_sdk_wrapper
 
 
-  module_wrapper :launch_template do |m|
+  launch_template_module = has_wrapper :launch_template do |m|
     m.has_many :aws_ami do |ami, _|
       ami.data_source true
       ami.allowed_ids ["enabled"]
     end
   end
 
-  registry[:clusters] = has_many :aws_eks_cluster do |eks_clusters|
+  has_many :aws_eks_cluster do |eks_clusters|
     eks_clusters.identify {|found_cluster| found_cluster.id }
-    eks_clusters.wrap do |m|
-      m.logic_name :cluster
+    eks_clusters.wrap(:cluster) do |m|
       m.has_one :tls_certificate do |cert, root|
         cert.data_source true
         cert.where url: root.identity[0].oidc[0].issuer
@@ -41,20 +40,20 @@ class EksWithNodes < Struktura23::BaseSpec
       end
 
       m.has_many :aws_launch_template do |lt, _|
+        lt.wrap :common_launch_template, launch_template_module
         lt.where false
-        lt.wrap :launch_template, :common
       end
 
       m.has_many :aws_launch_template do |lt, _|
+        lt.wrap :ng_launch_template, launch_template_module
         lt.where false
-        lt.wrap :launch_template, :ng
       end
     end
   end
 
-  registry[:templates] = has_many :aws_launch_template do |templates|
+  has_many :aws_launch_template do |templates|
     templates.identify {|found_template| found_template.name}
-    templates.wrap :launch_template
+    templates.wrap :launch_template, launch_template_module
   end
 end
 
