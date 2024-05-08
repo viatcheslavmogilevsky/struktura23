@@ -6,7 +6,7 @@ class EksWithNodes < Struktura23::BaseSpec
   query_provider :aws, :core_sdk_wrapper
 
 
-  launch_template_module = has_wrapper :launch_template do |m|
+  has_wrapper :launch_template do |m|
     m.has_many :aws_ami do |ami, _|
       ami.data_source true
       ami.allowed_ids ["enabled"]
@@ -40,12 +40,12 @@ class EksWithNodes < Struktura23::BaseSpec
       end
 
       m.has_many :aws_launch_template do |lt, _|
-        lt.wrap :common_launch_template, launch_template_module
+        lt.wrap :common_launch_template, :launch_template
         lt.where false
       end
 
       m.has_many :aws_launch_template do |lt, _|
-        lt.wrap :ng_launch_template, launch_template_module
+        lt.wrap :ng_launch_template, :launch_template
         lt.where false
       end
     end
@@ -53,7 +53,7 @@ class EksWithNodes < Struktura23::BaseSpec
 
   has_many :aws_launch_template do |templates|
     templates.identify {|found_template| found_template.name}
-    templates.wrap :launch_template, launch_template_module
+    templates.wrap :launch_template
   end
 end
 
