@@ -11,6 +11,8 @@ class EksWithNodes < Struktura23::BaseSpec
       ami.data_source true
       ami.allowed_ids ["enabled"]
     end
+
+    m.core.enforce image_id: Struktura23::Utils.expression(:"???")
   end
 
   has_many :aws_eks_cluster do |eks_clusters|
@@ -18,25 +20,26 @@ class EksWithNodes < Struktura23::BaseSpec
     eks_clusters.wrap(:cluster) do |m|
       m.has_one :tls_certificate do |cert, root|
         cert.data_source true
-        cert.where url: root.identity[0].oidc[0].issuer
+        cert.where url: root.core.found.identity[0].oidc[0].issuer
+        cert.enforce_to_default all_except: :url
       end
 
       m.has_many :aws_iam_openid_connect_provider do |providers, root|
-        providers.where url: root.identity[0].oidc[0].issuer
+        providers.where url: root.core.found.identity[0].oidc[0].issuer
 
-        providers.max_count 1
         providers.allowed_ids ["enabled"]
         providers.identify {|_| "enabled"}
       end
 
       m.has_many :aws_eks_addon do |addons, root|
-        addons.where cluster_name: root.id
+        addons.where cluster_name: root.core.found.id
         addons.identify {|found_addon| found_addon.name}
       end
 
       m.has_many :aws_eks_node_group do |groups, root|
-        groups.where cluster_name: root.id
+        groups.where cluster_name: root.core.found.id
         groups.identify {|found_group| found_group.node_group_name}
+        groups.enforce :"launch_template.name" => Struktura23::Utils.expression(:"???"), :"launch_template.version" => :"???"
       end
 
       m.has_many :aws_launch_template do |lt, _|
