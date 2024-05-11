@@ -6,16 +6,13 @@ class EksWithNodes < Struktura23::BaseSpec
   query_provider :aws, :core_sdk_wrapper
 
 
-  has_wrapper :launch_template do |m|
-    m.required_core_type :aws_launch_template
-
-    m.has_many :aws_ami do |ami, _|
+  has_wrapper :launch_template, of: :aws_launch_template do |m|
+    m.has_optional_one :aws_ami do |ami, _|
       ami.data_source true
-      ami.allowed_ids ["enabled"]
     end
 
     m.core.enforce :image_id do |context|
-      "#{context.core.var[:image_id]} ? #{context.core.var[:image_id]} : #{context.aws_ami["enabled"].value[:image_id]}"
+      "#{context.aws_ami.var.length} > 0 ? #{context.aws_ami.enabled.image_id} : #{context.current_var} "
     end
   end
 
@@ -29,10 +26,8 @@ class EksWithNodes < Struktura23::BaseSpec
         cert.hide_all
       end
 
-      m.has_many :aws_iam_openid_connect_provider do |providers, root|
-        providers.where url: root.core.found.identity[0].oidc[0].issuer
-        providers.allowed_ids ["enabled"]
-        providers.identify {|_| "enabled"}
+      m.has_optional_one :aws_iam_openid_connect_provider do |connect_provider, root|
+        connect_provider.where url: root.core.found.identity[0].oidc[0].issuer
       end
 
       m.has_many :aws_eks_addon do |addons, root|
@@ -43,24 +38,26 @@ class EksWithNodes < Struktura23::BaseSpec
       m.has_many :aws_eks_node_group do |groups, root|
         groups.where cluster_name: root.core.found.id
         groups.identify {|found_group| found_group.node_group_name}
-        # groups.enforce :"launch_template.name"  => Struktura23::Utils.expression(:"???"), :"launch_template.version" => :"???"
-        groups.add_var {:common_launch_template_key => "string"}
 
-        groups.enforce :"launch_template.name" do |context|
-          "???"
+        groups.add_var common_launch_template_key: "string"
+
+        groups.each_has_optional_one :aws_launch_template do |lt, root, owner|
+          lt.wrap :launch_template
+          lt.where false
+          lt.store root, :custom_launch_template, owner.key
         end
 
-        groups.enforce :"launch_template.version" do |context|
-          "???"
+        # todo: make them short&concise:
+        groups.enforce_each :"launch_template.name" do |context, context_key|
+          "#{context.aws_eks_node_group[context_key].var[:custom_launch_template].length} > 0 ? #{context.custom_launch_template[context_key].name} : (#{context.aws_eks_node_group[context_key].var[:common_launch_template_key]} != null ? #{context.common_launch_template[context.aws_eks_node_group[context_key].var[:common_launch_template_key]].name} : #{context.current_var})"
+        end
+
+        groups.enforce_each :"launch_template.version" do |context|
+          "#{context.aws_eks_node_group[context_key].var[:custom_launch_template].length} > 0 ? #{context.custom_launch_template[context_key].version} : (#{context.aws_eks_node_group[context_key].var[:common_launch_template_key]} != null ? #{context.common_launch_template[context.aws_eks_node_group[context_key].var[:common_launch_template_key]].version} : #{context.current_var})"
         end
       end
 
       m.has_many :aws_launch_template, :common_launch_template do |lt, _|
-        lt.wrap :launch_template
-        lt.where false
-      end
-
-      m.has_many :aws_launch_template, :ng_launch_template do |lt, _|
         lt.wrap :launch_template
         lt.where false
       end
