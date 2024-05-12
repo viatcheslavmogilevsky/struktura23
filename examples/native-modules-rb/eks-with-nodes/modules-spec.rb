@@ -50,6 +50,7 @@ class EksWithNodes < Struktura23::BaseSpec
         # end
 
         groups.enforce_each :"launch_template.name" do |context|
+          # todo: make lambda???
           context_key = context.current_key
           custom_launch_template = context.wrapper.custom_launch_template[context_key]
           common_launch_template = context.wrapper.common_launch_template[context.current.var[:common_launch_template_key]]
@@ -70,9 +71,11 @@ class EksWithNodes < Struktura23::BaseSpec
       end
 
       m.has_many :aws_launch_template, :custom_launch_template do |lt, _|
-        # lt.input ???
         lt.wrap :launch_template
         lt.where false
+        lt.enforce_each :for_each do |context|
+          # "???"
+        end
       end
     end
   end
