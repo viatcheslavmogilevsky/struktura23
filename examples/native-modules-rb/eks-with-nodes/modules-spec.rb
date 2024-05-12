@@ -12,7 +12,8 @@ class EksWithNodes < Struktura23::BaseSpec
     end
 
     m.core.enforce :image_id do |context|
-      "#{context.aws_ami.var.length} > 0 ? #{context.aws_ami.enabled.image_id} : #{context.current_var} "
+      aws_ami = context.wrapper.aws_ami
+      "#{aws_ami.var.length} > 0 ? #{aws_ami.enabled.image_id} : #{context.current_var} "
     end
   end
 
@@ -40,24 +41,36 @@ class EksWithNodes < Struktura23::BaseSpec
         groups.identify {|found_group| found_group.node_group_name}
 
         groups.add_var common_launch_template_key: "string"
+        groups.add_var custom_launch_template: :launch_template
 
-        groups.each_has_optional_one :aws_launch_template do |lt, root, owner|
-          lt.wrap :launch_template
-          lt.where false
-          lt.store root, :custom_launch_template, owner.key
-        end
+        # groups.each_has_optional_one :aws_launch_template do |lt, context|
+        #   lt.wrap :launch_template
+        #   lt.where false
+        #   lt.store context.wrapper, :custom_launch_template, context.current_key
+        # end
 
-        # todo: make them short&concise:
-        groups.enforce_each :"launch_template.name" do |context, context_key|
-          "#{context.aws_eks_node_group[context_key].var[:custom_launch_template].length} > 0 ? #{context.custom_launch_template[context_key].name} : (#{context.aws_eks_node_group[context_key].var[:common_launch_template_key]} != null ? #{context.common_launch_template[context.aws_eks_node_group[context_key].var[:common_launch_template_key]].name} : #{context.current_var})"
+        groups.enforce_each :"launch_template.name" do |context|
+          context_key = context.current_key
+          custom_launch_template = context.wrapper.custom_launch_template[context_key]
+          common_launch_template = context.wrapper.common_launch_template[context.current.var[:common_launch_template_key]]
+          "#{context.current.var[:custom_launch_template].length} > 0 ? #{custom_launch_template.name} : (#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.name} : #{context.current_var})"
         end
 
         groups.enforce_each :"launch_template.version" do |context|
-          "#{context.aws_eks_node_group[context_key].var[:custom_launch_template].length} > 0 ? #{context.custom_launch_template[context_key].version} : (#{context.aws_eks_node_group[context_key].var[:common_launch_template_key]} != null ? #{context.common_launch_template[context.aws_eks_node_group[context_key].var[:common_launch_template_key]].version} : #{context.current_var})"
+          context_key = context.current_key
+          custom_launch_template = context.wrapper.custom_launch_template[context_key]
+          common_launch_template = context.wrapper.common_launch_template[context.current.var[:common_launch_template_key]]
+          "#{context.current.var[:custom_launch_template].length} > 0 ? #{custom_launch_template.version} : (#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.version} : #{context.current_var})"
         end
       end
 
       m.has_many :aws_launch_template, :common_launch_template do |lt, _|
+        lt.wrap :launch_template
+        lt.where false
+      end
+
+      m.has_many :aws_launch_template, :custom_launch_template do |lt, _|
+        # lt.input ???
         lt.wrap :launch_template
         lt.where false
       end
