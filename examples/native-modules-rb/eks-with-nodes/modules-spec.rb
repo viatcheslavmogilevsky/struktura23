@@ -36,6 +36,10 @@ class EksWithNodes < Struktura23::BaseSpec
         addons.identify {|found_addon| found_addon.name}
       end
 
+      # m.has_locals :ng_helpers do |root|
+        
+      # end
+
       m.has_many :aws_eks_node_group do |groups, root|
         groups.where cluster_name: root.core.found.id
         groups.identify {|found_group| found_group.node_group_name}
@@ -44,7 +48,7 @@ class EksWithNodes < Struktura23::BaseSpec
         groups.add_var custom_launch_template: :launch_template
 
         groups.enforce_each :"launch_template.name" do |context|
-          # todo: make lambda???
+          # todo: make lambda/locals???
           context_key = context.current_key
           custom_launch_template = context.wrapper.custom_launch_template[context_key]
           common_launch_template = context.wrapper.common_launch_template[context.current.var[:common_launch_template_key]]
@@ -55,7 +59,7 @@ class EksWithNodes < Struktura23::BaseSpec
           context_key = context.current_key
           custom_launch_template = context.wrapper.custom_launch_template[context_key]
           common_launch_template = context.wrapper.common_launch_template[context.current.var[:common_launch_template_key]]
-          "#{context.current.var[:custom_launch_template]} != null ? #{custom_launch_template.version} : (#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.version} : #{context.current_var})"
+          "#{context.current.var[:custom_launch_template]} != null ? #{custom_launch_template.latest_version} : (#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.latest_version} : #{context.current_var})"
         end
       end
 
