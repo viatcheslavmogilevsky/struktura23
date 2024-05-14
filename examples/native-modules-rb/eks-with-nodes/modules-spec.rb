@@ -13,7 +13,7 @@ class EksWithNodes < Struktura23::BaseSpec
 
     m.core.enforce :image_id do |context|
       aws_ami = context.wrapper.aws_ami
-      "#{aws_ami.var.length} > 0 ? #{aws_ami.enabled.image_id} : #{context.current_var} "
+      "#{aws_ami.var.length} > 0 ? #{aws_ami.one.image_id} : #{context.current_var} "
     end
   end
 
@@ -36,7 +36,7 @@ class EksWithNodes < Struktura23::BaseSpec
         addons.identify {|found_addon| found_addon.name}
       end
 
-      # m.has_locals :ng_helpers do |root|
+      # m.has_local :ng_helpers do |root|
         
       # end
 
@@ -47,19 +47,13 @@ class EksWithNodes < Struktura23::BaseSpec
         groups.add_var common_launch_template_key: "string"
         groups.add_var custom_launch_template: :launch_template
 
-        groups.enforce_each :"launch_template.name" do |context|
-          # todo: make lambda/locals???
-          context_key = context.current_key
-          custom_launch_template = context.wrapper.custom_launch_template[context_key]
-          common_launch_template = context.wrapper.common_launch_template[context.current.var[:common_launch_template_key]]
-          "#{context.current.var[:custom_launch_template]} != null ? #{custom_launch_template.name} : (#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.name} : #{context.current_var})"
-        end
-
-        groups.enforce_each :"launch_template.version" do |context|
-          context_key = context.current_key
-          custom_launch_template = context.wrapper.custom_launch_template[context_key]
-          common_launch_template = context.wrapper.common_launch_template[context.current.var[:common_launch_template_key]]
-          "#{context.current.var[:custom_launch_template]} != null ? #{custom_launch_template.latest_version} : (#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.latest_version} : #{context.current_var})"
+        groups.enforce_each do |context|
+          custom_launch_template = context.wrapper.custom_launch_template.at(context.current_key)
+          common_launch_template = context.wrapper.common_launch_template.at(context.current.var[:common_launch_template_key])
+          {
+            :"launch_template.name" => "#{context.current.var[:custom_launch_template]} != null ? #{custom_launch_template.name} : (#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.name} : #{context.current_var})"
+            :"launch_template.version" => "#{context.current.var[:custom_launch_template]} != null ? #{custom_launch_template.latest_version} : (#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.latest_version} : #{context.current_var})"
+          }
         end
       end
 
