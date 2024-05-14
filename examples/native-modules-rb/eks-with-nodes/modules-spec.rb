@@ -43,16 +43,16 @@ class EksWithNodes < Struktura23::BaseSpec
         groups.add_var common_launch_template_key: "string"
         groups.add_var custom_launch_template: :launch_template
 
-        groups.enforce_each do |context|
+        groups.enforce_each :launch_template do |context|
           custom_launch_template = context.wrapper.custom_launch_template.at(context.current_key)
           common_launch_template = context.wrapper.common_launch_template.at(context.current.var[:common_launch_template_key])
 
           {
-            :"launch_template.name" => "#{context.current.var[:custom_launch_template]} != null ? "\
+            :name => "#{context.current.var[:custom_launch_template]} != null ? "\
               "#{custom_launch_template.name} : "\
               "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.name} : #{context.current_var})"
 
-            :"launch_template.version" => "#{context.current.var[:custom_launch_template]} != null ? "\
+            :version => "#{context.current.var[:custom_launch_template]} != null ? "\
               "#{custom_launch_template.latest_version} : "\
               "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.latest_version} : #{context.current_var})"
           }
