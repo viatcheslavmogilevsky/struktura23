@@ -3,7 +3,7 @@ require 'struktura23'
 class EksWithNodes < Struktura23::BaseSpec
   provider :opentofu, :aws, source: "hashicorp/aws", version: ">= 5.46.0"
   provider :opentofu, :http, source: "hashicorp/tls", version: ">= 4.0.4"
-  query_provider :aws, :core_sdk_wrapper
+  query_provider :aws, :core_sdk_query_provider
 
 
   has_wrapper :launch_template, of: :aws_launch_template do |m|
@@ -36,10 +36,6 @@ class EksWithNodes < Struktura23::BaseSpec
         addons.identify {|found_addon| found_addon.name}
       end
 
-      # m.has_local :ng_helpers do |root|
-        
-      # end
-
       m.has_many :aws_eks_node_group do |groups, root|
         groups.where cluster_name: root.core.found.id
         groups.identify {|found_group| found_group.node_group_name}
@@ -50,9 +46,15 @@ class EksWithNodes < Struktura23::BaseSpec
         groups.enforce_each do |context|
           custom_launch_template = context.wrapper.custom_launch_template.at(context.current_key)
           common_launch_template = context.wrapper.common_launch_template.at(context.current.var[:common_launch_template_key])
+
           {
-            :"launch_template.name" => "#{context.current.var[:custom_launch_template]} != null ? #{custom_launch_template.name} : (#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.name} : #{context.current_var})"
-            :"launch_template.version" => "#{context.current.var[:custom_launch_template]} != null ? #{custom_launch_template.latest_version} : (#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.latest_version} : #{context.current_var})"
+            :"launch_template.name" => "#{context.current.var[:custom_launch_template]} != null ? "\
+              "#{custom_launch_template.name} : "\
+              "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.name} : #{context.current_var})"
+
+            :"launch_template.version" => "#{context.current.var[:custom_launch_template]} != null ? "\
+              "#{custom_launch_template.latest_version} : "\
+              "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.latest_version} : #{context.current_var})"
           }
         end
       end
@@ -82,5 +84,6 @@ class EksWithNodes < Struktura23::BaseSpec
 end
 
 # then this class used in bins:
+# EksWithNodes.generate_opentofu_modules
 # EksWithNodes.scan
 
