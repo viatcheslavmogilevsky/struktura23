@@ -50,8 +50,7 @@ class EksWithNodes < Struktura23::BaseSpec
           {
             :name => "#{context.current.var[:custom_launch_template]} != null ? "\
               "#{custom_launch_template.name} : "\
-              "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.name} : #{context.current_var})"
-
+              "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.name} : #{context.current_var})",
             :version => "#{context.current.var[:custom_launch_template]} != null ? "\
               "#{custom_launch_template.latest_version} : "\
               "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.latest_version} : #{context.current_var})"

@@ -17,7 +17,16 @@ module Struktura23
     end
   end
 
+  module Core
+    def has_many(*args)
+    end
+
+    def has_wrapper(*args)
+    end
+  end
+
   class BaseSpec
     extend Providers
+    extend Core
   end
 end
