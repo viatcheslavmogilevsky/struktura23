@@ -1,24 +1,23 @@
 module Struktura23
-  module Entrypoint
-    def entrypoint
-      @entrypoint ||= []
+  module Providers
+    def provider(*args)
+      providers << args
     end
 
-    def is_repeatable?
-      entrypoint.length == 1
+    def query_provider(*args)
+      query_providers << args
     end
 
-    def entrypoint?
-      entrypoint.length > 0
+    def providers
+      @providers ||= []
     end
 
-    def has_one resource
-      entrypoint << resource
+    def query_providers
+      @query_providers ||= []
     end
   end
 
-
   class BaseSpec
-    extend Entrypoint
+    extend Providers
   end
 end
