@@ -21,6 +21,12 @@ module Struktura23
     def has_many(*args)
     end
 
+    def has_one(*args)
+    end
+
+    def has_optional_one(*args)
+    end
+
     def has_wrapper(*args)
     end
   end
