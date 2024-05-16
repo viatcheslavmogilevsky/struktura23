@@ -19,7 +19,7 @@ class EksWithNodes < Struktura23::BaseSpec
 
   has_many :aws_eks_cluster do |eks_clusters|
     eks_clusters.identify {|found_cluster| found_cluster.id }
-    eks_clusters.wrap(:cluster) do |m|
+    eks_clusters.wrap do |m|
       m.has_one :tls_certificate do |cert, root|
         cert.data_source true
         cert.where url: root.core.found.identity[0].oidc[0].issuer
@@ -41,7 +41,7 @@ class EksWithNodes < Struktura23::BaseSpec
         groups.identify {|found_group| found_group.node_group_name}
 
         groups.add_var common_launch_template_key: "string"
-        groups.add_var custom_launch_template: :launch_template
+        groups.add_var :custom_launch_template => {:wrapper => :launch_template}
 
         groups.enforce_each :launch_template do |context|
           custom_launch_template = context.wrapper.custom_launch_template.at(context.current_key)
@@ -51,6 +51,7 @@ class EksWithNodes < Struktura23::BaseSpec
             :name => "#{context.current.var[:custom_launch_template]} != null ? "\
               "#{custom_launch_template.name} : "\
               "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.name} : #{context.current_var})",
+            # TODO: latest_version/default_version
             :version => "#{context.current.var[:custom_launch_template]} != null ? "\
               "#{custom_launch_template.latest_version} : "\
               "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.latest_version} : #{context.current_var})"
