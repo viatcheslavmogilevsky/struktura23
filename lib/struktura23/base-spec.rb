@@ -17,7 +17,7 @@ module Struktura23
     end
   end
 
-  module Core
+  module Owner
     def has_many(*args)
     end
 
@@ -26,13 +26,36 @@ module Struktura23
 
     def has_optional_one(*args)
     end
-
-    def has_wrapper(*args)
-    end
   end
 
   class BaseSpec
     extend Providers
-    extend Core
+    extend Owner
+
+    class << self
+      def has_wrapper(wrapper_key, options={})
+        named_wrappers[wrapper_key] = new_wrapper = Wrapper.new
+        yield(new_wrapper)
+      end
+
+      def named_wrappers
+        @named_wrappers ||= {}
+      end
+    end
+  end
+
+  class Wrapper
+    include Owner
+
+    def core
+      WrapperCore.new
+    end
+  end
+
+
+  class WrapperCore
+    def method_missing(name, *args, &block)
+      puts "I don't care about #{name}"
+    end
   end
 end
