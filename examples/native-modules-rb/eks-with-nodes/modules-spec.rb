@@ -15,7 +15,7 @@ class EksWithNodes < Struktura23::BaseSpec
 
     m.core.enforce :image_id do |context|
       aws_ami = context.wrapper.aws_ami
-      "#{aws_ami.var.length} > 0 ? #{aws_ami.one.image_id} : #{context.current_var} "
+      "#{aws_ami.var.length} > 0 ? #{aws_ami.one.image_id} : #{context.current_var}"
     end
   end
 
