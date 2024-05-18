@@ -1,4 +1,6 @@
-require 'struktura23'
+load 'struktura23/base-spec.rb'
+
+# require 'struktura23'
 
 class EksWithNodes < Struktura23::BaseSpec
   provider :opentofu, :aws, source: "hashicorp/aws", version: ">= 5.46.0"

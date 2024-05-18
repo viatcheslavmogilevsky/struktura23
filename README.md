@@ -13,9 +13,6 @@
 
 ```
 $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/lib")
-load 'struktura23/base-spec.rb'
-class ExampleTfModule < Struktura23::BaseSpec
-# ...
-end
+load "#{File.dirname(__FILE__)}/examples/native-modules-rb/eks-with-nodes/modules-spec.rb"
 ```
  
