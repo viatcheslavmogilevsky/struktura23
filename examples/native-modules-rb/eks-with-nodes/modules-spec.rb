@@ -8,12 +8,12 @@ class EksWithNodes < Struktura23::BaseSpec
   query_provider :aws, :core_sdk_query_provider
 
 
-  has_wrapper :launch_template, of: :aws_launch_template do |m|
+  has_wrapper :launch_template, of: :aws_launch_template do |m, core|
     m.has_optional_one :aws_ami do |ami, _|
       ami.data_source true
     end
 
-    m.core.enforce :image_id do |context|
+    core.enforce :image_id do |context|
       aws_ami = context.wrapper.aws_ami
       "#{aws_ami.var.length} > 0 ? #{aws_ami.one.image_id} : #{context.current_var}"
     end
