@@ -28,6 +28,12 @@ module Struktura23
     end
   end
 
+  module Enforceable
+    def enforce(attribute, &block)
+      puts "I don't care about #{attribute}"
+    end
+  end
+
   class BaseSpec
     extend Providers
     extend Owner
@@ -63,14 +69,12 @@ module Struktura23
 
 
   class WrapperCore
+    include Enforceable
+
     attr_reader :core_type
 
     def initialize(core_type)
       @core_type = core_type
-    end
-
-    def method_missing(name, *args, &block)
-      puts "I don't care about #{name}"
     end
   end
 end
