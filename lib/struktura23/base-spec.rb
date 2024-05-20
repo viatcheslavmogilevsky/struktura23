@@ -41,8 +41,7 @@ module Struktura23
     class << self
       def has_wrapper(wrapper_key, options={})
         named_wrappers[wrapper_key] = wrapper = Wrapper.new(options)
-        wrapper_core = WrapperCore.new(wrapper.core_type)
-        yield(wrapper, wrapper_core)
+        yield(wrapper, wrapper.core)
       end
 
       def named_wrappers
@@ -54,24 +53,17 @@ module Struktura23
   class Wrapper
     include Owner
 
+    attr_reader :core
+
     def initialize(options)
       @options = options
-    end
-
-    def core_type
-      @options[:of]
-    end
-
-    def core
-      WrapperCore.new
+      @core = WrapperCore.new(@options[:of])
     end
   end
 
 
   class WrapperCore
     include Enforceable
-
-    attr_reader :core_type
 
     def initialize(core_type)
       @core_type = core_type
