@@ -18,13 +18,21 @@ module Struktura23
   end
 
   module Owner
-    def has_many(*args)
+    def has_many(*args, &block)
+      has(*args, &block)
     end
 
-    def has_one(*args)
+    def has_one(*args, &block)
+      has(*args, &block)
     end
 
-    def has_optional_one(*args)
+    def has_optional_one(*args, &block)
+      has(*args, &block)
+    end
+
+
+    def has(node_type, node_label=:main, &block)
+      puts "I don't care about #{node_type}.#{node_label}"
     end
   end
 
