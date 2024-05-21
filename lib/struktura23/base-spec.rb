@@ -17,22 +17,35 @@ module Struktura23
     end
   end
 
+  module Belonging
+    class Base
+    end
+
+    class Collection < Base
+    end
+
+    class Singular < Base
+    end
+
+    class Optional < Base
+    end
+  end
+
   module Owner
     def has_many(*args, &block)
-      has(*args, &block)
+      has(Belonging::Collection.new, *args, &block)
     end
 
     def has_one(*args, &block)
-      has(*args, &block)
+      has(Belonging::Singular.new, *args, &block)
     end
 
     def has_optional_one(*args, &block)
-      has(*args, &block)
+      has(Belonging::Optional.new, *args, &block)
     end
 
-
-    def has(node_type, node_label=:main, &block)
-      puts "I don't care about #{node_type}.#{node_label}"
+    def has(belonging, node_type, node_label=:main, &block)
+      puts "I don't care about #{node_type}.#{node_label} (#{belonging.class})"
     end
   end
 
