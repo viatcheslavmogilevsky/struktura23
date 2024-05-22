@@ -17,8 +17,26 @@ module Struktura23
     end
   end
 
-  module Belonging
+  module Enforceable
+    def enforce(attribute, &block)
+      puts "I don't care about #{attribute}"
+    end
+  end
+
+  module Node
     class Base
+      include Enforceable
+
+      attr_reader :node_type, :label
+
+      def initialize(node_type, label=:main)
+        @node_type = node_type
+        @label = label
+      end
+
+      def method_missing(name, *args, &block)
+        puts "I'm #{node_type}.#{label} and I don't care about #{name}"
+      end
     end
 
     class Collection < Base
@@ -32,28 +50,31 @@ module Struktura23
   end
 
   module Owner
-    def has_many(*args, &block)
-      has(Belonging::Collection.new, *args, &block)
+    def has_many(*args)
+      node = Node::Collection.new(*args)
+      yield(node) if block_given?
+      node
     end
 
-    def has_one(*args, &block)
-      has(Belonging::Singular.new, *args, &block)
+    def has_one(*args)
+      node = Node::Singular.new(*args)
+      yield(node) if block_given?
+      node
     end
 
-    def has_optional_one(*args, &block)
-      has(Belonging::Optional.new, *args, &block)
+    def has_optional_one(*args)
+      node = Node::Optional.new(*args)
+      yield(node) if block_given?
+      node
     end
 
-    def has(belonging, node_type, node_label=:main, &block)
-      puts "I don't care about #{node_type}.#{node_label} (#{belonging.class})"
-    end
+    # def has(node_klass, node_type, node_label=:main, &block)
+    #   node = node_klass.new
+    #   puts "I don't care about #{node_type}.#{node_label} (#{node})"
+    # end
   end
 
-  module Enforceable
-    def enforce(attribute, &block)
-      puts "I don't care about #{attribute}"
-    end
-  end
+
 
   class BaseSpec
     extend Providers
