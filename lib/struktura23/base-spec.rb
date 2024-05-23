@@ -50,30 +50,40 @@ module Struktura23
   end
 
   module Owner
-    def has_many(*args)
+    def has_many(*args, &block)
       node = Node::Collection.new(*args)
-      yield(node) if block_given?
-      node
+      has!(node, &block)
     end
 
-    def has_one(*args)
+    def has_one(*args, &block)
       node = Node::Singular.new(*args)
-      yield(node) if block_given?
-      node
+      has!(node, &block)
     end
 
-    def has_optional_one(*args)
+    def has_optional_one(*args, &block)
       node = Node::Optional.new(*args)
-      yield(node) if block_given?
-      node
+      has!(node, &block)
     end
 
-    # def has(node_klass, node_type, node_label=:main, &block)
-    #   node = node_klass.new
-    #   puts "I don't care about #{node_type}.#{node_label} (#{node})"
-    # end
-  end
+    def core
+    end
 
+    def nodes
+      @nodes ||= {}
+    end
+
+    def has!(node, &block)
+      if block.arity == 2 and core
+        yield(node, core)
+      else
+        yield(node)
+      end
+
+      nodes.merge!({node.node_type => {node.label => node}}) do |_, val1, val2|
+        val1.merge val2
+      end
+    end
+  end
 
 
   class BaseSpec

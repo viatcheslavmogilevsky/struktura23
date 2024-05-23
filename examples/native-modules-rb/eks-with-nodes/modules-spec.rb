@@ -22,24 +22,24 @@ class EksWithNodes < Struktura23::BaseSpec
   has_many :aws_eks_cluster do |eks_clusters|
     eks_clusters.identify {|found_cluster| found_cluster.id }
     eks_clusters.wrap do |m|
-      m.has_one :tls_certificate do |cert, root|
+      m.has_one :tls_certificate do |cert, core|
         cert.data_source true
-        cert.where url: root.core.found.identity[0].oidc[0].issuer
+        cert.where url: core.found.identity[0].oidc[0].issuer
         cert.enforce_all_to_default except: :url
         cert.hide_all
       end
 
-      m.has_optional_one :aws_iam_openid_connect_provider do |connect_provider, root|
-        connect_provider.where url: root.core.found.identity[0].oidc[0].issuer
+      m.has_optional_one :aws_iam_openid_connect_provider do |connect_provider, core|
+        connect_provider.where url: core.found.identity[0].oidc[0].issuer
       end
 
-      m.has_many :aws_eks_addon do |addons, root|
-        addons.where cluster_name: root.core.found.id
+      m.has_many :aws_eks_addon do |addons, core|
+        addons.where cluster_name: core.found.id
         addons.identify {|found_addon| found_addon.name}
       end
 
-      m.has_many :aws_eks_node_group do |groups, root|
-        groups.where cluster_name: root.core.found.id
+      m.has_many :aws_eks_node_group do |groups, core|
+        groups.where cluster_name: core.found.id
         groups.identify {|found_group| found_group.node_group_name}
 
         groups.add_var common_launch_template_key: "string"
