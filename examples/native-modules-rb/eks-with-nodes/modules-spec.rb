@@ -9,7 +9,7 @@ class EksWithNodes < Struktura23::BaseSpec
 
 
   has_wrapper :launch_template, of: :aws_launch_template do |m, core|
-    m.has_optional_one :aws_ami do |ami, _|
+    m.has_optional_one :aws_ami do |ami|
       ami.data_source true
     end
 
@@ -61,12 +61,12 @@ class EksWithNodes < Struktura23::BaseSpec
         end
       end
 
-      m.has_many :aws_launch_template, :common_launch_template do |lt, _|
+      m.has_many :aws_launch_template, :common_launch_template do |lt|
         lt.wrap :launch_template
         lt.where false
       end
 
-      m.has_many :aws_launch_template, :custom_launch_template do |lt, _|
+      m.has_many :aws_launch_template, :custom_launch_template do |lt|
         lt.wrap :launch_template
         lt.where false
         lt.disable_input
