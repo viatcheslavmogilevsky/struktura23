@@ -18,6 +18,7 @@ module Struktura23
   end
 
   module Enforceable
+    # TODO: TestDriver and assign block somewhere
     def enforce(attribute, &block)
       puts "I don't care about #{attribute}"
     end
@@ -32,14 +33,30 @@ module Struktura23
       def initialize(node_type, label=:main)
         @node_type = node_type
         @label = label
+        @data_source = false
       end
 
+      # TODO: enforcement + query instructions
+      def where(*args)
+        puts "I'm not even reachable at the moment"
+      end
+
+      # TODO: move to the top (has_many ... data???)
+      def data_source(flag)
+        @data_source = flag
+      end
+
+      # TODO: continue defining methods
       def method_missing(name, *args, &block)
         puts "I'm #{node_type}.#{label} and I don't care about #{name}"
       end
     end
 
     class Collection < Base
+      # TODO: TestDriver and assign block somewhere
+      def identify(&block)
+        puts "I'm #{node_type}.#{label} and I don't care about how to identify"
+      end
     end
 
     class Singular < Base
