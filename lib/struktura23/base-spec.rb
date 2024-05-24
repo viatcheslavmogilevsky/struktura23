@@ -67,6 +67,7 @@ module Struktura23
   end
 
   module Owner
+    # TODO: these methods will be removed
     def has_many(*args, &block)
       node = Node::Collection.new(*args)
       has!(node, &block)
@@ -77,7 +78,7 @@ module Struktura23
       has!(node, &block)
     end
 
-    def has_optional_one(*args, &block)
+    def has_optional(*args, &block)
       node = Node::Optional.new(*args)
       has!(node, &block)
     end
@@ -100,6 +101,14 @@ module Struktura23
         val1.merge val2
       end
     end
+
+    # WIP:
+    # def method_missing(method_name, *args, &block)
+    #   if method_name =~ /has_(many|one|optional)(_data)?/
+    #   else
+    #     super(method_name, *args, &block)
+    #   end
+    # end
   end
 
 

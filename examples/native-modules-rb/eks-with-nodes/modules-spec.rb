@@ -9,7 +9,7 @@ class EksWithNodes < Struktura23::BaseSpec
 
 
   has_wrapper :launch_template, of: :aws_launch_template do |m, core|
-    m.has_optional_one :aws_ami do |ami|
+    m.has_optional :aws_ami do |ami|
       ami.data_source true
     end
 
@@ -29,7 +29,7 @@ class EksWithNodes < Struktura23::BaseSpec
         cert.hide_all
       end
 
-      m.has_optional_one :aws_iam_openid_connect_provider do |connect_provider, core|
+      m.has_optional :aws_iam_openid_connect_provider do |connect_provider, core|
         connect_provider.where url: core.found.identity[0].oidc[0].issuer
       end
 
