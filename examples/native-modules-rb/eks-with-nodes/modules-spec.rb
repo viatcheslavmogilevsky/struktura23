@@ -9,9 +9,7 @@ class EksWithNodes < Struktura23::BaseSpec
 
 
   has_wrapper :launch_template, of: :aws_launch_template do |m, core|
-    m.has_optional :aws_ami do |ami|
-      ami.data_source true
-    end
+    m.has_optional_data :aws_ami
 
     core.enforce :image_id do |context|
       aws_ami = context.wrapper.aws_ami
@@ -22,8 +20,7 @@ class EksWithNodes < Struktura23::BaseSpec
   has_many :aws_eks_cluster do |eks_clusters|
     eks_clusters.identify {|found_cluster| found_cluster.id }
     eks_clusters.wrap do |m|
-      m.has_one :tls_certificate do |cert, core|
-        cert.data_source true
+      m.has_one_data :tls_certificate do |cert, core|
         cert.where url: core.found.identity[0].oidc[0].issuer
         cert.enforce_all_to_default except: :url
         cert.hide_all

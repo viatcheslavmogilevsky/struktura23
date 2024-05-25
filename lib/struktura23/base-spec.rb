@@ -28,22 +28,17 @@ module Struktura23
     class Base
       include Enforceable
 
-      attr_reader :node_type, :label
+      attr_reader :node_type, :label, :data_source
 
-      def initialize(node_type, label=:main)
+      def initialize(data_source, node_type, label=:main)
         @node_type = node_type
         @label = label
-        @data_source = false
+        @data_source = data_source
       end
 
       # TODO: enforcement + query instructions
       def where(*args)
         puts "I'm not even reachable at the moment"
-      end
-
-      # TODO: move to the top (has_many ... data???)
-      def data_source(flag)
-        @data_source = flag
       end
 
       # TODO: continue defining methods
@@ -67,22 +62,6 @@ module Struktura23
   end
 
   module Owner
-    # TODO: these methods will be removed
-    def has_many(*args, &block)
-      node = Node::Collection.new(*args)
-      has!(node, &block)
-    end
-
-    def has_one(*args, &block)
-      node = Node::Singular.new(*args)
-      has!(node, &block)
-    end
-
-    def has_optional(*args, &block)
-      node = Node::Optional.new(*args)
-      has!(node, &block)
-    end
-
     def core
     end
 
@@ -91,10 +70,12 @@ module Struktura23
     end
 
     def has!(node, &block)
-      if block.arity == 2 and core
-        yield(node, core)
-      else
-        yield(node)
+      if block_given?
+        if block.arity == 2 and core
+          yield(node, core)
+        else
+          yield(node)
+        end
       end
 
       nodes.merge!({node.node_type => {node.label => node}}) do |_, val1, val2|
@@ -102,13 +83,21 @@ module Struktura23
       end
     end
 
-    # WIP:
-    # def method_missing(method_name, *args, &block)
-    #   if method_name =~ /has_(many|one|optional)(_data)?/
-    #   else
-    #     super(method_name, *args, &block)
-    #   end
-    # end
+    def method_missing(method_name, *args, &block)
+      if method_name =~ /^has_(many|one|optional)(_data)?$/
+        node = case $1
+        when "many"
+          Node::Collection.new(!!$2, *args)
+        when "one"
+          Node::Singular.new(!!$2, *args)
+        when "optional"
+          Node::Optional.new(!!$2, *args)
+        end
+        has!(node, &block)
+      else
+        super(method_name, *args, &block)
+      end
+    end
   end
 
 
