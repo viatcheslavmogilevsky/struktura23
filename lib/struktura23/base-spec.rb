@@ -18,7 +18,7 @@ module Struktura23
   end
 
   module Enforceable
-    # TODO: TestDriver
+    # TODO: TestDriver [1]
     def enforce(attribute, &block)
       enforcers[attribute] = block
     end
@@ -76,9 +76,14 @@ module Struktura23
     end
 
     class Collection < Base
-      # TODO: TestDriver and assign block somewhere
+      def initialize(*args)
+        super(*args)
+        @identificator = nil
+      end
+
+      # TODO: TestDrive [2]
       def identify(&block)
-        puts "I'm #{node_type}.#{label} and I don't care about how to identify"
+        @identificator = block
       end
     end
 
@@ -171,8 +176,6 @@ module Struktura23
       PromiseElement.new(self)
     end
   end
-
-
 
   class PromiseElement
     attr_reader :referenced_to, :method_name, :method_args
