@@ -18,9 +18,17 @@ module Struktura23
   end
 
   module Enforceable
-    # TODO: TestDriver and assign block somewhere
+    # TODO: TestDriver
     def enforce(attribute, &block)
-      puts "I don't care about #{attribute}"
+      enforcers[attribute] = block
+    end
+
+    def enforce_all_to_default(*args)
+      puts "Method is stub now"
+    end
+
+    def enforcers
+      @enforcers ||= {}
     end
   end
 
