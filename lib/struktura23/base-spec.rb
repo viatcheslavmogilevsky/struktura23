@@ -42,6 +42,7 @@ module Struktura23
         @search_query = {}
         @input_enabled = true
         @output_enabled = true
+        @extra_input_vars = {}
       end
 
 
@@ -76,6 +77,10 @@ module Struktura23
         end
       end
 
+      def add_var(vars_spec)
+        @extra_input_vars.merge!(vars_spec)
+      end
+
       # TODO: continue defining methods
       def method_missing(name, *args, &block)
         puts "I'm #{node_type}.#{label} and I don't care about #{name}"
@@ -86,11 +91,17 @@ module Struktura23
       def initialize(*args)
         super(*args)
         @identificator = nil
+        @for_each_override = nil
       end
 
       # TODO: TestDrive [2]
       def identify(&block)
         @identificator = block
+      end
+
+      # TODO: TestDrive [2]
+      def override_for_each(&block)
+        @for_each_override = block
       end
     end
 

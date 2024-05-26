@@ -40,7 +40,7 @@ class EksWithNodes < Struktura23::BaseSpec
         groups.identify {|found_group| found_group.node_group_name}
 
         groups.add_var common_launch_template_key: "string"
-        groups.add_var :custom_launch_template => {:wrapper => :launch_template}
+        groups.add_var custom_launch_template: lt_wrapper
 
         groups.enforce :launch_template do |context|
           custom_launch_template = context.wrapper.custom_launch_template.at(context.current_key)
