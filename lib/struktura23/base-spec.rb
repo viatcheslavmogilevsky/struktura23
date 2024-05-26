@@ -32,7 +32,7 @@ module Struktura23
     class Base
       include Enforceable
 
-      attr_reader :node_type, :label, :data_source, :wrapped_by
+      attr_reader :node_type, :label, :data_source, :wrapped_by, :input_enabled, :output_enabled
 
       def initialize(data_source, node_type, label=:main)
         @node_type = node_type
@@ -40,6 +40,17 @@ module Struktura23
         @data_source = data_source
         @search_enabled = true
         @search_query = {}
+        @input_enabled = true
+        @output_enabled = true
+      end
+
+
+      def disable_input
+        @input_enabled = false
+      end
+
+      def disable_output
+        @output_enabled = false
       end
 
       def wrap_by(wrapper)
