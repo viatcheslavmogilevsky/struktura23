@@ -18,9 +18,15 @@ module Struktura23
   end
 
   module Enforceable
-    # TODO: TestDriver [1]
-    def enforce(attribute, &block)
-      enforcers[attribute] = block
+    def enforce(attribute, value=nil, &block)
+      if block_given?
+        # TODO: TestDriver [1]
+        enforcers[attribute] = block
+      elsif value
+        enforcers[attribute] = value
+      else
+        raise "Either value or block should be specified"
+      end
     end
 
     def enforcers
@@ -70,10 +76,12 @@ module Struktura23
         if predicate == false
           @search_enabled = false
         else
-          @search_query = predicate.transform_values do |v|
+          transformed = predicate.transform_values do |v|
             v.is_a?(PromiseElement) ? v.resolve : v
           end
-          # TODO: enforcement
+          @search_query = transformed
+          # TODO: improve somehow (for easier implementaion?)
+          enforcers.merge! transformed
         end
       end
 
@@ -95,6 +103,8 @@ module Struktura23
       end
 
       # TODO: TestDrive [2]
+      # TODO: maybe usign more correct: identify_by :attribute
+      # this gives to check early
       def identify(&block)
         @identificator = block
       end
