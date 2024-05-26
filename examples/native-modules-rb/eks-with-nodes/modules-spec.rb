@@ -22,8 +22,8 @@ class EksWithNodes < Struktura23::BaseSpec
     eks_clusters.wrap do |m|
       m.has_one_data :tls_certificate do |cert, core|
         cert.where url: core.found.identity[0].oidc[0].issuer
-        cert.enforce_all_to_default except: :url
-        cert.hide_all
+        cert.disable_input
+        cert.disable_output
       end
 
       m.has_optional :aws_iam_openid_connect_provider do |connect_provider, core|
