@@ -36,17 +36,39 @@ module Struktura23
     class Base
       include Enforceable
 
-      attr_reader :node_type, :label, :data_source
+      attr_reader :node_type, :label, :data_source, :wrapped_by
 
       def initialize(data_source, node_type, label=:main)
         @node_type = node_type
         @label = label
         @data_source = data_source
+        @search_enabled = true
+        @search_query = {}
       end
 
-      # TODO: enforcement + query instructions
-      def where(*args)
-        puts "I'm not even reachable at the moment"
+      def wrap_by(wrapper)
+        if wrapper.core.core_type != @node_type
+          raise "Wrapper of a #{wrapper.core.core_type} cannot be used to wrap a #{@node_type}"
+        end
+        @wrapped_by = wrapper
+      end
+
+      def wrap
+        @wrapped_by = Wrapper.new(of: @node_type, id: nil)
+        yield(@wrapped_by)
+      end
+
+      def where(predicate)
+        #puts "WHERE: predicate: #{predicate}"
+        if predicate == false
+          @search_enabled = false
+        else
+          puts "HELLO, HELLO, HELLO"
+          @search_query = predicate.transform_values do |v|
+            v.is_a?(PromiseElement) ? v.resolve : v
+          end
+          # TODO: enforcement
+        end
       end
 
       # TODO: continue defining methods
@@ -115,8 +137,9 @@ module Struktura23
 
     class << self
       def has_wrapper(wrapper_key, options={})
-        named_wrappers[wrapper_key] = wrapper = Wrapper.new(options)
+        named_wrappers[wrapper_key] = wrapper = Wrapper.new(options.merge({:id => wrapper_key}))
         yield(wrapper, wrapper.core)
+        wrapper
       end
 
       def named_wrappers
@@ -128,11 +151,11 @@ module Struktura23
   class Wrapper
     include Owner
 
-    attr_reader :core
+    attr_reader :core, :id
 
     def initialize(options)
-      @options = options
-      @core = WrapperCore.new(@options[:of])
+      @core = WrapperCore.new(options[:of])
+      @id = options[:id]
     end
   end
 
@@ -140,8 +163,42 @@ module Struktura23
   class WrapperCore
     include Enforceable
 
+    attr_reader :core_type
+
     def initialize(core_type)
       @core_type = core_type
     end
+
+    def found
+      PromiseElement.new()
+    end
   end
+
+
+
+  class PromiseElement
+    attr_reader :referenced_to, :method_name, :method_args
+
+    def initialize(referenced_to=nil, method_name=nil, method_args=[])
+      @referenced_to = referenced_to
+      @method_name = method_name
+      @method_args = method_args
+    end
+
+    # TODO: just return array
+    def resolve
+      stack = [self]
+      current = self
+      while current.referenced_to
+        stack << current.referenced_to
+        current = current.referenced_to
+      end
+      stack.reverse
+    end
+
+    def method_missing(method_name, *args)
+      self.class.new(self, method_name, args)
+    end
+  end
+
 end

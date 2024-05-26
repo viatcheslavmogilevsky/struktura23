@@ -8,7 +8,7 @@ class EksWithNodes < Struktura23::BaseSpec
   query_provider :aws, :core_sdk_query_provider
 
 
-  has_wrapper :launch_template, of: :aws_launch_template do |m, core|
+  lt_wrapper = has_wrapper :launch_template, of: :aws_launch_template do |m, core|
     m.has_optional_data :aws_ami
 
     core.enforce :image_id do |context|
@@ -59,12 +59,12 @@ class EksWithNodes < Struktura23::BaseSpec
       end
 
       m.has_many :aws_launch_template, :common_launch_template do |lt|
-        lt.wrap :launch_template
+        lt.wrap_by lt_wrapper
         lt.where false
       end
 
       m.has_many :aws_launch_template, :custom_launch_template do |lt|
-        lt.wrap :launch_template
+        lt.wrap_by lt_wrapper
         lt.where false
         lt.disable_input
         lt.override_for_each do |context|
@@ -78,7 +78,7 @@ class EksWithNodes < Struktura23::BaseSpec
 
   has_many :aws_launch_template, :launch_template do |templates|
     templates.identify {|found_template| found_template.name}
-    templates.wrap :launch_template
+    templates.wrap_by lt_wrapper
   end
 end
 
