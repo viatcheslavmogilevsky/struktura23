@@ -23,10 +23,6 @@ module Struktura23
       enforcers[attribute] = block
     end
 
-    def enforce_all_to_default(*args)
-      puts "Method is stub now"
-    end
-
     def enforcers
       @enforcers ||= {}
     end
