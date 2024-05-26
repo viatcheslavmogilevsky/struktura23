@@ -59,11 +59,9 @@ module Struktura23
       end
 
       def where(predicate)
-        #puts "WHERE: predicate: #{predicate}"
         if predicate == false
           @search_enabled = false
         else
-          puts "HELLO, HELLO, HELLO"
           @search_query = predicate.transform_values do |v|
             v.is_a?(PromiseElement) ? v.resolve : v
           end
@@ -170,7 +168,7 @@ module Struktura23
     end
 
     def found
-      PromiseElement.new()
+      PromiseElement.new(self)
     end
   end
 
@@ -179,17 +177,17 @@ module Struktura23
   class PromiseElement
     attr_reader :referenced_to, :method_name, :method_args
 
-    def initialize(referenced_to=nil, method_name=nil, method_args=[])
+    def initialize(referenced_to, method_name=nil, method_args=[])
       @referenced_to = referenced_to
       @method_name = method_name
       @method_args = method_args
     end
 
-    # TODO: just return array
     def resolve
+      klass = self.class
       stack = [self]
       current = self
-      while current.referenced_to
+      while current.referenced_to.is_a?(klass)
         stack << current.referenced_to
         current = current.referenced_to
       end
@@ -198,6 +196,13 @@ module Struktura23
 
     def method_missing(method_name, *args)
       self.class.new(self, method_name, args)
+    end
+
+    def inspect
+      "#<#{self.class}:#{object_id} "\
+        "@method_name=#{@method_name} "\
+        "@method_args=#{@method_args} "\
+        "@referenced_to=#<#{@referenced_to.class}:#{@referenced_to.object_id}>>"
     end
   end
 
