@@ -102,11 +102,9 @@ module Struktura23
         @for_each_override = nil
       end
 
-      # TODO: TestDrive [2]
-      # TODO: maybe usign more correct: identify_by :attribute
-      # this gives to check early
-      def identify(&block)
-        @identificator = block
+      # TODO: how to check?
+      def identify_by(attribute)
+        @identificator = attribute
       end
 
       # TODO: TestDrive [2]
