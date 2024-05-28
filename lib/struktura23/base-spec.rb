@@ -20,7 +20,7 @@ module Struktura23
   module Enforceable
     def enforce(attribute, value=nil, &block)
       if block_given?
-        # TODO: TestDriver [1]
+        # TODO: Yield now! use lazy string interpolation [1]
         enforcers[attribute] = block
       elsif value
         enforcers[attribute] = value
@@ -76,12 +76,9 @@ module Struktura23
         if predicate == false
           @search_enabled = false
         else
-          transformed = predicate.transform_values do |v|
-            v.is_a?(PromiseElement) ? v.resolve : v
-          end
-          @search_query = transformed
+          @search_query = predicate
           # TODO: improve somehow (for easier implementaion?)
-          enforcers.merge! transformed
+          enforcers.merge! predicate
         end
       end
 
@@ -102,14 +99,12 @@ module Struktura23
         @for_each_override = nil
       end
 
-      # TODO: TestDrive [2]
-      # TODO: maybe usign more correct: identify_by :attribute
-      # this gives to check early
+      # TODO: Yield now! use promises!
       def identify(&block)
         @identificator = block
       end
 
-      # TODO: TestDrive [2]
+      # TODO: Yield now! use lazy string interpolation [1]
       def override_for_each(&block)
         @for_each_override = block
       end
@@ -201,39 +196,23 @@ module Struktura23
     end
 
     def found
-      PromiseElement.new(self)
+      PromiseChain.new(self)
     end
   end
 
-  class PromiseElement
-    attr_reader :referenced_to, :method_name, :method_args
+  class PromiseChain
+    attr_reader :valid_methods_chain
 
-    def initialize(referenced_to, method_name=nil, method_args=[])
-      @referenced_to = referenced_to
-      @method_name = method_name
-      @method_args = method_args
-    end
-
-    def resolve
-      klass = self.class
-      stack = [self]
-      current = self
-      while current.referenced_to.is_a?(klass)
-        stack << current.referenced_to
-        current = current.referenced_to
-      end
-      stack.reverse
+    def initialize(owner)
+      @valid_methods_chain = []
+      @owner = owner
     end
 
     def method_missing(method_name, *args)
-      self.class.new(self, method_name, args)
-    end
-
-    def inspect
-      "#<#{self.class}:#{object_id} "\
-        "@method_name=#{@method_name} "\
-        "@method_args=#{@method_args} "\
-        "@referenced_to=#<#{@referenced_to.class}:#{@referenced_to.object_id}>>"
+      # TODO: validate?
+      new_method = [method_name] + args
+      @valid_methods_chain << new_method
+      self
     end
   end
 
