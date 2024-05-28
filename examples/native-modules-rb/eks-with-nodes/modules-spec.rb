@@ -18,7 +18,7 @@ class EksWithNodes < Struktura23::BaseSpec
   end
 
   has_many :aws_eks_cluster do |eks_clusters|
-    eks_clusters.identify_by :id
+    eks_clusters.identify {|found_cluster| found_cluster.id }
     eks_clusters.wrap do |m|
       m.has_one_data :tls_certificate do |cert, core|
         cert.where url: core.found.identity[0].oidc[0].issuer
@@ -32,12 +32,12 @@ class EksWithNodes < Struktura23::BaseSpec
 
       m.has_many :aws_eks_addon do |addons, core|
         addons.where cluster_name: core.found.id
-        addons.identify_by :name
+        addons.identify {|found_addon| found_addon.name}
       end
 
       m.has_many :aws_eks_node_group do |groups, core|
         groups.where cluster_name: core.found.id
-        groups.identify_by :node_group_name
+        groups.identify {|found_group| found_group.node_group_name}
 
         groups.add_var common_launch_template_key: "string"
         groups.add_var custom_launch_template: lt_wrapper
@@ -77,7 +77,7 @@ class EksWithNodes < Struktura23::BaseSpec
   end
 
   has_many :aws_launch_template, :launch_template do |templates|
-    templates.identify_by :name
+    templates.identify {|found_template| found_template.name}
     templates.wrap_by lt_wrapper
   end
 end
