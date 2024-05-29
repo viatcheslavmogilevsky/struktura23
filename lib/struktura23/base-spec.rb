@@ -98,7 +98,6 @@ module Struktura23
         @for_each_override = nil
       end
 
-      # TODO: Yield now! use promises!
       def identify
         promise_chain = PromiseChain.new(self)
         yield(promise_chain)
