@@ -9,10 +9,9 @@ class EksWithNodes < Struktura23::BaseSpec
 
 
   lt_wrapper = has_wrapper :launch_template, of: :aws_launch_template do |m, core|
-    m.has_optional_data :aws_ami
+    aws_ami = m.has_optional_data :aws_ami
 
     core.enforce :image_id do |context|
-      aws_ami = context.wrapper.aws_ami
       "#{aws_ami.var.length} > 0 ? #{aws_ami.one.image_id} : #{context.current_var}"
     end
   end
@@ -35,6 +34,22 @@ class EksWithNodes < Struktura23::BaseSpec
         addons.identify {|found_addon| found_addon.name}
       end
 
+      common_launch_templates = m.has_many :aws_launch_template, :common_launch_template do |lt|
+        lt.wrap_by lt_wrapper
+        lt.where false
+      end
+
+      custom_launch_templates = m.has_many :aws_launch_template, :custom_launch_template do |lt|
+        lt.wrap_by lt_wrapper
+        lt.where false
+        lt.disable_input
+        lt.override_for_each do |context|
+          ng = context.wrapper.aws_eks_node_group
+          clt = ng.var[:custom_launch_template]
+          "{for input_key in #{ng} : input_key => #{clt} if #{clt} != null}"
+        end
+      end
+
       m.has_many :aws_eks_node_group do |groups, core|
         groups.where cluster_name: core.found.id
         groups.identify {|found_group| found_group.node_group_name}
@@ -43,8 +58,8 @@ class EksWithNodes < Struktura23::BaseSpec
         groups.add_var custom_launch_template: lt_wrapper
 
         groups.enforce :launch_template do |context|
-          custom_launch_template = context.wrapper.custom_launch_template.at(context.current_key)
-          common_launch_template = context.wrapper.common_launch_template.at(context.current.var[:common_launch_template_key])
+          custom_launch_template = custom_launch_templates.at(context.current_key)
+          common_launch_template = common_launch_templates.at(context.current.var[:common_launch_template_key])
 
           {
             :name => "#{context.current.var[:custom_launch_template]} != null ? "\
@@ -55,22 +70,6 @@ class EksWithNodes < Struktura23::BaseSpec
               "#{custom_launch_template.latest_version} : "\
               "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.latest_version} : #{context.current_var})"
           }
-        end
-      end
-
-      m.has_many :aws_launch_template, :common_launch_template do |lt|
-        lt.wrap_by lt_wrapper
-        lt.where false
-      end
-
-      m.has_many :aws_launch_template, :custom_launch_template do |lt|
-        lt.wrap_by lt_wrapper
-        lt.where false
-        lt.disable_input
-        lt.override_for_each do |context|
-          ng = context.wrapper.aws_eks_node_group
-          clt = ng.var[:custom_launch_template]
-          "{for input_key in #{ng} : input_key => #{clt} if #{clt} != null}"
         end
       end
     end

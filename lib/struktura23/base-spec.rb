@@ -150,6 +150,7 @@ module Struktura23
           Node::Optional.new(!!$2, *args)
         end
         has!(node, &block)
+        node
       else
         super(method_name, *args, &block)
       end
