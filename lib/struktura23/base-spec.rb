@@ -77,7 +77,6 @@ module Struktura23
           @search_enabled = false
         else
           @search_query = predicate
-          # TODO: improve somehow (for easier implementaion?)
           enforcers.merge! predicate
         end
       end
@@ -95,13 +94,15 @@ module Struktura23
     class Collection < Base
       def initialize(*args)
         super(*args)
-        @identificator = nil
+        @identify_by = nil
         @for_each_override = nil
       end
 
       # TODO: Yield now! use promises!
-      def identify(&block)
-        @identificator = block
+      def identify
+        promise_chain = PromiseChain.new(self)
+        yield(promise_chain)
+        @identify_by = promise_chain
       end
 
       # TODO: Yield now! use lazy string interpolation [1]
