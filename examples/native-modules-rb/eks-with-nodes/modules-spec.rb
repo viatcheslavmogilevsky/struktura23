@@ -12,7 +12,7 @@ class EksWithNodes < Struktura23::BaseSpec
     aws_ami = m.has_optional_data :aws_ami
 
     core.enforce :image_id do |context|
-      "#{aws_ami.var.length} > 0 ? #{aws_ami.one.image_id} : #{context.current_var}"
+      "#{aws_ami.flag_to_enable} ? #{aws_ami.one.image_id} : #{context.current_var}"
     end
   end
 
@@ -58,7 +58,7 @@ class EksWithNodes < Struktura23::BaseSpec
         groups.add_var custom_launch_template: lt_wrapper
 
         groups.enforce :launch_template do |context|
-          custom_launch_template = custom_launch_templates.at(context.current_key)
+          custom_launch_template = custom_launch_templates.at(context.current.key)
           common_launch_template = common_launch_templates.at(context.current.var[:common_launch_template_key])
 
           {

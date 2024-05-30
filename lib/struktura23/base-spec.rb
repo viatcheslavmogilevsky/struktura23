@@ -20,8 +20,9 @@ module Struktura23
   module Enforceable
     def enforce(attribute, value=nil, &block)
       if block_given?
-        # TODO: Yield now! use lazy string interpolation [1]
-        enforcers[attribute] = block
+        # TODO: use lazy string interpolation [1]
+        context = Context.new(self, attribute)
+        enforcers[attribute] = yield(context)
       elsif value
         enforcers[attribute] = value
       else
@@ -31,6 +32,23 @@ module Struktura23
 
     def enforcers
       @enforcers ||= {}
+    end
+
+    class Context
+      def initialize(enforced_resource, enforced_attr)
+        @enforced_resource = enforced_resource
+        @enforced_attr = enforced_attr
+      end
+
+      def current_var
+        # TODO: it is stub
+        "#{@enforced_resource.class}.#{@enforced_attr}"
+      end
+
+      def current
+        # TODO: it is stub
+        PromiseChain.new(@enforced_resource)
+      end
     end
   end
 
@@ -85,6 +103,11 @@ module Struktura23
         @extra_input_vars.merge!(vars_spec)
       end
 
+      def var
+        # TODO: it is stub
+        {}
+      end
+
       # TODO: continue defining methods
       def method_missing(name, *args, &block)
         puts "I'm #{node_type}.#{label} and I don't care about #{name}"
@@ -108,12 +131,31 @@ module Struktura23
       def override_for_each(&block)
         @for_each_override = block
       end
+
+
+      def at(arg)
+        # TODO: it is stub
+        PromiseChain.new(self).send(:at, arg)
+      end
     end
 
     class Singular < Base
+      def one
+        # TODO: it is stub
+        PromiseChain.new(self)
+      end
     end
 
     class Optional < Base
+      def one
+        # TODO: it is stub
+        PromiseChain.new(self)
+      end
+
+      def flag_to_enable
+        # TODO: it is stub
+        "var.#{@data_source ? 'data_' : ''}#{@node_type}_#{@label}_enabled"
+      end
     end
   end
 
