@@ -43,14 +43,9 @@ class EksWithNodes < Struktura23::BaseSpec
         lt.wrap_by lt_wrapper
         lt.where false
         lt.disable_input
-        lt.override_for_each do |context|
-          ng = context.wrapper.aws_eks_node_group
-          clt = ng.var[:custom_launch_template]
-          "{for input_key in #{ng} : input_key => #{clt} if #{clt} != null}"
-        end
       end
 
-      m.has_many :aws_eks_node_group do |groups, core|
+      eks_node_groups = m.has_many :aws_eks_node_group do |groups, core|
         groups.where cluster_name: core.found.id
         groups.identify {|found_group| found_group.node_group_name}
 
@@ -71,6 +66,11 @@ class EksWithNodes < Struktura23::BaseSpec
               "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.latest_version} : #{context.current_var})"
           }
         end
+      end
+
+      custom_launch_templates.override_for_each do |context|
+        ng_input = eks_node_groups.var
+        "{for input_key, input_val in #{ng_input} : input_key => input_val[\"custom_launch_template\"] if input_val[\"custom_launch_template\"] != null}"
       end
     end
   end

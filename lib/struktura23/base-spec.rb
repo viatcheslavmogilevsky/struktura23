@@ -127,9 +127,10 @@ module Struktura23
         @identify_by = promise_chain
       end
 
-      # TODO: Yield now! use lazy string interpolation [1]
-      def override_for_each(&block)
-        @for_each_override = block
+      # TODO: use lazy string interpolation [1]
+      def override_for_each
+        context = Context.new(self, :for_each)
+        @for_each_override = yield(context)
       end
 
 
