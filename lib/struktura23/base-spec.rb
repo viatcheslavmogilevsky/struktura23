@@ -20,7 +20,7 @@ module Struktura23
   module Enforceable
     def enforce(attribute, value=nil, &block)
       if block_given?
-        # TODO: use lazy string interpolation [1]
+        # TODO: validate???
         context = Context.new(self, attribute)
         enforcers[attribute] = yield(context)
       elsif value
