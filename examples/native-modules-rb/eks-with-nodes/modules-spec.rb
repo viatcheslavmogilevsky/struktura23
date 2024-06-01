@@ -12,14 +12,11 @@ class EksWithNodes < Struktura23::BaseSpec
     aws_ami = m.has_optional_data :aws_ami
 
     core.enforce :image_id do |context|
-      [
-        "%{is_data_enabled} ? %{image_from_data} : %{default}",
-        {
-          is_data_enabled: aws_ami.flag_to_enable,
-          image_from_data: aws_ami.one.image_id,
-          default: context.current_var
-        }
-      ]
+      expr :opentofu, "%{is_data_enabled} ? %{image_from_data} : %{default}", {
+        is_data_enabled: aws_ami.flag_to_enable,
+        image_from_data: aws_ami.one.image_id,
+        default: context.current_var
+      }
     end
   end
 
@@ -72,6 +69,10 @@ class EksWithNodes < Struktura23::BaseSpec
               "#{custom_launch_template.latest_version} : "\
               "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.latest_version} : #{context.current_var})"
           }
+
+          # {
+          #   :name => 
+          # }
         end
       end
 

@@ -215,6 +215,20 @@ module Struktura23
       def named_wrappers
         @named_wrappers ||= {}
       end
+
+      def expr(expr_type, template, input={})
+        Expression.new(expr_type, template, input)
+      end
+    end
+
+    class Expression
+      attr_reader :expr_type, :template, :input
+
+      def initialize(expr_type, template, input)
+        @expr_type = expr_type
+        @template = template
+        @input = input
+      end
     end
   end
 
