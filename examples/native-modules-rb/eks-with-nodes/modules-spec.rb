@@ -12,7 +12,7 @@ class EksWithNodes < Struktura23::BaseSpec
     aws_ami = m.has_optional_data :aws_ami
 
     core.enforce :image_id do |context|
-      expr :opentofu, "%{is_data_enabled} ? %{image_from_data} : %{default}", {
+      context.expr "%{is_data_enabled} ? %{image_from_data} : %{default}", {
         is_data_enabled: aws_ami.flag_to_enable,
         image_from_data: aws_ami.one.image_id,
         default: context.current_var
@@ -61,18 +61,22 @@ class EksWithNodes < Struktura23::BaseSpec
           common_launch_template = common_launch_templates.at(context.current.var[:common_launch_template_key])
 
           {
-            :name => "#{context.current.var[:custom_launch_template]} != null ? "\
-              "#{custom_launch_template.name} : "\
-              "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.name} : #{context.current_var})",
+            :name => context.expr("%{custom} != null ? %{custom_name} : (%{common} != null ? %{common_name} : %{default})", {
+              :custom => context.current.var[:custom_launch_template],
+              :custom_name => custom_launch_template.name,
+              :common => context.current.var[:common_launch_template_key],
+              :common_name => common_launch_template.name,
+              :default => context.current_var.name
+            }),
             # TODO: latest_version/default_version
-            :version => "#{context.current.var[:custom_launch_template]} != null ? "\
-              "#{custom_launch_template.latest_version} : "\
-              "(#{context.current.var[:common_launch_template_key]} != null ? #{common_launch_template.latest_version} : #{context.current_var})"
+            :version => context.expr("%{custom} != null ? %{custom_last} : (%{common} != null ? %{common_last} : %{default})", {
+              :custom => context.current.var[:custom_launch_template],
+              :custom_last => custom_launch_template.latest_version,
+              :common => context.current.var[:common_launch_template_key],
+              :common_last => common_launch_template.latest_version,
+              :default => context.current_var.name
+            })
           }
-
-          # {
-          #   :name => 
-          # }
         end
       end
 

@@ -34,6 +34,11 @@ module Struktura23
       @enforcers ||= {}
     end
 
+    # TODO: default 'opentofu' value should be specified differently
+    def provider
+      @provider || "opentofu"
+    end
+
     class Context
       def initialize(enforced_resource, enforced_attr)
         @enforced_resource = enforced_resource
@@ -42,12 +47,17 @@ module Struktura23
 
       def current_var
         # TODO: it is stub
-        "#{@enforced_resource.class}.#{@enforced_attr}"
+        # "#{@enforced_resource.class}.#{@enforced_attr}"
+        PromiseChain.new(@enforced_resource).send(@enforced_attr)
       end
 
       def current
         # TODO: it is stub
         PromiseChain.new(@enforced_resource)
+      end
+
+      def expr(template, input={})
+        ExpressionTemplate.new(@enforced_resource.provider, template, input)
       end
     end
   end
@@ -215,20 +225,6 @@ module Struktura23
       def named_wrappers
         @named_wrappers ||= {}
       end
-
-      def expr(expr_type, template, input={})
-        Expression.new(expr_type, template, input)
-      end
-    end
-
-    class Expression
-      attr_reader :expr_type, :template, :input
-
-      def initialize(expr_type, template, input)
-        @expr_type = expr_type
-        @template = template
-        @input = input
-      end
     end
   end
 
@@ -271,6 +267,17 @@ module Struktura23
       new_method = [method_name] + args
       @valid_methods_chain << new_method
       self
+    end
+  end
+
+  class ExpressionTemplate
+    attr_reader :expr_provider, :template, :input
+
+    def initialize(expr_provider, template, input)
+      _ = "#{template}" % input
+      @expr_provider = expr_provider
+      @template = template
+      @input = input
     end
   end
 
