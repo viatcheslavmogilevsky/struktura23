@@ -81,8 +81,9 @@ class EksWithNodes < Struktura23::BaseSpec
       end
 
       custom_launch_templates.override_for_each do |context|
-        ng_input = eks_node_groups.var
-        "{for input_key, input_val in #{ng_input} : input_key => input_val[\"custom_launch_template\"] if input_val[\"custom_launch_template\"] != null}"
+        context.expr("{for input_key, input_val in %{ng_input} : input_key => input_val[\"custom_launch_template\"] if input_val[\"custom_launch_template\"] != null}", {
+          :ng_input => eks_node_groups.var
+        })
       end
     end
   end
