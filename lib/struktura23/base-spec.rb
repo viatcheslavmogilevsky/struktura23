@@ -25,6 +25,21 @@ module Struktura23
         },
         :aws_ami => {
           :data => {}
+        },
+        :aws_eks_cluster => {
+          :resource => {}
+        },
+        :tls_certificate => {
+          :data => {}
+        },
+        :aws_iam_openid_connect_provider => {
+          :resource => {}
+        },
+        :aws_eks_addon => {
+          :resource => {}
+        },
+        :aws_eks_node_group => {
+          :resource => {}
         }
       }
     end
