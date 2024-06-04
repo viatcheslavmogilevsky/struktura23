@@ -1,10 +1,10 @@
 module Struktura23
-  module Providers
-    def provider(*args)
+  module ProviderOwner
+    def add_provider(*args)
       providers << args
     end
 
-    def query_provider(*args)
+    def add_query_provider(*args)
       query_providers << args
     end
 
@@ -14,6 +14,19 @@ module Struktura23
 
     def query_providers
       @query_providers ||= []
+    end
+
+    def schemas
+      # TODO: this should be like the following:
+      # @schemas ||= {}
+      @schemas ||= {
+        :aws_launch_template => {
+          :resource => {}
+        },
+        :aws_ami => {
+          :data => {}
+        }
+      }
     end
   end
 
@@ -212,7 +225,7 @@ module Struktura23
 
 
   class BaseSpec
-    extend Providers
+    extend ProviderOwner
     extend Owner
 
     class << self

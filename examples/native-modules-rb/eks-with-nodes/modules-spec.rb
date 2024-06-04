@@ -3,9 +3,9 @@ load 'struktura23/base-spec.rb'
 # require 'struktura23'
 
 class EksWithNodes < Struktura23::BaseSpec
-  provider :opentofu, :aws, source: "hashicorp/aws", version: ">= 5.46.0"
-  provider :opentofu, :http, source: "hashicorp/tls", version: ">= 4.0.4"
-  query_provider :aws, :core_sdk_query_provider
+  add_provider :opentofu, :aws, source: "hashicorp/aws", version: ">= 5.46.0"
+  add_provider :opentofu, :http, source: "hashicorp/tls", version: ">= 4.0.4"
+  add_query_provider :aws, :core_sdk_query_provider
 
 
   lt_wrapper = has_wrapper :launch_template, of: :aws_launch_template do |m, core|
