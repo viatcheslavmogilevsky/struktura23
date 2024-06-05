@@ -21,27 +21,75 @@ module Struktura23
       # @schemas ||= {}
       @schemas ||= {
         :aws_launch_template => {
-          :resource => {}
+          :resource => OpentofuProviderSchema::DummyResource.new
         },
         :aws_ami => {
-          :data => {}
+          :data => OpentofuProviderSchema::DummyDatasource.new
         },
         :aws_eks_cluster => {
-          :resource => {}
+          :resource => OpentofuProviderSchema::DummyResource.new
         },
         :tls_certificate => {
-          :data => {}
+          :data => OpentofuProviderSchema::DummyDatasource.new
         },
         :aws_iam_openid_connect_provider => {
-          :resource => {}
+          :resource => OpentofuProviderSchema::DummyResource.new
         },
         :aws_eks_addon => {
-          :resource => {}
+          :resource => OpentofuProviderSchema::DummyResource.new
         },
         :aws_eks_node_group => {
-          :resource => {}
+          :resource => OpentofuProviderSchema::DummyResource.new
         }
       }
+    end
+  end
+
+  module OpentofuProviderSchema
+    class Attribute
+      attr_reader :spec
+
+      def initialize(spec)
+        @spec = spec
+      end
+    end
+
+    class Argument < Attribute
+      def initialize(*args)
+        super(*args)
+        @export_as_attr = true
+      end
+
+      def input_only
+        @export_as_attr = false
+        self
+      end
+    end
+
+    class Base
+      attr_reader :schema
+
+      def initialize(schema)
+        @schema = schema
+      end
+    end
+
+    class Resource < Base
+    end
+
+    class Datasource < Base
+    end
+
+    class DummyResource < Resource
+      def initialize
+        super(id: Attribute.new("string"), name: Argument.new("string"))
+      end
+    end
+
+    class DummyDatasource < Datasource
+      def initialize
+        super(id: Attribute.new("string"), name: Argument.new("string"))
+      end
     end
   end
 
