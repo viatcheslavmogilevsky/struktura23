@@ -46,27 +46,16 @@ module Struktura23
   end
 
   module OpentofuProviderSchema
-    class Attribute
-      attr_reader :spec
+    class BaseValue
+      attr_reader :optional, :computed
 
-      def initialize(spec)
-        @spec = spec
+      def initialize(computed=false, optional=true)
+        @opional = optional
+        @computed = computed
       end
     end
 
-    class Argument < Attribute
-      def initialize(*args)
-        super(*args)
-        @export_as_attr = true
-      end
-
-      def input_only
-        @export_as_attr = false
-        self
-      end
-    end
-
-    class Base
+    class TFBlock
       attr_reader :schema
 
       def initialize(schema)
@@ -74,21 +63,21 @@ module Struktura23
       end
     end
 
-    class Resource < Base
+    class Resource < TFBlock
     end
 
-    class Datasource < Base
+    class Datasource < TFBlock
     end
 
     class DummyResource < Resource
       def initialize
-        super(id: Attribute.new("string"), name: Argument.new("string"))
+        super(id: BaseValue.new(true), name: BaseValue.new)
       end
     end
 
     class DummyDatasource < Datasource
       def initialize
-        super(id: Attribute.new("string"), name: Argument.new("string"))
+        super(id: BaseValue.new(true), name: BaseValue.new)
       end
     end
   end
