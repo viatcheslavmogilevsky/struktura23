@@ -21,45 +21,44 @@ module Struktura23
       # @schemas ||= {}
       @schemas ||= {
         :aws_launch_template => {
-          :resource => OpentofuProviderSchema::DummyResource.new
+          :resource => OpentofuSchema::Resource.new
+            .val(:id, :computed)
+            .val(:name)
+            .val(:tag, :optional)
         },
         :aws_ami => {
-          :data => OpentofuProviderSchema::DummyDatasource.new
+          :data => OpentofuSchema::Datasource.new
         },
         :aws_eks_cluster => {
-          :resource => OpentofuProviderSchema::DummyResource.new
+          :resource => OpentofuSchema::Resource.new
         },
         :tls_certificate => {
-          :data => OpentofuProviderSchema::DummyDatasource.new
+          :data => OpentofuSchema::Datasource.new
         },
         :aws_iam_openid_connect_provider => {
-          :resource => OpentofuProviderSchema::DummyResource.new
+          :resource => OpentofuSchema::Resource.new
         },
         :aws_eks_addon => {
-          :resource => OpentofuProviderSchema::DummyResource.new
+          :resource => OpentofuSchema::Resource.new
         },
         :aws_eks_node_group => {
-          :resource => OpentofuProviderSchema::DummyResource.new
+          :resource => OpentofuSchema::Resource.new
         }
       }
     end
   end
 
-  module OpentofuProviderSchema
-    class BaseValue
-      attr_reader :optional, :computed
-
-      def initialize(computed=false, optional=true)
-        @opional = optional
-        @computed = computed
-      end
-    end
-
+  module OpentofuSchema
     class TFBlock
       attr_reader :schema
 
-      def initialize(schema)
-        @schema = schema
+      def initialize
+        @schema = {}
+      end
+
+      def val(name, *args)
+        @schema[name] = *args
+        self
       end
     end
 
@@ -67,18 +66,6 @@ module Struktura23
     end
 
     class Datasource < TFBlock
-    end
-
-    class DummyResource < Resource
-      def initialize
-        super(id: BaseValue.new(true), name: BaseValue.new)
-      end
-    end
-
-    class DummyDatasource < Datasource
-      def initialize
-        super(id: BaseValue.new(true), name: BaseValue.new)
-      end
     end
   end
 
