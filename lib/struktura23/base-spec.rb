@@ -57,7 +57,13 @@ module Struktura23
       end
 
       def with(name, *args)
-        @schema[name] = *args
+        @schema[name] = args.inject({}) do |res, arg|
+          if arg.is_a?(Hash)
+            res.merge(arg)
+          elsif arg.is_a?(Symbol)
+            res.merge(arg => true)
+          end
+        end
         self
       end
     end
