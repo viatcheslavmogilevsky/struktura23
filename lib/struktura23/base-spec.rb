@@ -22,9 +22,9 @@ module Struktura23
       @schemas ||= {
         :aws_launch_template => {
           :resource => OpentofuSchema::Resource.new
-            .val(:id, :computed)
-            .val(:name)
-            .val(:tag, :optional)
+            .with(:id, :computed)
+            .with(:name)
+            .with(:tag, :optional)
         },
         :aws_ami => {
           :data => OpentofuSchema::Datasource.new
@@ -49,23 +49,23 @@ module Struktura23
   end
 
   module OpentofuSchema
-    class TFBlock
+    class TofuBlock
       attr_reader :schema
 
       def initialize
         @schema = {}
       end
 
-      def val(name, *args)
+      def with(name, *args)
         @schema[name] = *args
         self
       end
     end
 
-    class Resource < TFBlock
+    class Resource < TofuBlock
     end
 
-    class Datasource < TFBlock
+    class Datasource < TofuBlock
     end
   end
 
