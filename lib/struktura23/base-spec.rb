@@ -28,9 +28,76 @@ module Struktura23
         },
         :aws_ami => {
           :data => OpentofuSchema::Datasource.new
-            .with(:architecture, :computed, :String)
-            .with(:arn, :computed, :String)
-            .with(:boot_mode, :computed, :String)
+            .with_list(
+              [
+                :architecture,
+                :arn,
+                :boot_mode,
+                :creation_date,
+                :deprecation_time,
+                :description,
+                :hypervisor,
+                :image_id,
+                :image_location,
+                :image_owner_alias,
+                :image_type,
+                :imds_support,
+                :kernel_id,
+                :name,
+                :owner_id,
+                :platform,
+                :platform_details,
+                :ramdisk_id,
+                :root_device_name,
+                :root_device_type,
+                :root_snapshot_id,
+                :sriov_net_support,
+                :state,
+                :tpm_support,
+                :usage_operation,
+                :virtualization_type
+              ],
+              :computed, :String
+            )
+            .with_list(
+              [
+                :ena_support,
+                :public
+              ],
+              :computed, :Bool
+            )
+            .with(:block_device_mappings,
+              :computed,
+              Set: OpentofuSchema::Resource.new(:computed)
+                .with(:device_name, :String)
+                .with(:ebs, Map: :String)
+                .with(:no_device, :String)
+                .with(:virtual_name, :String)
+            )
+            .with(:product_codes,
+              :computed,
+              Set: OpentofuSchema::Resource.new(:computed, :String)
+                .with(:product_code_id)
+                .with(:product_code_type)
+            )
+            .with(:state_reason, :computed, Map: :String)
+            .with(:tags, :computed, :optional, Map: :String)
+            .with(:executable_users, :optional, List: :String)
+            .with(:filter,
+              :optional,
+              Set: OpentofuSchema::Resource.new(:required)
+                .with(:name, :String)
+                .with(:vales, List: :String)
+            )
+            .with_list(
+              [
+                :include_deprecated,
+                :most_recent
+              ],
+              :optional, :Bool, default: false
+            )
+            .with(:name_regex, :optional, :String)
+            .with(:owners, :optional, List: {type: :String, min_items: 1})
         },
         :aws_eks_cluster => {
           :resource => OpentofuSchema::Resource.new
@@ -70,17 +137,25 @@ module Struktura23
     class TofuBlock
       attr_reader :schema
 
-      def initialize
+      def initialize(*flags)
+        @flags = flags || []
         @schema = {}
       end
 
       def with(name, *args)
-        @schema[name] = args.inject({}) do |res, arg|
+        @schema[name] = (args + @flags).uniq.inject({}) do |res, arg|
           if arg.is_a?(Hash)
             res.merge(arg)
           elsif arg.is_a?(Symbol)
             res.merge(arg => true)
           end
+        end
+        self
+      end
+
+      def with_list(names, *flags)
+        names.each do |n|
+          with(n, *flags)
         end
         self
       end
