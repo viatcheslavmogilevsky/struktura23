@@ -28,21 +28,39 @@ module Struktura23
         },
         :aws_ami => {
           :data => OpentofuSchema::Datasource.new
+            .with(:architecture, :computed, :String)
+            .with(:arn, :computed, :String)
+            .with(:boot_mode, :computed, :String)
         },
         :aws_eks_cluster => {
           :resource => OpentofuSchema::Resource.new
+            .with(:id, :computed)
+            .with(:name)
+            .with(:tag, :optional)
         },
         :tls_certificate => {
           :data => OpentofuSchema::Datasource.new
+            .with(:id, :computed)
+            .with(:name)
+            .with(:tag, :optional)
         },
         :aws_iam_openid_connect_provider => {
           :resource => OpentofuSchema::Resource.new
+            .with(:id, :computed)
+            .with(:name)
+            .with(:tag, :optional)
         },
         :aws_eks_addon => {
           :resource => OpentofuSchema::Resource.new
+            .with(:id, :computed)
+            .with(:name)
+            .with(:tag, :optional)
         },
         :aws_eks_node_group => {
           :resource => OpentofuSchema::Resource.new
+            .with(:id, :computed)
+            .with(:name)
+            .with(:tag, :optional)
         }
       }
     end
