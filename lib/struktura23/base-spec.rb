@@ -22,9 +22,19 @@ module Struktura23
       @schemas ||= {
         :aws_launch_template => {
           :resource => OpentofuSchema::Resource.new
-            .with(:id, :computed)
-            .with(:name)
-            .with(:tag, :optional)
+            .with(:name, :computed, :optional, :force_new, conflicts_with: [:name_prefix])
+            .with(:name_prefix, :computed, :optional, :force_new, conflicts_with: [:name])
+            .with(:ebs_optimized, :optional, :NullableBool)
+            .with(:image_id, :optional, :String)
+            .with(:instance_type, :optional, :String)
+            .with(:key_name, :optional, :String)
+            .with(:vpc_security_group_ids, :optional, Set: :String, conflicts_with: [:security_group_names])
+            .with(:security_group_names, :optional, Set: :String, conflicts_with: [:vpc_security_group_ids])
+            .with(:tag_specifications, :optional, List: OpentofuSchema::Resource.new
+              .with(:resource_type, :optional)
+              .with(:tags, :optional, Map: :String)
+            )
+            .with(:user_data, :optional, :String)
         },
         :aws_ami => {
           :data => OpentofuSchema::Datasource.new
