@@ -15,4 +15,10 @@
 $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/lib")
 load "#{File.dirname(__FILE__)}/examples/native-modules-rb/eks-with-nodes/modules-spec.rb"
 ```
+
+
+## Daily progress
+
+
+[Here!](deyliki.md)
  
