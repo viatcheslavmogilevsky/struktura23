@@ -95,6 +95,6 @@ class EksWithNodes < Struktura23::BaseSpec
 end
 
 # then this class used in bins:
-# EksWithNodes.generate_opentofu_modules
+# EksWithNodes.to_opentofu_json
 # EksWithNodes.scan
 

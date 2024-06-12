@@ -1,3 +1,5 @@
+require "json"
+
 module Struktura23
   module ProviderOwner
     def add_provider(*args)
@@ -279,6 +281,15 @@ module Struktura23
         {}
       end
 
+      # TODO: this is stub
+      def as_json(options={})
+        {}
+      end
+
+      def to_json(*a)
+        as_json.to_json(*a)
+      end
+
       # TODO: continue defining methods
       def method_missing(name, *args, &block)
         puts "I'm #{node_type}.#{label} and I don't care about #{name}"
@@ -386,6 +397,10 @@ module Struktura23
       def named_wrappers
         @named_wrappers ||= {}
       end
+
+      def to_opentofu_json
+        JSON.generate(nodes)
+      end
     end
   end
 
@@ -441,5 +456,4 @@ module Struktura23
       @input = input
     end
   end
-
 end
