@@ -9,3 +9,8 @@ class AwsAmiDataRootSimple < Struktura23::BaseSpec
     aa.where most_recent: true, owners: ["amazon"], name_regex: "amazon-eks-arm64-node-1.27-v*"
   end
 end
+
+# This should generate the following (in JSON):
+# 1. variables: all "non-computed" inputs from aws_ami/data, except enforced by "where"
+# 2. outputs: all from aws_ami/data
+# 3. data.aws_ami (main?) with enforced by "where" and other inputs set from variables
