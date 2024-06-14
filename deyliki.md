@@ -17,5 +17,10 @@
 
 ## 13.06.2024:
 
-* [ff2271c8](https://github.com/viatcheslavmogilevsky/struktura23/commit/ff2271c89e106a6d190ff97a388fc383a093dfc2) `desired json output from simple example`
+* [ff22](https://github.com/viatcheslavmogilevsky/struktura23/commit/ff2271c89e106a6d190ff97a388fc383a093dfc2) `desired json output from simple example`
 	* just explaining how output JSON should look like for simplest example (data.aws_ami in root module)
+
+## 14.06.2024:
+
+* [f291](https://github.com/viatcheslavmogilevsky/struktura23/commit/f2911ac1e73c920fd1b276d339b7a0f68359d82b) `to opentofu (not json string)`
+	* define basic structure of JSON-output, return object (hash) - it will be converted to JSON-string anytime later 
