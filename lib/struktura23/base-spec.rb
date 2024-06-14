@@ -398,8 +398,17 @@ module Struktura23
         @named_wrappers ||= {}
       end
 
-      def to_opentofu_json
-        JSON.generate(nodes)
+      def to_opentofu
+        {
+          "//": "This is not ready yet!",
+          "variables" => {},
+          "resources" => {},
+          "data" => {},
+          "output" => {},
+          "provider" => {},
+          "locals" => {},
+          "terraform" => {}
+        }
       end
     end
   end
