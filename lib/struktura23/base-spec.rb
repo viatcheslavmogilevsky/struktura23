@@ -289,11 +289,6 @@ module Struktura23
       def to_json(*a)
         as_json.to_json(*a)
       end
-
-      # TODO: continue defining methods
-      def method_missing(name, *args, &block)
-        puts "I'm #{node_type}.#{label} and I don't care about #{name}"
-      end
     end
 
     class Collection < Base
