@@ -24,3 +24,9 @@
 
 * [f291](https://github.com/viatcheslavmogilevsky/struktura23/commit/f2911ac1e73c920fd1b276d339b7a0f68359d82b) `to opentofu (not json string)`
 	* define basic structure of JSON-output, return object (hash) - it will be converted to JSON-string anytime later 
+
+
+## 15.06.2024
+
+* [9f23](https://github.com/viatcheslavmogilevsky/struktura23/commit/9f231ea2da476524e93508b11a4fcd51ac5fcda9) `no needed to stub unknown methods of Base Node`
+	* remove extra lines for now, thinking how to export vars from nodes
