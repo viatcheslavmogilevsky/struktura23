@@ -30,3 +30,9 @@
 
 * [9f23](https://github.com/viatcheslavmogilevsky/struktura23/commit/9f231ea2da476524e93508b11a4fcd51ac5fcda9) `no needed to stub unknown methods of Base Node`
 	* remove extra lines for now, thinking how to export vars from nodes
+
+
+## 16.06.2024
+
+* [a109](https://github.com/viatcheslavmogilevsky/struktura23/commit/a109209d9520c5b5e0acef714cf10163e2197ccc) `some schemas big shenanigans`
+	* introduce mock schemas in a bad way, will refactor it somehow later
