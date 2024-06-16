@@ -21,141 +21,127 @@ module Struktura23
     def schemas
       # TODO: this should be like the following:
       # @schemas ||= {}
-      @schemas ||= {
-        :aws_launch_template => {
-          :resource => OpentofuSchema::Resource.new
-            .with(:name, :computed, :optional, :force_new, conflicts_with: [:name_prefix])
-            .with(:name_prefix, :computed, :optional, :force_new, conflicts_with: [:name])
-            .with(:ebs_optimized, :optional, :NullableBool)
-            .with(:image_id, :optional, :String)
-            .with(:instance_type, :optional, :String)
-            .with(:key_name, :optional, :String)
-            .with(:vpc_security_group_ids, :optional, Set: :String, conflicts_with: [:security_group_names])
-            .with(:security_group_names, :optional, Set: :String, conflicts_with: [:vpc_security_group_ids])
-            .with(:tag_specifications, :optional, List: OpentofuSchema::Resource.new
-              .with(:resource_type, :optional)
-              .with(:tags, :optional, Map: :String)
-            )
-            .with(:user_data, :optional, :String)
-        },
-        :aws_ami => {
-          :data => OpentofuSchema::Datasource.new
-            .with_list(
-              [
-                :architecture,
-                :arn,
-                :boot_mode,
-                :creation_date,
-                :deprecation_time,
-                :description,
-                :hypervisor,
-                :image_id,
-                :image_location,
-                :image_owner_alias,
-                :image_type,
-                :imds_support,
-                :kernel_id,
-                :name,
-                :owner_id,
-                :platform,
-                :platform_details,
-                :ramdisk_id,
-                :root_device_name,
-                :root_device_type,
-                :root_snapshot_id,
-                :sriov_net_support,
-                :state,
-                :tpm_support,
-                :usage_operation,
-                :virtualization_type
-              ],
-              :computed, :String
-            )
-            .with_list(
-              [
-                :ena_support,
-                :public
-              ],
-              :computed, :Bool
-            )
-            .with(:block_device_mappings,
-              :computed,
-              Set: OpentofuSchema::Resource.new(:computed)
-                .with(:device_name, :String)
-                .with(:ebs, Map: :String)
-                .with(:no_device, :String)
-                .with(:virtual_name, :String)
-            )
-            .with(:product_codes,
-              :computed,
-              Set: OpentofuSchema::Resource.new(:computed, :String)
-                .with(:product_code_id)
-                .with(:product_code_type)
-            )
-            .with(:state_reason, :computed, Map: :String)
-            .with(:tags, :computed, :optional, Map: :String)
-            .with(:executable_users, :optional, List: :String)
-            .with(:filter,
-              :optional,
-              Set: OpentofuSchema::Resource.new(:required)
-                .with(:name, :String)
-                .with(:vales, List: :String)
-            )
-            .with_list(
-              [
-                :include_deprecated,
-                :most_recent
-              ],
-              :optional, :Bool, default: false
-            )
-            .with(:name_regex, :optional, :String)
-            .with(:owners, :optional, List: {type: :String, min_items: 1})
-        },
-        :aws_eks_cluster => {
-          :resource => OpentofuSchema::Resource.new
-            .with(:id, :computed)
-            .with(:name)
-            .with(:tag, :optional)
-        },
-        :tls_certificate => {
-          :data => OpentofuSchema::Datasource.new
-            .with(:id, :computed)
-            .with(:name)
-            .with(:tag, :optional)
-        },
-        :aws_iam_openid_connect_provider => {
-          :resource => OpentofuSchema::Resource.new
-            .with(:id, :computed)
-            .with(:name)
-            .with(:tag, :optional)
-        },
-        :aws_eks_addon => {
-          :resource => OpentofuSchema::Resource.new
-            .with(:id, :computed)
-            .with(:name)
-            .with(:tag, :optional)
-        },
-        :aws_eks_node_group => {
-          :resource => OpentofuSchema::Resource.new
-            .with(:id, :computed)
-            .with(:name)
-            .with(:tag, :optional)
-        }
-      }
+      @schemas ||= [
+        OpentofuSchema::Resource.new(:aws_launch_template)
+          .with(:name, :computed, :optional, :force_new, conflicts_with: [:name_prefix])
+          .with(:name_prefix, :computed, :optional, :force_new, conflicts_with: [:name])
+          .with(:ebs_optimized, :optional, :NullableBool)
+          .with(:image_id, :optional, :String)
+          .with(:instance_type, :optional, :String)
+          .with(:key_name, :optional, :String)
+          .with(:vpc_security_group_ids, :optional, Set: :String, conflicts_with: [:security_group_names])
+          .with(:security_group_names, :optional, Set: :String, conflicts_with: [:vpc_security_group_ids])
+          .with(:tag_specifications, :optional, List: OpentofuSchema::Base.new
+            .with(:resource_type, :optional)
+            .with(:tags, :optional, Map: :String)
+          )
+          .with(:user_data, :optional, :String),
+        OpentofuSchema::Datasource.new(:aws_ami)
+          .with_list(
+            [
+              :architecture,
+              :arn,
+              :boot_mode,
+              :creation_date,
+              :deprecation_time,
+              :description,
+              :hypervisor,
+              :image_id,
+              :image_location,
+              :image_owner_alias,
+              :image_type,
+              :imds_support,
+              :kernel_id,
+              :name,
+              :owner_id,
+              :platform,
+              :platform_details,
+              :ramdisk_id,
+              :root_device_name,
+              :root_device_type,
+              :root_snapshot_id,
+              :sriov_net_support,
+              :state,
+              :tpm_support,
+              :usage_operation,
+              :virtualization_type
+            ],
+            :computed, :String
+          )
+          .with_list(
+            [
+              :ena_support,
+              :public
+            ],
+            :computed, :Bool
+          )
+          .with(:block_device_mappings,
+            :computed,
+            Set: OpentofuSchema::Base.new(:computed)
+              .with(:device_name, :String)
+              .with(:ebs, Map: :String)
+              .with(:no_device, :String)
+              .with(:virtual_name, :String)
+          )
+          .with(:product_codes,
+            :computed,
+            Set: OpentofuSchema::Base.new(:computed, :String)
+              .with(:product_code_id)
+              .with(:product_code_type)
+          )
+          .with(:state_reason, :computed, Map: :String)
+          .with(:tags, :computed, :optional, Map: :String)
+          .with(:executable_users, :optional, List: :String)
+          .with(:filter,
+            :optional,
+            Set: OpentofuSchema::Base.new(:required)
+              .with(:name, :String)
+              .with(:vales, List: :String)
+          )
+          .with_list(
+            [
+              :include_deprecated,
+              :most_recent
+            ],
+            :optional, :Bool, default: false
+          )
+          .with(:name_regex, :optional, :String)
+          .with(:owners, :optional, List: {type: :String, min_items: 1}),
+        OpentofuSchema::Resource.new(:aws_eks_cluster)
+          .with(:id, :computed)
+          .with(:name)
+          .with(:tag, :optional),
+        OpentofuSchema::Datasource.new(:tls_certificate)
+          .with(:id, :computed)
+          .with(:name)
+          .with(:tag, :optional),
+        OpentofuSchema::Resource.new(:aws_iam_openid_connect_provider)
+          .with(:id, :computed)
+          .with(:name)
+          .with(:tag, :optional),
+        OpentofuSchema::Resource.new(:aws_eks_addon)
+          .with(:id, :computed)
+          .with(:name)
+          .with(:tag, :optional),
+        OpentofuSchema::Resource.new(:aws_eks_node_group)
+          .with(:id, :computed)
+          .with(:name)
+          .with(:tag, :optional)
+      ]
     end
   end
 
   module OpentofuSchema
-    class TofuBlock
-      attr_reader :schema
+    class Base
+      attr_reader :definition
 
       def initialize(*flags)
         @flags = flags || []
-        @schema = {}
+        @definition = {}
       end
 
       def with(name, *args)
-        @schema[name] = (args + @flags).uniq.inject({}) do |res, arg|
+        @definition[name] = (args + @flags).uniq.inject({}) do |res, arg|
           if arg.is_a?(Hash)
             res.merge(arg)
           elsif arg.is_a?(Symbol)
@@ -173,10 +159,27 @@ module Struktura23
       end
     end
 
-    class Resource < TofuBlock
+    class NamedSchema < Base
+      attr_reader :name, :group_name
+
+      def initialize(name)
+        @name = name
+        super()
+      end
     end
 
-    class Datasource < TofuBlock
+    class Resource < NamedSchema
+      def initialize(*args)
+        super(*args)
+        @group_name = :resource
+      end
+    end
+
+    class Datasource < NamedSchema
+      def initialize(*args)
+        super(*args)
+        @group_name = :data
+      end
     end
   end
 
@@ -229,12 +232,12 @@ module Struktura23
     class Base
       include Enforceable
 
-      attr_reader :node_type, :label, :data_source, :wrapped_by, :input_enabled, :output_enabled
+      attr_reader :schema, :label, :wrapped_by, :input_enabled, :output_enabled
+      attr_writer :schemas
 
-      def initialize(data_source, node_type, label=:main)
-        @node_type = node_type
+      def initialize(schema, label=:main)
+        @schema = schema
         @label = label
-        @data_source = data_source
         @search_enabled = true
         @search_query = {}
         @input_enabled = true
@@ -252,14 +255,14 @@ module Struktura23
       end
 
       def wrap_by(wrapper)
-        if wrapper.core.core_type != @node_type
-          raise "Wrapper of a #{wrapper.core.core_type} cannot be used to wrap a #{@node_type}"
+        if wrapper.core.schema != @schema
+          raise "Wrapper of a #{wrapper.core.schema} cannot be used to wrap a #{@schema}"
         end
         @wrapped_by = wrapper
       end
 
       def wrap
-        @wrapped_by = Wrapper.new(of: @node_type, id: nil)
+        @wrapped_by = Wrapper.new(core_schema: @schema, id: nil, schemas: @schemas)
         yield(@wrapped_by)
       end
 
@@ -332,13 +335,17 @@ module Struktura23
 
       def flag_to_enable
         # TODO: it is stub
-        "var.#{@data_source ? 'data_' : ''}#{@node_type}_#{@label}_enabled"
+        "var.#{@data_source ? 'data_' : ''}#{@schema.name}_#{@label}_enabled"
       end
     end
   end
 
   module Owner
     def core
+    end
+
+    def schemas
+      @schemas || []
     end
 
     def nodes
@@ -354,21 +361,29 @@ module Struktura23
         end
       end
 
-      nodes.merge!({node.node_type => {node.label => node}}) do |_, val1, val2|
+      nodes.merge!({node.schema.name => {node.label => node}}) do |_, val1, val2|
         val1.merge val2
       end
     end
 
     def method_missing(method_name, *args, &block)
       if method_name =~ /^has_(many|one|optional)(_data)?$/
+        is_data = !!$2
+        schema = schemas.find do |s|
+          ((is_data && s.group_name == :data) || (!is_data && s.group_name == :resource)) && s.name == args[0]
+        end
+
+        raise "Cannot find schema for #{is_data ? 'data' : 'resource'} #{args[0]} from #{schemas.map(&:name)}" unless schema
+
         node = case $1
         when "many"
-          Node::Collection.new(!!$2, *args)
+          Node::Collection.new(schema, *args[1..-1])
         when "one"
-          Node::Singular.new(!!$2, *args)
+          Node::Singular.new(schema, *args[1..-1])
         when "optional"
-          Node::Optional.new(!!$2, *args)
+          Node::Optional.new(schema, *args[1..-1])
         end
+        node.schemas = schemas
         has!(node, &block)
         node
       else
@@ -379,12 +394,18 @@ module Struktura23
 
 
   class BaseSpec
-    extend ProviderOwner
     extend Owner
+    extend ProviderOwner
 
     class << self
       def has_wrapper(wrapper_key, options={})
-        named_wrappers[wrapper_key] = wrapper = Wrapper.new(options.merge({:id => wrapper_key}))
+        schema = if options[:of]
+          schemas.find {|s| s.group_name == :resource && s.name == options[:of]}
+        elsif options[:of_data]
+          schemas.find {|s| s.group_name == :data && s.name == options[:of_data]}
+        end
+
+        named_wrappers[wrapper_key] = wrapper = Wrapper.new(id: wrapper_key, core_schema: schema, schemas: schemas)
         yield(wrapper, wrapper.core)
         wrapper
       end
@@ -411,11 +432,12 @@ module Struktura23
   class Wrapper
     include Owner
 
-    attr_reader :core, :id
+    attr_reader :core, :id, :schemas
 
     def initialize(options)
-      @core = WrapperCore.new(options[:of])
+      @core = WrapperCore.new(options[:core_schema])
       @id = options[:id]
+      @schemas = options[:schemas]
     end
   end
 
@@ -423,10 +445,10 @@ module Struktura23
   class WrapperCore
     include Enforceable
 
-    attr_reader :core_type
+    attr_reader :schema
 
-    def initialize(core_type)
-      @core_type = core_type
+    def initialize(schema)
+      @schema = schema
     end
 
     def found
