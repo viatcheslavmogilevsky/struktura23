@@ -44,3 +44,5 @@
 	* just found yet another place to refactor
 * [d244](https://github.com/viatcheslavmogilevsky/struktura23/commit/d244fb42b819a4b11dbad0d44d97001335c601ea) `pave the way to generate variables`
 	* but anyway is it clear how to generate variables fron "nodes"
+* [55d5](https://github.com/viatcheslavmogilevsky/struktura23/commit/55d510ab99ec6b1e1824d02d5d0b3147e9c51874) `render input at node`
+	* render input for node is better at node level
