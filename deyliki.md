@@ -36,3 +36,11 @@
 
 * [a109](https://github.com/viatcheslavmogilevsky/struktura23/commit/a109209d9520c5b5e0acef714cf10163e2197ccc) `some schemas big shenanigans`
 	* introduce mock schemas in a bad way, will refactor it somehow later
+
+
+## 17.06.2024
+
+* [8d8e](https://github.com/viatcheslavmogilevsky/struktura23/commit/8d8e318c450bc264007122396109ff2746506f0f) `plans for future refactoring`
+	* just found yet another place to refactor
+* [d244](https://github.com/viatcheslavmogilevsky/struktura23/commit/d244fb42b819a4b11dbad0d44d97001335c601ea) `pave the way to generate variables`
+	* but anyway is it clear how to generate variables fron "nodes"
