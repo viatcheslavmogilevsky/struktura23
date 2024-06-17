@@ -243,6 +243,7 @@ module Struktura23
         @input_enabled = true
         @output_enabled = true
         @extra_input_vars = {}
+        @input_prefix = nil
       end
 
 
@@ -291,6 +292,19 @@ module Struktura23
 
       def to_json(*a)
         as_json.to_json(*a)
+      end
+
+      def input
+        result = {}
+        if @input_enabled
+          prefix = @input_prefix || "#{@schema.name}_#{@label}"
+          @schema.definition.each do |k,v|
+            if v[:optional] || v[:required]
+              result["#{prefix}_#{k}"] = v
+            end
+          end
+        end
+        result
       end
     end
 
@@ -418,12 +432,6 @@ module Struktura23
       def to_opentofu
         variables = {}
         # TODO: to be continued
-        # nodes.map do |node|
-        #   node.schema.select {|attribute| attribute[:optional] || attribute[:required]}
-        # end.inject({}) do |res, input|
-
-        # end
-
         {
           "//": "This is not ready yet!",
           "variables" => variables,
