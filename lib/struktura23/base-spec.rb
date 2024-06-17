@@ -394,6 +394,7 @@ module Struktura23
 
 
   class BaseSpec
+    # TODO: these should be united into single Module
     extend Owner
     extend ProviderOwner
 
@@ -441,7 +442,7 @@ module Struktura23
     end
   end
 
-
+  # TODO: this should be united with Node::Base
   class WrapperCore
     include Enforceable
 
