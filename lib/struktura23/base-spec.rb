@@ -416,9 +416,17 @@ module Struktura23
       end
 
       def to_opentofu
+        variables = {}
+        # TODO: to be continued
+        # nodes.map do |node|
+        #   node.schema.select {|attribute| attribute[:optional] || attribute[:required]}
+        # end.inject({}) do |res, input|
+
+        # end
+
         {
           "//": "This is not ready yet!",
-          "variables" => {},
+          "variables" => variables,
           "resources" => {},
           "data" => {},
           "output" => {},
