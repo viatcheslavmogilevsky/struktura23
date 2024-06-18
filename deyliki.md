@@ -46,3 +46,9 @@
 	* but anyway is it clear how to generate variables fron "nodes"
 * [55d5](https://github.com/viatcheslavmogilevsky/struktura23/commit/55d510ab99ec6b1e1824d02d5d0b3147e9c51874) `render input at node`
 	* render input for node is better at node level
+
+
+## 18.06.2024
+
+* [63db](https://github.com/viatcheslavmogilevsky/struktura23/commit/63dbfbbc11a4d7353ce91ebc0b1cd80f04e2630e) `input definition`
+	* schema class knows what an instance keys can be used in input (variables)
