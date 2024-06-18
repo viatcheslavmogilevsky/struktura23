@@ -300,7 +300,7 @@ module Struktura23
 
       def input
         return {} if !@input_enabled
-        @schema.input_definition
+        @schema.input_definition.select {|k,_| !enforcers[k]}
       end
     end
 
@@ -376,6 +376,14 @@ module Struktura23
       end
     end
 
+    def iterate_nodes
+      nodes.each_pair do |schema_name, labels|
+        labels.each_pair do |label, node|
+          yield(node)
+        end
+      end
+    end
+
     def method_missing(method_name, *args, &block)
       if method_name =~ /^has_(many|one|optional)(_data)?$/
         is_data = !!$2
@@ -427,6 +435,12 @@ module Struktura23
 
       def to_opentofu
         variables = {}
+
+        iterate_nodes do |node|
+          node.input.each_pair do |k,v|
+            variables["#{node.schema.name}_#{node.label}_#{k}"] = v
+          end
+        end
         # TODO: to be continued
         {
           "//": "This is not ready yet!",
