@@ -166,6 +166,10 @@ module Struktura23
         @name = name
         super()
       end
+
+      def input_definition
+        @definition.select {|k,v| v[:optional] || v[:required]}
+      end
     end
 
     class Resource < NamedSchema
@@ -295,16 +299,8 @@ module Struktura23
       end
 
       def input
-        result = {}
-        if @input_enabled
-          prefix = @input_prefix || "#{@schema.name}_#{@label}"
-          @schema.definition.each do |k,v|
-            if v[:optional] || v[:required]
-              result["#{prefix}_#{k}"] = v
-            end
-          end
-        end
-        result
+        return {} if !@input_enabled
+        @schema.input_definition
       end
     end
 
