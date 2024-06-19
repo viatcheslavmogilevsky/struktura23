@@ -447,7 +447,9 @@ module Struktura23
             variables["#{node.schema.name}_#{node.label}_#{k}"] = v
           end
           node.output.each_pair do |k,v|
-            output["#{node.schema.name}_#{node.label}_#{k}"] = v
+            output["#{node.schema.name}_#{node.label}_#{k}"] = {
+              :value => "${#{node.schema.name}.#{node.label}.#{k}}"
+            }
           end
         end
         # TODO: to be continued
