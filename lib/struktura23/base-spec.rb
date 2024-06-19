@@ -302,6 +302,11 @@ module Struktura23
         return {} if !@input_enabled
         @schema.input_definition.select {|k,_| !enforcers[k]}
       end
+
+      def output
+        return {} if !@output_enabled
+        @schema.definition
+      end
     end
 
     class Collection < Base
@@ -435,10 +440,14 @@ module Struktura23
 
       def to_opentofu
         variables = {}
+        output = {}
 
         iterate_nodes do |node|
           node.input.each_pair do |k,v|
             variables["#{node.schema.name}_#{node.label}_#{k}"] = v
+          end
+          node.output.each_pair do |k,v|
+            output["#{node.schema.name}_#{node.label}_#{k}"] = v
           end
         end
         # TODO: to be continued
@@ -447,7 +456,7 @@ module Struktura23
           "variables" => variables,
           "resources" => {},
           "data" => {},
-          "output" => {},
+          "output" => output,
           "provider" => {},
           "locals" => {},
           "terraform" => {}
