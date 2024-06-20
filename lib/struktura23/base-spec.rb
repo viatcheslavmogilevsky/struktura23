@@ -441,6 +441,8 @@ module Struktura23
       def to_opentofu
         variables = {}
         output = {}
+        resource = {}
+        data = {}
 
         iterate_nodes do |node|
           node.input.each_pair do |k,v|
@@ -451,13 +453,27 @@ module Struktura23
               :value => "${#{node.schema.name}.#{node.label}.#{k}}"
             }
           end
+
+          named_block = {}
+          node.input.keys.each do |k|
+            named_block[k] = "var.#{node.schema.name}_#{node.label}_#{k}"
+          end
+          named_block.merge! node.enforcers
+
+          if node.schema.group_name == :data
+            data[node.schema.name] ||= {}
+            data[node.schema.name][node.label] = named_block
+          else
+            resource[node.schema.name] ||= {}
+            resource[node.schema.name][node.label] = named_block
+          end
         end
         # TODO: to be continued
         {
           "//": "This is not ready yet!",
           "variables" => variables,
-          "resources" => {},
-          "data" => {},
+          "resource" => resource,
+          "data" => data,
           "output" => output,
           "provider" => {},
           "locals" => {},
