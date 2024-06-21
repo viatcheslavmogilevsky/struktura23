@@ -359,8 +359,15 @@ module Struktura23
     def core
     end
 
+    def schema_provider
+    end
+
     def schemas
       @schemas || []
+    end
+
+    def schemas_from_provider
+      schema_provider&.schemas || []
     end
 
     def nodes
@@ -422,6 +429,10 @@ module Struktura23
     extend ProviderOwner
 
     class << self
+      def schema_provider
+        self
+      end
+
       def has_wrapper(wrapper_key, options={})
         schema = if options[:of]
           schemas.find {|s| s.group_name == :resource && s.name == options[:of]}
@@ -437,6 +448,7 @@ module Struktura23
       def named_wrappers
         @named_wrappers ||= {}
       end
+
 
       def to_opentofu
         variables = {}
