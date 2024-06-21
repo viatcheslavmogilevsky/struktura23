@@ -70,3 +70,7 @@
 	* starting rendering resource and data
 
 
+## 21.06.2024
+
+* [7bf8](https://github.com/viatcheslavmogilevsky/struktura23/commit/7bf81d253dfa7bae413cbe64b4b6280024ecb746) `schema provider: the beginning`
+	* starting some needed refactoring - to not to copy schemas from owners to nodes/wrappers
