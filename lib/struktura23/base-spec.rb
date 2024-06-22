@@ -170,6 +170,16 @@ module Struktura23
       def input_definition
         @definition.select {|k,v| v[:optional] || v[:required]}
       end
+
+      # this is example of how to customize inspect for all instances of all class' descendants
+      # TODO: what about modes of printing staff
+      class << self
+        def suppress_definition
+          define_method(:inspect) do
+            "<#{self.class.to_s}>"
+          end
+        end
+      end
     end
 
     class Resource < NamedSchema
