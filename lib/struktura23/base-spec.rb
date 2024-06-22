@@ -237,7 +237,7 @@ module Struktura23
       include Enforceable
 
       attr_reader :schema, :label, :wrapped_by, :input_enabled, :output_enabled
-      attr_writer :schemas
+      attr_writer :schema_provider
 
       def initialize(schema, label=:main)
         @schema = schema
@@ -267,7 +267,7 @@ module Struktura23
       end
 
       def wrap
-        @wrapped_by = Wrapper.new(core_schema: @schema, id: nil, schemas: @schemas)
+        @wrapped_by = Wrapper.new(core_schema: @schema, id: nil, schema_provider: @schema_provider)
         yield(@wrapped_by)
       end
 
@@ -363,10 +363,6 @@ module Struktura23
     end
 
     def schemas
-      @schemas || []
-    end
-
-    def schemas_from_provider
       schema_provider&.schemas || []
     end
 
@@ -413,7 +409,7 @@ module Struktura23
         when "optional"
           Node::Optional.new(schema, *args[1..-1])
         end
-        node.schemas = schemas
+        node.schema_provider = schema_provider
         has!(node, &block)
         node
       else
@@ -440,7 +436,7 @@ module Struktura23
           schemas.find {|s| s.group_name == :data && s.name == options[:of_data]}
         end
 
-        named_wrappers[wrapper_key] = wrapper = Wrapper.new(id: wrapper_key, core_schema: schema, schemas: schemas)
+        named_wrappers[wrapper_key] = wrapper = Wrapper.new(id: wrapper_key, core_schema: schema, schema_provider: schema_provider)
         yield(wrapper, wrapper.core)
         wrapper
       end
@@ -498,12 +494,12 @@ module Struktura23
   class Wrapper
     include Owner
 
-    attr_reader :core, :id, :schemas
+    attr_reader :core, :id, :schema_provider
 
     def initialize(options)
       @core = WrapperCore.new(options[:core_schema])
       @id = options[:id]
-      @schemas = options[:schemas]
+      @schema_provider = options[:schema_provider]
     end
   end
 
