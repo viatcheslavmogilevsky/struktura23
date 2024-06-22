@@ -74,3 +74,11 @@
 
 * [7bf8](https://github.com/viatcheslavmogilevsky/struktura23/commit/7bf81d253dfa7bae413cbe64b4b6280024ecb746) `schema provider: the beginning`
 	* starting some needed refactoring - to not to copy schemas from owners to nodes/wrappers
+
+
+## 22.06.2024
+
+* [0ecd](https://github.com/viatcheslavmogilevsky/struktura23/commit/0ecd44d643ec4f54cf501ff992bb7589a5b40f4f) `refactor for better debugging: using schema provider instead of copying schema`
+	* this decreases printing the same list mocked schemas, now it just pring BaseSpec descendant
+* [fdf7](https://github.com/viatcheslavmogilevsky/struktura23/commit/fdf7d794dc32a6a4da395583348b65135def8328) `NamedSchema: suppress inspecting definition`
+	* schemas also can suppress inspecting definition - so number of printed lines is decreased as well
