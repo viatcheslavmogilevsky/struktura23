@@ -1,5 +1,3 @@
-require "json"
-
 module Struktura23
   module ProviderOwner
     def add_provider(*args)
