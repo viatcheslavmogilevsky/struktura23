@@ -214,11 +214,6 @@ module Struktura23
       @enforcers ||= {}
     end
 
-    # TODO: default 'opentofu' value should be specified differently
-    def provider
-      @provider || "opentofu"
-    end
-
     def merge!(another)
       enforcers.merge!(another.enforcers)
     end
@@ -241,7 +236,7 @@ module Struktura23
       end
 
       def expr(template, input={})
-        ExpressionTemplate.new(@enforced_resource.provider, template, input)
+        ExpressionTemplate.new(template, input)
       end
     end
   end
@@ -546,11 +541,10 @@ module Struktura23
   end
 
   class ExpressionTemplate
-    attr_reader :expr_provider, :template, :input
+    attr_reader :template, :input
 
-    def initialize(expr_provider, template, input)
+    def initialize(template, input)
       _ = "#{template}" % input
-      @expr_provider = expr_provider
       @template = template
       @input = input
     end
