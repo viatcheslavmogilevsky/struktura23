@@ -426,6 +426,49 @@ module Struktura23
         super(method_name, *args, &block)
       end
     end
+
+    def to_opentofu
+      variables = {}
+      output = {}
+      resource = {}
+      data = {}
+
+      iterate_nodes do |node|
+        node.input.each_pair do |k,v|
+          variables["#{node.schema.name}_#{node.label}_#{k}"] = v
+        end
+        node.output.each_pair do |k,v|
+          output["#{node.schema.name}_#{node.label}_#{k}"] = {
+            :value => "${#{node.schema.name}.#{node.label}.#{k}}"
+          }
+        end
+
+        named_block = {}
+        node.input.keys.each do |k|
+          named_block[k] = "var.#{node.schema.name}_#{node.label}_#{k}"
+        end
+        named_block.merge! node.enforcers
+
+        if node.schema.group_name == :data
+          data[node.schema.name] ||= {}
+          data[node.schema.name][node.label] = named_block
+        else
+          resource[node.schema.name] ||= {}
+          resource[node.schema.name][node.label] = named_block
+        end
+      end
+      {
+        "//": "This is not ready yet!",
+        "variables" => variables,
+        "resource" => resource,
+        "data" => data,
+        "output" => output,
+        # TODO: to be continued
+        "provider" => {},
+        "locals" => {},
+        "terraform" => {}
+      }
+    end
   end
 
 
@@ -453,50 +496,6 @@ module Struktura23
 
       def named_wrappers
         @named_wrappers ||= {}
-      end
-
-
-      def to_opentofu
-        variables = {}
-        output = {}
-        resource = {}
-        data = {}
-
-        iterate_nodes do |node|
-          node.input.each_pair do |k,v|
-            variables["#{node.schema.name}_#{node.label}_#{k}"] = v
-          end
-          node.output.each_pair do |k,v|
-            output["#{node.schema.name}_#{node.label}_#{k}"] = {
-              :value => "${#{node.schema.name}.#{node.label}.#{k}}"
-            }
-          end
-
-          named_block = {}
-          node.input.keys.each do |k|
-            named_block[k] = "var.#{node.schema.name}_#{node.label}_#{k}"
-          end
-          named_block.merge! node.enforcers
-
-          if node.schema.group_name == :data
-            data[node.schema.name] ||= {}
-            data[node.schema.name][node.label] = named_block
-          else
-            resource[node.schema.name] ||= {}
-            resource[node.schema.name][node.label] = named_block
-          end
-        end
-        # TODO: to be continued
-        {
-          "//": "This is not ready yet!",
-          "variables" => variables,
-          "resource" => resource,
-          "data" => data,
-          "output" => output,
-          "provider" => {},
-          "locals" => {},
-          "terraform" => {}
-        }
       end
     end
   end
