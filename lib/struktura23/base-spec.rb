@@ -277,7 +277,7 @@ module Struktura23
       end
 
       def wrap
-        @wrapped_by = Wrapper.new(core_schema: @schema, id: nil, schema_provider: @schema_provider)
+        @wrapped_by = Wrapper.new(core_schema: @schema, schema_provider: @schema_provider)
         yield(@wrapped_by)
       end
 
@@ -501,10 +501,10 @@ module Struktura23
 
     attr_reader :core, :id, :schema_provider
 
-    def initialize(options)
-      @core = WrapperCore.new(options[:core_schema])
-      @id = options[:id]
-      @schema_provider = options[:schema_provider]
+    def initialize(id: nil, core_schema:, schema_provider:)
+      @core = WrapperCore.new(core_schema)
+      @id = id
+      @schema_provider = schema_provider
     end
   end
 
