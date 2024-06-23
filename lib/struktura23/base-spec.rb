@@ -469,34 +469,30 @@ module Struktura23
         "terraform" => {}
       }
     end
+
+    def has_wrapper(wrapper_key, options={})
+      schema = if options[:of]
+        schemas.find {|s| s.group_name == :resource && s.name == options[:of]}
+      elsif options[:of_data]
+        schemas.find {|s| s.group_name == :data && s.name == options[:of_data]}
+      end
+
+      named_wrappers[wrapper_key] = wrapper = Wrapper.new(id: wrapper_key, core_schema: schema, schema_provider: schema_provider)
+      yield(wrapper, wrapper.core)
+      wrapper
+    end
+
+    def named_wrappers
+      @named_wrappers ||= {}
+    end
   end
 
-
   class BaseSpec
-    # TODO: these should be united into single Module
     extend Owner
     extend ProviderOwner
 
-    class << self
-      def schema_provider
-        self
-      end
-
-      def has_wrapper(wrapper_key, options={})
-        schema = if options[:of]
-          schemas.find {|s| s.group_name == :resource && s.name == options[:of]}
-        elsif options[:of_data]
-          schemas.find {|s| s.group_name == :data && s.name == options[:of_data]}
-        end
-
-        named_wrappers[wrapper_key] = wrapper = Wrapper.new(id: wrapper_key, core_schema: schema, schema_provider: schema_provider)
-        yield(wrapper, wrapper.core)
-        wrapper
-      end
-
-      def named_wrappers
-        @named_wrappers ||= {}
-      end
+    def self.schema_provider
+      self
     end
   end
 
