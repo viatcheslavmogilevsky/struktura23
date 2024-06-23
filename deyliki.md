@@ -82,3 +82,20 @@
 	* this decreases printing the same list mocked schemas, now it just pring BaseSpec descendant
 * [fdf7](https://github.com/viatcheslavmogilevsky/struktura23/commit/fdf7d794dc32a6a4da395583348b65135def8328) `NamedSchema: suppress inspecting definition`
 	* schemas also can suppress inspecting definition - so number of printed lines is decreased as well
+
+
+## 23.06.2024
+
+* [7675](https://github.com/viatcheslavmogilevsky/struktura23/commit/767572e8bb9591343547b2e1ef6b692bfcacb270) `any owners can to_opentofu`
+	* this will be needed for recursive rendering
+* [f058](https://github.com/viatcheslavmogilevsky/struktura23/commit/f058a88cfadf88d5a89a3d064f2d96f848345e15) `wrappers can have their own named wrappers`
+	* to allow recursive and named(reusable) modules 
+* [406c](https://github.com/viatcheslavmogilevsky/struktura23/commit/406cdbf5fbbffc656784da140b6bea8f7fac48d9) `using keywords for wrapper constructor`
+	* initializer params look better now
+* [5241](https://github.com/viatcheslavmogilevsky/struktura23/commit/52419a59ebf066ec6f207fa9c87bc6fe03d3f2de) `enforceables can merge`
+	* core "resource/data" will be enforced from wrapper block
+* [42fa](https://github.com/viatcheslavmogilevsky/struktura23/commit/42fad597649deff6998cef4b4a9c1b10c1954cd5) `remove "provider" from enforcable for clarity`
+	* all current code is tightly coupled with opentofu (not flexible, but focus is focus)
+* [ae04](https://github.com/viatcheslavmogilevsky/struktura23/commit/ae0422c86122a042e9b97a3f1d223acb14744eef) `json serialization is not needed here`
+	* serialization can be done in upper level if it is needed
+
