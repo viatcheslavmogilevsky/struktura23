@@ -217,20 +217,20 @@ module Struktura23
     end
 
     class Context
-      def initialize(enforced_resource, enforced_attr)
-        @enforced_resource = enforced_resource
+      def initialize(enforced_node, enforced_attr)
+        @enforced_node = enforced_node
         @enforced_attr = enforced_attr
       end
 
       def current_var
         # TODO: it is stub
-        # "#{@enforced_resource.class}.#{@enforced_attr}"
-        PromiseChain.new(@enforced_resource).send(@enforced_attr)
+        # "#{@enforced_node.class}.#{@enforced_attr}"
+        PromiseChain.new(@enforced_node).send(@enforced_attr)
       end
 
       def current
         # TODO: it is stub
-        PromiseChain.new(@enforced_resource)
+        PromiseChain.new(@enforced_node)
       end
 
       def expr(template, input={})
