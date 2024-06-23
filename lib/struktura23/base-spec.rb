@@ -219,6 +219,10 @@ module Struktura23
       @provider || "opentofu"
     end
 
+    def merge!(another)
+      enforcers.merge!(another.enforcers)
+    end
+
     class Context
       def initialize(enforced_resource, enforced_attr)
         @enforced_resource = enforced_resource
@@ -273,12 +277,14 @@ module Struktura23
         if wrapper.core.schema != @schema
           raise "Wrapper of a #{wrapper.core.schema} cannot be used to wrap a #{@schema}"
         end
+        merge!(wrapper.core)
         @wrapped_by = wrapper
       end
 
       def wrap
         @wrapped_by = Wrapper.new(core_schema: @schema, schema_provider: @schema_provider)
         yield(@wrapped_by)
+        merge!(@wrapped_by.core)
       end
 
       def where(predicate)
