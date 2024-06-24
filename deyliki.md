@@ -99,3 +99,9 @@
 * [ae04](https://github.com/viatcheslavmogilevsky/struktura23/commit/ae0422c86122a042e9b97a3f1d223acb14744eef) `json serialization is not needed here`
 	* serialization can be done in upper level if it is needed
 
+
+## 24.06.2024
+
+* [9a01](https://github.com/viatcheslavmogilevsky/struktura23/commit/9a011a1506d2ff7ec4a08834163b2f9a22d51581) `wrapper should have proper core-node`
+	* core should be created as Node::Base within wrapper (opentofu module); also removed some unneeded methods
+
