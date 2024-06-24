@@ -43,47 +43,50 @@ class EksWithNodes < Struktura23::BaseSpec
         lt.where false
       end
 
-      custom_launch_templates = m.has_many :aws_launch_template, :custom_launch_template do |lt|
-        lt.wrap_by lt_wrapper
-        lt.where false
-        lt.disable_input
-      end
-
-      eks_node_groups = m.has_many :aws_eks_node_group do |groups, core|
+      m.has_many :aws_eks_node_group do |groups, core|
         groups.where cluster_name: core.found.id
         groups.identify {|found_group| found_group.node_group_name}
-
         groups.add_var common_launch_template_key: "string"
-        groups.add_var custom_launch_template: lt_wrapper
 
         groups.enforce :launch_template do |context|
-          custom_launch_template = custom_launch_templates.at(context.current.key)
-          common_launch_template = common_launch_templates.at(context.current.var[:common_launch_template_key])
+          common_launch_template_key = context.current.var[:common_launch_template_key]
+          common_launch_template = common_launch_templates.at(common_launch_template_key)
 
           {
-            :name => context.expr("%{custom} != null ? %{custom_name} : (%{common} != null ? %{common_name} : %{default})", {
-              :custom => context.current.var[:custom_launch_template],
-              :custom_name => custom_launch_template.name,
-              :common => context.current.var[:common_launch_template_key],
+            :name => context.expr("%{common} != null ? %{common_name} : %{default}", {
+              :common => common_launch_template_key,
               :common_name => common_launch_template.name,
               :default => context.current_var.name
             }),
-            # TODO: latest_version/default_version
-            :version => context.expr("%{custom} != null ? %{custom_last} : (%{common} != null ? %{common_last} : %{default})", {
-              :custom => context.current.var[:custom_launch_template],
-              :custom_last => custom_launch_template.latest_version,
-              :common => context.current.var[:common_launch_template_key],
-              :common_last => common_launch_template.latest_version,
-              :default => context.current_var.name
+            :version => context.expr("%{common} != null ? %{common_version} : %{default}", {
+              :common => common_launch_template_key,
+              :common_version => common_launch_template.latest_version,
+              :default => context.current_var.version
             })
           }
         end
-      end
 
-      custom_launch_templates.override_for_each do |context|
-        context.expr("{for input_key, input_val in %{ng_input} : input_key => input_val[\"custom_launch_template\"] if input_val[\"custom_launch_template\"] != null}", {
-          :ng_input => eks_node_groups.var
-        })
+        groups.wrap do |ngm|
+          template = ngm.has_optional :aws_launch_template do |lt|
+            lt.wrap_by lt_wrapper
+            lt.where false
+          end
+
+          ngm.core.enforce :launch_template do |context|
+            {
+              :name => context.expr("%{custom_enabled}  ? %{custom_name} : %{default}", {
+                :custom_enabled => template.flag_to_enable,
+                :custom_name => template.one.name,
+                :default => context.current_var.name
+              }),
+              :version => context.expr("%{custom_enabled}  ? %{custom_version} : %{default}", {
+                :custom_enabled => template.flag_to_enable,
+                :custom_version => template.one.latest_version,
+                :default => context.current_var.version
+              })
+            }
+          end
+        end
       end
     end
   end

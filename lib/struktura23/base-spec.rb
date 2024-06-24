@@ -270,14 +270,12 @@ module Struktura23
         if wrapper.core.schema != @schema
           raise "Wrapper of a #{wrapper.core.schema} cannot be used to wrap a #{@schema}"
         end
-        merge!(wrapper.core)
         @wrapped_by = wrapper
       end
 
       def wrap
         @wrapped_by = Wrapper.new(core_schema: @schema, schema_provider: @schema_provider)
         yield(@wrapped_by)
-        merge!(@wrapped_by.core)
       end
 
       def where(predicate)
@@ -285,7 +283,6 @@ module Struktura23
           @search_enabled = false
         else
           @search_query = predicate
-          enforcers.merge! predicate
         end
       end
 
@@ -296,15 +293,6 @@ module Struktura23
       def var
         # TODO: it is stub
         {}
-      end
-
-      # TODO: this is stub
-      def as_json(options={})
-        {}
-      end
-
-      def to_json(*a)
-        as_json.to_json(*a)
       end
 
       def input
@@ -322,7 +310,6 @@ module Struktura23
       def initialize(*args)
         super(*args)
         @identify_by = nil
-        @for_each_override = nil
       end
 
       def identify
@@ -330,13 +317,6 @@ module Struktura23
         yield(promise_chain)
         @identify_by = promise_chain
       end
-
-      # TODO: use lazy string interpolation [1]
-      def override_for_each
-        context = Context.new(self, :for_each)
-        @for_each_override = yield(context)
-      end
-
 
       def at(arg)
         # TODO: it is stub
