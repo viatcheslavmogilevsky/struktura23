@@ -105,3 +105,8 @@
 * [9a01](https://github.com/viatcheslavmogilevsky/struktura23/commit/9a011a1506d2ff7ec4a08834163b2f9a22d51581) `wrapper should have proper core-node`
 	* core should be created as Node::Base within wrapper (opentofu module); also removed some unneeded methods
 
+
+## 25.06.2024
+
+* [0090](https://github.com/viatcheslavmogilevsky/struktura23/commit/009063d2f2c4eab73d11aa02485dd7c15fcd7951)  `recursive opentofu generation: the beginning`
+	* the to_opentofu method should located at node level
