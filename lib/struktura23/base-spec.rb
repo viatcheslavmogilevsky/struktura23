@@ -304,6 +304,11 @@ module Struktura23
         return {} if !@output_enabled
         @schema.definition
       end
+
+      # TODO: this is stub
+      def to_opentofu
+        {}
+      end
     end
 
     class Collection < Base
