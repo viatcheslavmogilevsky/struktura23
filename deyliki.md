@@ -110,3 +110,10 @@
 
 * [0090](https://github.com/viatcheslavmogilevsky/struktura23/commit/009063d2f2c4eab73d11aa02485dd7c15fcd7951)  `recursive opentofu generation: the beginning`
 	* the to_opentofu method should located at node level
+
+
+## 26.06.2024
+
+* [b419](https://github.com/viatcheslavmogilevsky/struktura23/commit/b419d3d68521ac54f2a993ecda158306450b4bf4)  `to_opentofu of node: implementation plan`
+	* unfinished plan of how to implement to_opentofu at node (todo: add rendering of wrapper's core)
+
