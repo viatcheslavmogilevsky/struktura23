@@ -305,10 +305,46 @@ module Struktura23
         @schema.definition
       end
 
-      # TODO: this is stub
-      def to_opentofu
-        {}
-      end
+      # TODO: finish implementing
+      # def to_opentofu
+      #   if @wrapped_by
+      #     opentofu_result = @wrapped_by.to_opentofu
+      #   else
+      #     variables = {}
+      #     output = {}
+      #     resource = {}
+      #     data = {}
+
+      #     input.each_pair do |k,v|
+      #       variables["#{schema.name}_#{label}_#{k}"] = v
+      #     end
+
+      #     output.each_pair do |k,v|
+      #       output["#{schema.name}_#{label}_#{k}"] = {
+      #         :value => "${#{schema.name}.#{label}.#{k}}"
+      #       }
+      #     end
+
+      #     named_block = {}
+      #     input.keys.each do |k|
+      #       named_block[k] = "var.#{schema.name}_#{label}_#{k}"
+      #     end
+      #     named_block.merge! enforcers
+
+      #     if schema.group_name == :data
+      #       data[schema.name] = {label => named_block}
+      #     else
+      #       resource[schema.name] = {label => named_block}
+      #     end
+
+      #     {
+      #       "variables" => variables,
+      #       "resource" => resource,
+      #       "data" => data,
+      #       "output" => output,
+      #     }
+      #   end
+      # end
     end
 
     class Collection < Base
