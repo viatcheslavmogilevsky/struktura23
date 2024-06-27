@@ -117,3 +117,9 @@
 * [b419](https://github.com/viatcheslavmogilevsky/struktura23/commit/b419d3d68521ac54f2a993ecda158306450b4bf4)  `to_opentofu of node: implementation plan`
 	* unfinished plan of how to implement to_opentofu at node (todo: add rendering of wrapper's core)
 
+
+## 27.06.2024
+
+* [82ca](https://github.com/viatcheslavmogilevsky/struktura23/commit/82ca8e75f9d87e7cb75dc9aed1424c55ed7a6bb9) `recursive to_opentofu-ing: dull implementation`
+	* uncorrect implementation just to pave the way to correct one
+
