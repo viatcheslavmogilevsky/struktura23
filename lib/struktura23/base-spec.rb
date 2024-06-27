@@ -305,46 +305,46 @@ module Struktura23
         @schema.definition
       end
 
-      # TODO: finish implementing
-      # def to_opentofu
-      #   if @wrapped_by
-      #     opentofu_result = @wrapped_by.to_opentofu
-      #   else
-      #     variables = {}
-      #     output = {}
-      #     resource = {}
-      #     data = {}
+      # TODO: fix properly
+      def to_opentofu
+        if @wrapped_by
+          @wrapped_by.to_opentofu
+        else
+          variables = {}
+          output_result = {}
+          resource = {}
+          data = {}
 
-      #     input.each_pair do |k,v|
-      #       variables["#{schema.name}_#{label}_#{k}"] = v
-      #     end
+          input.each_pair do |k,v|
+            variables["#{schema.name}_#{label}_#{k}"] = v
+          end
 
-      #     output.each_pair do |k,v|
-      #       output["#{schema.name}_#{label}_#{k}"] = {
-      #         :value => "${#{schema.name}.#{label}.#{k}}"
-      #       }
-      #     end
+          output.each_pair do |k,v|
+            output_result["#{schema.name}_#{label}_#{k}"] = {
+              :value => "${#{schema.name}.#{label}.#{k}}"
+            }
+          end
 
-      #     named_block = {}
-      #     input.keys.each do |k|
-      #       named_block[k] = "var.#{schema.name}_#{label}_#{k}"
-      #     end
-      #     named_block.merge! enforcers
+          named_block = {}
+          input.keys.each do |k|
+            named_block[k] = "var.#{schema.name}_#{label}_#{k}"
+          end
+          named_block.merge! enforcers
 
-      #     if schema.group_name == :data
-      #       data[schema.name] = {label => named_block}
-      #     else
-      #       resource[schema.name] = {label => named_block}
-      #     end
+          if schema.group_name == :data
+            data[schema.name] = {label => named_block}
+          else
+            resource[schema.name] = {label => named_block}
+          end
 
-      #     {
-      #       "variables" => variables,
-      #       "resource" => resource,
-      #       "data" => data,
-      #       "output" => output,
-      #     }
-      #   end
-      # end
+          {
+            "variables" => variables,
+            "resource" => resource,
+            "data" => data,
+            "output" => output_result,
+          }
+        end
+      end
     end
 
     class Collection < Base
@@ -454,28 +454,11 @@ module Struktura23
       data = {}
 
       iterate_nodes do |node|
-        node.input.each_pair do |k,v|
-          variables["#{node.schema.name}_#{node.label}_#{k}"] = v
-        end
-        node.output.each_pair do |k,v|
-          output["#{node.schema.name}_#{node.label}_#{k}"] = {
-            :value => "${#{node.schema.name}.#{node.label}.#{k}}"
-          }
-        end
-
-        named_block = {}
-        node.input.keys.each do |k|
-          named_block[k] = "var.#{node.schema.name}_#{node.label}_#{k}"
-        end
-        named_block.merge! node.enforcers
-
-        if node.schema.group_name == :data
-          data[node.schema.name] ||= {}
-          data[node.schema.name][node.label] = named_block
-        else
-          resource[node.schema.name] ||= {}
-          resource[node.schema.name][node.label] = named_block
-        end
+        node_opentofu = node.to_opentofu
+        variables.merge!(node_opentofu["variables"] || {})
+        output.merge!(node_opentofu["output"] || {})
+        resource.merge!(node_opentofu["resource"] || {})
+        data.merge!(node_opentofu["data"] || {})
       end
       {
         "//": "This is not ready yet!",
