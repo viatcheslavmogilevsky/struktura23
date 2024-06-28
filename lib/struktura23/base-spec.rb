@@ -342,6 +342,7 @@ module Struktura23
             "resource" => resource,
             "data" => data,
             "output" => output_result,
+            "module" => {}
           }
         end
       end
@@ -452,6 +453,7 @@ module Struktura23
       output = {}
       resource = {}
       data = {}
+      modules = {}
 
       iterate_nodes do |node|
         node_opentofu = node.to_opentofu
@@ -459,6 +461,7 @@ module Struktura23
         output.merge!(node_opentofu["output"] || {})
         resource.merge!(node_opentofu["resource"] || {})
         data.merge!(node_opentofu["data"] || {})
+        modules.merge!(node_opentofu["module"] || {})
       end
       {
         "//": "This is not ready yet!",
@@ -466,6 +469,7 @@ module Struktura23
         "resource" => resource,
         "data" => data,
         "output" => output,
+        "module" => modules,
         # TODO: to be continued
         "provider" => {},
         "locals" => {},
