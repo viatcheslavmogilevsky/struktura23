@@ -305,46 +305,67 @@ module Struktura23
         @schema.definition
       end
 
+      def wrapped?
+        !!@wrapped_by
+      end
+
+      def datasource?
+        schema.group_name == :data
+      end
+
       # TODO: fix properly
       def to_opentofu
-        if @wrapped_by
-          @wrapped_by.to_opentofu
+        variables = {}
+        outputs = {}
+        resources = {}
+        datasources = {}
+        modules = {}
+
+        input.each_pair do |k,v|
+          variables["#{schema.name}_#{label}_#{k}"] = v
+        end
+
+        named_block = {}
+        input.keys.each do |k|
+          # TODO: implement another part (wrapped block within wrapper)
+          # key = if wrapped? and [:source, :version].includes?(k)
+          #   "#{label}_#{k}"
+          # else
+          #   k
+          # end
+          named_block[k] = "var.#{schema.name}_#{label}_#{k}"
+        end
+        # TODO: implement another part (wrapped block within wrapper)
+        named_block.merge! enforcers
+
+        if wrapped?
+          # TODO: implement another part (wrapped block within wrapper)
+          modules["#{schema.name}_#{label}"] = named_block.merge({"contents" => @wrapped_by.to_opentofu})
+        elsif datasource?
+          datasources[schema.name] = {label => named_block}
         else
-          variables = {}
-          output_result = {}
-          resource = {}
-          data = {}
+          resources[schema.name] = {label => named_block}
+        end
 
-          input.each_pair do |k,v|
-            variables["#{schema.name}_#{label}_#{k}"] = v
-          end
-
-          output.each_pair do |k,v|
-            output_result["#{schema.name}_#{label}_#{k}"] = {
-              :value => "${#{schema.name}.#{label}.#{k}}"
-            }
-          end
-
-          named_block = {}
-          input.keys.each do |k|
-            named_block[k] = "var.#{schema.name}_#{label}_#{k}"
-          end
-          named_block.merge! enforcers
-
-          if schema.group_name == :data
-            data[schema.name] = {label => named_block}
-          else
-            resource[schema.name] = {label => named_block}
-          end
-
-          {
-            "variables" => variables,
-            "resource" => resource,
-            "data" => data,
-            "output" => output_result,
-            "module" => {}
+        output.each_pair do |k,v|
+          outputs["#{schema.name}_#{label}_#{k}"] = {
+            :value => if wrapped?
+              "${module.#{schema.name}_#{label}.#{k}}"
+            else
+              data_prefix = datasource? ? "data." : ""
+              "${#{data_prefix}#{schema.name}.#{label}.#{k}}"
+            end
           }
         end
+
+
+        {
+          "variables" => variables,
+          "resource" => resources,
+          "data" => datasources,
+          "output" => outputs,
+          "module" => modules
+        }
       end
     end
 
