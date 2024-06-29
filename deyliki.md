@@ -124,7 +124,15 @@
 	* uncorrect implementation just to pave the way to correct one
 
 
-## 28.09.2024
+## 28.06.2024
 
 * [9c1a](https://github.com/viatcheslavmogilevsky/struktura23/commit/9c1abed88bcd7c47d3eb213d1bbaf4b81e059083) `recursive to_opentofu-ing: yet another dull implementation`
 	* this implementation is still not correct but closer to correct than previous
+
+
+## 29.06.2024
+
+* [e66b](https://github.com/viatcheslavmogilevsky/struktura23/commit/e66bbe7ebcb4a19be5861c731db940ff4bf4c357) ``
+	* this implementation is closer to correct than previous by only input/variables
+
+
