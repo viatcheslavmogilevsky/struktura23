@@ -305,10 +305,6 @@ module Struktura23
         @schema.definition
       end
 
-      def wrapped?
-        !!@wrapped_by
-      end
-
       def datasource?
         schema.group_name == :data
       end
@@ -321,14 +317,25 @@ module Struktura23
         datasources = {}
         modules = {}
 
+        wrapper_content = if !!@wrapped_by
+          @wrapped_by.to_opentofu
+        end
+
+        # input:
         input.each_pair do |k,v|
           variables["#{schema.name}_#{label}_#{k}"] = v
         end
+        if wrapper_content
+          wrapper_content["variables"]&.each_pair do |k,v|
+            variables["#{schema.name}_#{label}_#{k}"] = v
+          end
+        end
+
 
         named_block = {}
         input.keys.each do |k|
           # TODO: implement another part (wrapped block within wrapper)
-          # key = if wrapped? and [:source, :version].includes?(k)
+          # key = if wrapper_content and [:source, :version].includes?(k)
           #   "#{label}_#{k}"
           # else
           #   k
@@ -338,9 +345,9 @@ module Struktura23
         # TODO: implement another part (wrapped block within wrapper)
         named_block.merge! enforcers
 
-        if wrapped?
+        if wrapper_content
           # TODO: implement another part (wrapped block within wrapper)
-          modules["#{schema.name}_#{label}"] = named_block.merge({"contents" => @wrapped_by.to_opentofu})
+          modules["#{schema.name}_#{label}"] = named_block.merge({"contents" => wrapper_content})
         elsif datasource?
           datasources[schema.name] = {label => named_block}
         else
@@ -349,7 +356,7 @@ module Struktura23
 
         output.each_pair do |k,v|
           outputs["#{schema.name}_#{label}_#{k}"] = {
-            :value => if wrapped?
+            :value => if wrapper_content
               "${module.#{schema.name}_#{label}.#{k}}"
             else
               data_prefix = datasource? ? "data." : ""
