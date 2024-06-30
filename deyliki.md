@@ -132,7 +132,14 @@
 
 ## 29.06.2024
 
-* [e66b](https://github.com/viatcheslavmogilevsky/struktura23/commit/e66bbe7ebcb4a19be5861c731db940ff4bf4c357) ``
+* [e66b](https://github.com/viatcheslavmogilevsky/struktura23/commit/e66bbe7ebcb4a19be5861c731db940ff4bf4c357) `recursive to_opentofu-ing: fixing recusrive input (variables)`
 	* this implementation is closer to correct than previous by only input/variables
+
+
+## 30.06.2024
+
+* [9c32](https://github.com/viatcheslavmogilevsky/struktura23/commit/9c32d19a1a7b1ef35b631414477facb5b77da413) `recursive to_opentofu-ing: fixing recursive output`
+	* adding recursive output so this impl is closest to correct to date
+
 
 
