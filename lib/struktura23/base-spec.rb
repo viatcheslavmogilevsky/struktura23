@@ -335,26 +335,34 @@ module Struktura23
         named_block = {}
         input.keys.each do |k|
           # TODO: implement another part (wrapped block within wrapper)
-          # key = if wrapper_content and [:source, :version].includes?(k)
-          #   "#{label}_#{k}"
-          # else
-          #   k
-          # end
-          named_block[k] = "var.#{schema.name}_#{label}_#{k}"
+          key = if wrapper_content and [:source, :version].include?(k)
+            "#{label}_#{k}"
+          else
+            k
+          end
+          named_block[key] = "var.#{schema.name}_#{label}_#{k}"
         end
-        # TODO: implement another part (wrapped block within wrapper)
-        named_block.merge! enforcers
+        enforcers.each_pair do |k, v|
+          key = if wrapper_content and [:source, :version].include?(k)
+            "#{label}_#{k}"
+          else
+            k
+          end
+          named_block[key] = v
+        end
 
         if wrapper_content
           # TODO: implement another part (wrapped block within wrapper)
-          modules["#{schema.name}_#{label}"] = named_block.merge({"contents" => wrapper_content})
+          wrapper_content_with_core = wrapper_content
+
+          modules["#{schema.name}_#{label}"] = named_block.merge({"contents" => wrapper_content_with_core})
         elsif datasource?
           datasources[schema.name] = {label => named_block}
         else
           resources[schema.name] = {label => named_block}
         end
 
-        output.each_pair do |k,v|
+        output.keys.each do |k|
           outputs["#{schema.name}_#{label}_#{k}"] = {
             :value => if wrapper_content
               "${module.#{schema.name}_#{label}.#{k}}"
@@ -363,6 +371,13 @@ module Struktura23
               "${#{data_prefix}#{schema.name}.#{label}.#{k}}"
             end
           }
+        end
+        if wrapper_content
+          wrapper_content["output"]&.keys&.each do |k|
+            outputs["#{schema.name}_#{label}_#{k}"] = {
+              :value => "${module.#{schema.name}_#{label}.#{k}}"
+            }
+          end
         end
 
 
