@@ -212,10 +212,6 @@ module Struktura23
       @enforcers ||= {}
     end
 
-    def merge!(another)
-      enforcers.merge!(another.enforcers)
-    end
-
     class Context
       def initialize(enforced_node, enforced_attr)
         @enforced_node = enforced_node
@@ -334,9 +330,8 @@ module Struktura23
 
         named_block = {}
         input.keys.each do |k|
-          # TODO: implement another part (wrapped block within wrapper)
           key = if wrapper_content and [:source, :version].include?(k)
-            "#{label}_#{k}"
+            "#{schema.name}_#{k}"
           else
             k
           end
@@ -344,7 +339,7 @@ module Struktura23
         end
         enforcers.each_pair do |k, v|
           key = if wrapper_content and [:source, :version].include?(k)
-            "#{label}_#{k}"
+            "#{schema.name}_#{k}"
           else
             k
           end
@@ -352,10 +347,29 @@ module Struktura23
         end
 
         if wrapper_content
-          # TODO: implement another part (wrapped block within wrapper)
-          wrapper_content_with_core = wrapper_content
+          # TODO: implement internal vars/outputs
+          core_content = {}
+          core_block = {}
+          @schema.input_definition.keys.each do |k|
+            var_name = if [:source, :version].include?(k)
+              "var.#{schema.name}_#{k}"
+            else
+              "var.#{k}"
+            end
 
-          modules["#{schema.name}_#{label}"] = named_block.merge({"contents" => wrapper_content_with_core})
+            core_block[k] = var_name
+          end
+          core_block.merge! enforcers
+          core_content[datasource? ? "data" : "resource"] = {
+            "#{schema.name}" => {
+              "core" => core_block
+            }
+          }
+          modules["#{schema.name}_#{label}"] = named_block.merge({
+            "contents" => wrapper_content.merge(core_content) do |_, by_kind, one_kind|
+              by_kind.merge(one_kind) {|_, by_schema, one_schema|  by_schema.merge(one_schema)}
+            end
+          })
         elsif datasource?
           datasources[schema.name] = {label => named_block}
         else
