@@ -142,4 +142,8 @@
 	* adding recursive output so this impl is closest to correct to date
 
 
+## 1.07.2024
+
+* [05b7](https://github.com/viatcheslavmogilevsky/struktura23/commit/05b7fe655824ae8139ff75c6b2bcf4acfb735e13) `recursive to_opentofu-ing: inserting core schema into wrapper`
+	* wrapper can render core node inside resource/data
 
