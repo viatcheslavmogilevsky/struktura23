@@ -147,3 +147,8 @@
 * [05b7](https://github.com/viatcheslavmogilevsky/struktura23/commit/05b7fe655824ae8139ff75c6b2bcf4acfb735e13) `recursive to_opentofu-ing: inserting core schema into wrapper`
 	* wrapper can render core node inside resource/data
 
+
+## 2.07.2024
+
+* [4f24](https://github.com/viatcheslavmogilevsky/struktura23/commit/4f24c3bfdb47a7b34812f159954b1b5232b92c8f) `recursive to_opentofu-ing: fix deep merge`
+	* fixing merging resource/data/module entries at owner (module) level
