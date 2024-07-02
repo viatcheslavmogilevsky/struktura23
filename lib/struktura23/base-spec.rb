@@ -516,9 +516,16 @@ module Struktura23
         node_opentofu = node.to_opentofu
         variables.merge!(node_opentofu["variables"] || {})
         output.merge!(node_opentofu["output"] || {})
-        resource.merge!(node_opentofu["resource"] || {})
-        data.merge!(node_opentofu["data"] || {})
-        modules.merge!(node_opentofu["module"] || {})
+
+        modules.merge!(node_opentofu["module"] || {}) do |_, val1, val2|
+          val1.merge(val2)
+        end
+        resource.merge!(node_opentofu["resource"] || {}) do |_, val1, val2|
+          val1.merge(val2)
+        end
+        data.merge!(node_opentofu["data"] || {}) do |_, val1, val2|
+          val1.merge(val2)
+        end
       end
       {
         "//": "This is not ready yet!",
