@@ -350,7 +350,10 @@ module Struktura23
           # TODO: implement internal vars/outputs
           core_content = {}
           core_block = {}
-          @schema.input_definition.keys.each do |k|
+          core_variables = {}
+          core_output = {}
+
+          @schema.input_definition.each do |k, v|
             var_name = if [:source, :version].include?(k)
               "var.#{schema.name}_#{k}"
             else
@@ -358,17 +361,30 @@ module Struktura23
             end
 
             core_block[k] = var_name
+            core_variables[var_name] = v
           end
-          core_block.merge! enforcers
+
+          output.keys.each do |k|
+            data_prefix = datasource? ? "data." : ""
+            core_output[k] = {
+              :value => "${#{data_prefix}#{schema.name}.core.#{k}}"
+            }
+          end
+
+          core_block.merge!(@wrapped_by.core&.enforcers || {})
           core_content[datasource? ? "data" : "resource"] = {
             "#{schema.name}" => {
               "core" => core_block
             }
           }
+
+
           modules["#{schema.name}_#{label}"] = named_block.merge({
             "contents" => wrapper_content.merge(core_content) do |_, by_kind, one_kind|
               by_kind.merge(one_kind) {|_, by_schema, one_schema|  by_schema.merge(one_schema)}
             end
+            .merge({"variables" => core_variables}) {|_, w_vars, n_vars| w_vars.merge(n_vars)}
+            .merge({"output" => core_output}) {|_, w_output, n_output| w_output.merge(n_output)}
           })
         elsif datasource?
           datasources[schema.name] = {label => named_block}
