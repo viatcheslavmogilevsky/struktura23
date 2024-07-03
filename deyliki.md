@@ -152,3 +152,11 @@
 
 * [4f24](https://github.com/viatcheslavmogilevsky/struktura23/commit/4f24c3bfdb47a7b34812f159954b1b5232b92c8f) `recursive to_opentofu-ing: fix deep merge`
 	* fixing merging resource/data/module entries at owner (module) level
+
+
+## 3.07.2024
+
+* [5c26](https://github.com/viatcheslavmogilevsky/struktura23/commit/5c26a2a876b953f4658a9cc37d66a1d2e0eea61b) `recursive to_opentofu-ing: fix internal wrapper's vars/output`
+	* add variables and outputs related to wrapper's core
+
+
