@@ -160,3 +160,9 @@
 	* add variables and outputs related to wrapper's core
 
 
+## 4.07.2024
+
+* [7761](https://github.com/viatcheslavmogilevsky/struktura23/commit/776112bc544cca5ef7a776359108a41ab4c3b8fa) `starting adding 'flag to enable' to opentofu-ing`
+	* starting to add flag_to_enable -  some refactoring needed already
+
+
