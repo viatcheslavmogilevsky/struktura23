@@ -305,7 +305,7 @@ module Struktura23
         schema.group_name == :data
       end
 
-      # TODO: fix properly
+      # TODO: how to add "flag to enabled" to it - some small refactoring needed
       def to_opentofu
         variables = {}
         outputs = {}
@@ -347,7 +347,6 @@ module Struktura23
         end
 
         if wrapper_content
-          # TODO: implement internal vars/outputs
           core_content = {}
           core_block = {}
           core_variables = {}
@@ -452,9 +451,13 @@ module Struktura23
         PromiseChain.new(self)
       end
 
+      def var_name_to_enable
+        "enable_#{@schema.name}_#{@label}"
+      end
+
       def flag_to_enable
         # TODO: it is stub
-        "var.#{@data_source ? 'data_' : ''}#{@schema.name}_#{@label}_enabled"
+        "var.#{var_name_to_enable}"
       end
     end
   end
