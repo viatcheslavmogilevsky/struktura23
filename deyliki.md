@@ -166,3 +166,8 @@
 	* starting to add flag_to_enable -  some refactoring needed already
 
 
+## 5.07.2024
+
+* [8ad4](https://github.com/viatcheslavmogilevsky/struktura23/commit/8ad457245031cfc4297ade90b2f1c91c80217d4b) `refactoring of opentofu-ing: move outer variables generation into a method`
+	*  this is a first part of refactoring which allow to modify opentofu-ing at specific node subclasses
+
