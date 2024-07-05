@@ -305,32 +305,37 @@ module Struktura23
         schema.group_name == :data
       end
 
+      def wrapper_content
+        if !!@wrapped_by
+          @wrapper_content ||= @wrapped_by.to_opentofu
+        else
+          {}
+        end
+      end
+
+      def outside_variables
+        vars = {}
+        input.each_pair do |k,v|
+          vars["#{schema.name}_#{label}_#{k}"] = v
+        end
+        wrapper_content["variables"]&.each_pair do |k,v|
+          vars["#{schema.name}_#{label}_#{k}"] = v
+        end
+        vars
+      end
+
       # TODO: how to add "flag to enabled" to it - some small refactoring needed
       def to_opentofu
-        variables = {}
         outputs = {}
         resources = {}
         datasources = {}
         modules = {}
 
-        wrapper_content = if !!@wrapped_by
-          @wrapped_by.to_opentofu
-        end
-
-        # input:
-        input.each_pair do |k,v|
-          variables["#{schema.name}_#{label}_#{k}"] = v
-        end
-        if wrapper_content
-          wrapper_content["variables"]&.each_pair do |k,v|
-            variables["#{schema.name}_#{label}_#{k}"] = v
-          end
-        end
-
-
+        # tf block: begin
+        # TODO: fix: add setting variables of internal blocks into 'named block'
         named_block = {}
         input.keys.each do |k|
-          key = if wrapper_content and [:source, :version].include?(k)
+          key = if !wrapper_content.empty? and [:source, :version].include?(k)
             "#{schema.name}_#{k}"
           else
             k
@@ -338,7 +343,7 @@ module Struktura23
           named_block[key] = "var.#{schema.name}_#{label}_#{k}"
         end
         enforcers.each_pair do |k, v|
-          key = if wrapper_content and [:source, :version].include?(k)
+          key = if !wrapper_content.empty? and [:source, :version].include?(k)
             "#{schema.name}_#{k}"
           else
             k
@@ -346,7 +351,7 @@ module Struktura23
           named_block[key] = v
         end
 
-        if wrapper_content
+        if !wrapper_content.empty?
           core_content = {}
           core_block = {}
           core_variables = {}
@@ -354,12 +359,12 @@ module Struktura23
 
           @schema.input_definition.each do |k, v|
             var_name = if [:source, :version].include?(k)
-              "var.#{schema.name}_#{k}"
+              "#{schema.name}_#{k}"
             else
-              "var.#{k}"
+              k
             end
 
-            core_block[k] = var_name
+            core_block[k] = "var.#{var_name}"
             core_variables[var_name] = v
           end
 
@@ -390,10 +395,12 @@ module Struktura23
         else
           resources[schema.name] = {label => named_block}
         end
+        # tf block: end
 
+        # outside output: begin
         output.keys.each do |k|
           outputs["#{schema.name}_#{label}_#{k}"] = {
-            :value => if wrapper_content
+            :value => if !wrapper_content.empty?
               "${module.#{schema.name}_#{label}.#{k}}"
             else
               data_prefix = datasource? ? "data." : ""
@@ -401,17 +408,16 @@ module Struktura23
             end
           }
         end
-        if wrapper_content
-          wrapper_content["output"]&.keys&.each do |k|
-            outputs["#{schema.name}_#{label}_#{k}"] = {
-              :value => "${module.#{schema.name}_#{label}.#{k}}"
-            }
-          end
+        wrapper_content["output"]&.keys&.each do |k|
+          outputs["#{schema.name}_#{label}_#{k}"] = {
+            :value => "${module.#{schema.name}_#{label}.#{k}}"
+          }
         end
+        # outside output: end
 
 
         {
-          "variables" => variables,
+          "variables" => outside_variables,
           "resource" => resources,
           "data" => datasources,
           "output" => outputs,
