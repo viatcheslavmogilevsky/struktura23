@@ -332,7 +332,6 @@ module Struktura23
         modules = {}
 
         # tf block: begin
-        # TODO: fix: add setting variables of internal blocks into 'named block'
         named_block = {}
         input.keys.each do |k|
           key = if !wrapper_content.empty? and [:source, :version].include?(k)
@@ -350,6 +349,12 @@ module Struktura23
           end
           named_block[key] = v
         end
+
+        # tf block: setting variables of internal nodes: begin
+        wrapper_content["variables"]&.keys&.each do |k|
+          named_block[k] = "var.#{schema.name}_#{label}_#{k}"
+        end
+        # tf block: setting variables of internal nodes: end
 
         if !wrapper_content.empty?
           core_content = {}
