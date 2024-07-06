@@ -171,3 +171,9 @@
 * [8ad4](https://github.com/viatcheslavmogilevsky/struktura23/commit/8ad457245031cfc4297ade90b2f1c91c80217d4b) `refactoring of opentofu-ing: move outer variables generation into a method`
 	*  this is a first part of refactoring which allow to modify opentofu-ing at specific node subclasses
 
+
+## 6.07.2024
+
+* [91ae](https://github.com/viatcheslavmogilevsky/struktura23/commit/91ae6f0c5cbc25d207d29e3c27748e1f8cf14932) `fixing of refactoring of opentofu-ing: setting variables of internal nodes into named_block`
+	* fix setting module variables which relates to module's internal nodes (recursively)
+
