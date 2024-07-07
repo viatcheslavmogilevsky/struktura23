@@ -368,7 +368,6 @@ module Struktura23
         out_blk
       end
 
-      # TODO: how to add "flag to enabled" to it - some small refactoring needed
       def to_opentofu
         resources = {}
         datasources = {}
@@ -469,6 +468,22 @@ module Struktura23
       def flag_to_enable
         # TODO: it is stub
         "var.#{var_name_to_enable}"
+      end
+
+      def outside_variables
+        super.merge({
+          var_name_to_enable => {
+            :optional=>true,
+            :Bool=>true,
+            :default=>false
+          }
+        })
+      end
+
+      def outside_block
+        super.merge({
+          "count" => "#{flag_to_enable} ? 1 : 0"
+        })
       end
     end
   end
