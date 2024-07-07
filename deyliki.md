@@ -186,4 +186,5 @@
 	* adding 'flag to enabled', part 2 - move 'outer block' generation to its own method, so descendants can customize it
 * [d441](https://github.com/viatcheslavmogilevsky/struktura23/commit/d4417c9a5efc9aeccc59e11af685a4080031ceb7) `opentofu-ing: 'flag to enabled' added`
 	* adding 'flag to enabled', part 3 - customize for Node::Optional
-
+* [e2fe](https://github.com/viatcheslavmogilevsky/struktura23/commit/e2fecb338a6ed51fe9d334cfb6a50f633766019e) `roadmap`
+	* more detailed roadmap
