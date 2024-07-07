@@ -177,3 +177,13 @@
 * [91ae](https://github.com/viatcheslavmogilevsky/struktura23/commit/91ae6f0c5cbc25d207d29e3c27748e1f8cf14932) `fixing of refactoring of opentofu-ing: setting variables of internal nodes into named_block`
 	* fix setting module variables which relates to module's internal nodes (recursively)
 
+
+## 7.07.2024
+
+* [6773](https://github.com/viatcheslavmogilevsky/struktura23/commit/677399e8721df6a08159c2419b7de1bc88c9020b) `refactoring of opentofu-ing: move outer outputs generation into a method`
+	* adding 'flag to enabled', part 1 - move outputs generation to its own method, so descendants can customize it
+* [d34d](https://github.com/viatcheslavmogilevsky/struktura23/commit/d34db1b9562e16df368d64532fc06beace53c064) `refactoring of opentofu-ing: move generation of outer block into a method`
+	* adding 'flag to enabled', part 2 - move 'outer block' generation to its own method, so descendants can customize it
+* [d441](https://github.com/viatcheslavmogilevsky/struktura23/commit/d4417c9a5efc9aeccc59e11af685a4080031ceb7) `opentofu-ing: 'flag to enabled' added`
+	* adding 'flag to enabled', part 3 - customize for Node::Optional
+
