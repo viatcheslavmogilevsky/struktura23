@@ -344,21 +344,15 @@ module Struktura23
         outs
       end
 
-      # TODO: how to add "flag to enabled" to it - some small refactoring needed
-      def to_opentofu
-        resources = {}
-        datasources = {}
-        modules = {}
-
-        # tf block: begin
-        named_block = {}
+      def outside_block
+        out_blk = {}
         input.keys.each do |k|
           key = if !wrapper_content.empty? and [:source, :version].include?(k)
             "#{schema.name}_#{k}"
           else
             k
           end
-          named_block[key] = "var.#{schema.name}_#{label}_#{k}"
+          out_blk[key] = "var.#{schema.name}_#{label}_#{k}"
         end
         enforcers.each_pair do |k, v|
           key = if !wrapper_content.empty? and [:source, :version].include?(k)
@@ -366,15 +360,21 @@ module Struktura23
           else
             k
           end
-          named_block[key] = v
+          out_blk[key] = v
         end
-
-        # tf block: setting variables of internal nodes: begin
         wrapper_content["variables"]&.keys&.each do |k|
-          named_block[k] = "var.#{schema.name}_#{label}_#{k}"
+          out_blk[k] = "var.#{schema.name}_#{label}_#{k}"
         end
-        # tf block: setting variables of internal nodes: end
+        out_blk
+      end
 
+      # TODO: how to add "flag to enabled" to it - some small refactoring needed
+      def to_opentofu
+        resources = {}
+        datasources = {}
+        modules = {}
+
+        # tf block: begin
         if !wrapper_content.empty?
           core_content = {}
           core_block = {}
@@ -406,8 +406,7 @@ module Struktura23
             }
           }
 
-
-          modules["#{schema.name}_#{label}"] = named_block.merge({
+          modules["#{schema.name}_#{label}"] = outside_block.merge({
             "contents" => wrapper_content.merge(core_content) do |_, by_kind, one_kind|
               by_kind.merge(one_kind) {|_, by_schema, one_schema|  by_schema.merge(one_schema)}
             end
@@ -415,9 +414,9 @@ module Struktura23
             .merge({"output" => core_output}) {|_, w_output, n_output| w_output.merge(n_output)}
           })
         elsif datasource?
-          datasources[schema.name] = {label => named_block}
+          datasources[schema.name] = {label => outside_block}
         else
-          resources[schema.name] = {label => named_block}
+          resources[schema.name] = {label => outside_block}
         end
         # tf block: end
 
