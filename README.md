@@ -2,9 +2,16 @@
 
 ## Features
 
-### Roadmap 
+No features yet :no_mouth:
+
+## Roadmap 
 
 1. Focused: TBD: opentofu module generator (JSON Configuration Syntax)
+	* generating recursively :heavy_check_mark:
+	* tests/fixtures :dart:
+	* pulling schemas from providers (js/ts?) instead of mocking
+	* expression resolving
+	* "correlated" nodes along with wrapping
 2. TBD: querying existing infra
 3. TBD: generating `import` commands to instant import
 
