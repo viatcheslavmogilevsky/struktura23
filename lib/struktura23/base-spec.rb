@@ -324,9 +324,28 @@ module Struktura23
         vars
       end
 
+      def outside_outputs
+        outs = {}
+        output.keys.each do |k|
+          outs["#{schema.name}_#{label}_#{k}"] = {
+            :value => if !wrapper_content.empty?
+              "${module.#{schema.name}_#{label}.#{k}}"
+            else
+              data_prefix = datasource? ? "data." : ""
+              "${#{data_prefix}#{schema.name}.#{label}.#{k}}"
+            end
+          }
+        end
+        wrapper_content["output"]&.keys&.each do |k|
+          outs["#{schema.name}_#{label}_#{k}"] = {
+            :value => "${module.#{schema.name}_#{label}.#{k}}"
+          }
+        end
+        outs
+      end
+
       # TODO: how to add "flag to enabled" to it - some small refactoring needed
       def to_opentofu
-        outputs = {}
         resources = {}
         datasources = {}
         modules = {}
@@ -402,30 +421,12 @@ module Struktura23
         end
         # tf block: end
 
-        # outside output: begin
-        output.keys.each do |k|
-          outputs["#{schema.name}_#{label}_#{k}"] = {
-            :value => if !wrapper_content.empty?
-              "${module.#{schema.name}_#{label}.#{k}}"
-            else
-              data_prefix = datasource? ? "data." : ""
-              "${#{data_prefix}#{schema.name}.#{label}.#{k}}"
-            end
-          }
-        end
-        wrapper_content["output"]&.keys&.each do |k|
-          outputs["#{schema.name}_#{label}_#{k}"] = {
-            :value => "${module.#{schema.name}_#{label}.#{k}}"
-          }
-        end
-        # outside output: end
-
 
         {
           "variables" => outside_variables,
           "resource" => resources,
           "data" => datasources,
-          "output" => outputs,
+          "output" => outside_outputs,
           "module" => modules
         }
       end
