@@ -188,3 +188,5 @@
 	* adding 'flag to enabled', part 3 - customize for Node::Optional
 * [e2fe](https://github.com/viatcheslavmogilevsky/struktura23/commit/e2fecb338a6ed51fe9d334cfb6a50f633766019e) `roadmap`
 	* more detailed roadmap
+* [c1e8](https://github.com/viatcheslavmogilevsky/struktura23/commit/c1e8007b828a16d611840a52449594d45c2603b5) `roadmap: added some items`
+	* those items are important enough to be in the roadmap
