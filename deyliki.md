@@ -190,3 +190,10 @@
 	* more detailed roadmap
 * [c1e8](https://github.com/viatcheslavmogilevsky/struktura23/commit/c1e8007b828a16d611840a52449594d45c2603b5) `roadmap: added some items`
 	* those items are important enough to be in the roadmap
+
+
+## 8.07.2024
+
+* [50f8](https://github.com/viatcheslavmogilevsky/struktura23/commit/50f8556b6d5a1b3f694ebca24ec176c1f0a73f5e) `add rspec`
+	* initialize rspec as tests are needed
+
