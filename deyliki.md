@@ -197,3 +197,10 @@
 * [50f8](https://github.com/viatcheslavmogilevsky/struktura23/commit/50f8556b6d5a1b3f694ebca24ec176c1f0a73f5e) `add rspec`
 	* initialize rspec as tests are needed
 
+
+## 9.07.2024
+
+* [f1c3](https://github.com/viatcheslavmogilevsky/struktura23/commit/f1c39e21b45f517fa1608f4b3a3648dbf2510bcf) `rspec: simple data aws_ami: variables`
+	* exploring some rspec-expectations features
+
+
