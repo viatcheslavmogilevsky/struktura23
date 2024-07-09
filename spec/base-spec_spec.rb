@@ -11,7 +11,20 @@ class AwsAmiDataRootSimple < Struktura23::BaseSpec
 end
 
 describe AwsAmiDataRootSimple do
+  before :each do
+    @opentofu = AwsAmiDataRootSimple.to_opentofu
+    @data_aws_ami_schema = AwsAmiDataRootSimple.schemas.select do |s|
+      s.name == :aws_ami && s.group_name == :data
+    end
+  end
+
   it 'generates some opentofu' do
-    expect(AwsAmiDataRootSimple.to_opentofu).to be_a(Hash)
+    expect(@opentofu).to be_a(Hash)
+  end
+
+  it 'generates variables for aws_ami main' do
+    expect(@opentofu["variables"]).to be_a(Hash)
+    # TODO: finish (use: https://github.com/rspec/rspec-expectations)
+    # expect(@opentofu["variables"].keys.map {|k| }).to be_a(Hash)
   end
 end
