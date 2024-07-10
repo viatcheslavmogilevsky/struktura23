@@ -15,7 +15,7 @@ describe AwsAmiDataRootSimple do
     @opentofu = AwsAmiDataRootSimple.to_opentofu
     @data_aws_ami_schema = AwsAmiDataRootSimple.schemas.select do |s|
       s.name == :aws_ami && s.group_name == :data
-    end
+    end.first
   end
 
   it 'generates some opentofu' do
@@ -23,8 +23,10 @@ describe AwsAmiDataRootSimple do
   end
 
   it 'generates variables for aws_ami main' do
-    expect(@opentofu["variables"]).to be_a(Hash)
-    # TODO: finish (use: https://github.com/rspec/rspec-expectations)
-    # expect(@opentofu["variables"].keys.map {|k| }).to be_a(Hash)
+    expect(
+      @opentofu["variables"]&.keys
+    ).to match_array(
+      @data_aws_ami_schema.input_definition.keys.map {|k| "aws_ami_main_#{k}"}
+    )
   end
 end
