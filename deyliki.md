@@ -204,3 +204,8 @@
 	* exploring some rspec-expectations features
 
 
+## 10.07.2024
+
+* [0bf2](https://github.com/viatcheslavmogilevsky/struktura23/commit/0bf26ecb6941b41da626d95a332879b5db9243b6) `rspec: simple data aws_ami: variables`
+	* rspec: testing simple outside variables generation
+
