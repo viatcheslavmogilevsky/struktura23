@@ -29,4 +29,12 @@ describe AwsAmiDataRootSimple do
       @data_aws_ami_schema.input_definition.keys.map {|k| "aws_ami_main_#{k}"}
     )
   end
+
+  it 'generates output for aws_ami main' do
+    expect(
+      @opentofu["output"]&.keys
+    ).to match_array(
+      @data_aws_ami_schema.definition.keys.map {|k| "aws_ami_main_#{k}"}
+    )
+  end
 end
