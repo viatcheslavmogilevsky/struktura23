@@ -209,3 +209,11 @@
 * [0bf2](https://github.com/viatcheslavmogilevsky/struktura23/commit/0bf26ecb6941b41da626d95a332879b5db9243b6) `rspec: simple data aws_ami: variables`
 	* rspec: testing simple outside variables generation
 
+
+## 11.07.2024
+
+* [6d10](https://github.com/viatcheslavmogilevsky/struktura23/commit/6d10688e00cc4f8f310ceee2e3566eb4453db5d9) `rspec: simple data aws_ami: variables`
+	* rspec: testing simple outside output generation
+* [474c](https://github.com/viatcheslavmogilevsky/struktura23/commit/474c3caf126cae5e6070fea67a973ee281c9aad0) `remove suppress_definition`
+	* it is not needed anymore since starting testing
+
