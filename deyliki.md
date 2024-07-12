@@ -217,3 +217,8 @@
 * [474c](https://github.com/viatcheslavmogilevsky/struktura23/commit/474c3caf126cae5e6070fea67a973ee281c9aad0) `remove suppress_definition`
 	* it is not needed anymore since starting testing
 
+
+## 12.07.2024
+
+* [e98d](https://github.com/viatcheslavmogilevsky/struktura23/commit/e98d3fceed9a2faa6b30add90fdf880989050576) `rspec: simple data source`
+	* rspec: testing simple data sources generation
