@@ -37,4 +37,8 @@ describe AwsAmiDataRootSimple do
       @data_aws_ami_schema.definition.keys.map {|k| "aws_ami_main_#{k}"}
     )
   end
+
+  it 'generates datasource' do
+    expect(@opentofu["data"]).to be_a(Hash)
+  end
 end
