@@ -222,3 +222,9 @@
 
 * [e98d](https://github.com/viatcheslavmogilevsky/struktura23/commit/e98d3fceed9a2faa6b30add90fdf880989050576) `rspec: simple data source`
 	* rspec: testing simple data sources generation
+
+
+## 13.07.2024
+
+* [b1ab](https://github.com/viatcheslavmogilevsky/struktura23/commit/b1ab4d49379e9fd445e6866a51ff3f3aae662fea) `rspec: simple data resource`
+	* rspec: testing simple resources generation if there is no resource blocks (empty)
