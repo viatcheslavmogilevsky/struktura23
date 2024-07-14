@@ -45,4 +45,8 @@ describe AwsAmiDataRootSimple do
   it 'generates empty resource' do
     expect(@opentofu["resource"]).to eq({})
   end
+
+  it 'generates empty module' do
+    expect(@opentofu["module"]).to eq({})
+  end
 end
