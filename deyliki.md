@@ -228,3 +228,9 @@
 
 * [b1ab](https://github.com/viatcheslavmogilevsky/struktura23/commit/b1ab4d49379e9fd445e6866a51ff3f3aae662fea) `rspec: simple data resource`
 	* rspec: testing simple resources generation if there is no resource blocks (empty)
+
+
+## 14.07.2024
+
+* [1605](https://github.com/viatcheslavmogilevsky/struktura23/commit/1605213961068ac4da7e927846058295f0b68b9c) `rspec: simple data: module`
+	* rspec: testing simple resources generation if there is no module blocks (empty)
