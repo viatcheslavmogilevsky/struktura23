@@ -233,4 +233,11 @@
 ## 14.07.2024
 
 * [1605](https://github.com/viatcheslavmogilevsky/struktura23/commit/1605213961068ac4da7e927846058295f0b68b9c) `rspec: simple data: module`
-	* rspec: testing simple resources generation if there is no module blocks (empty)
+	* rspec: testing simple modules generation if there is no module blocks (empty)
+
+
+## 15.07.2024
+
+* [d41f](https://github.com/viatcheslavmogilevsky/struktura23/commit/d41fb3f829d09bcb6e25aa2f9a55c7d65e8e1f5d) `rspec: simple data: metadata (stub at the moment)`
+	* rspec: testing terraform-config/provider-config/locals generation (stub)
+
