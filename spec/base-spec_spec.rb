@@ -40,6 +40,7 @@ describe AwsAmiDataRootSimple do
 
   it 'generates datasource' do
     expect(@opentofu["data"]).to be_a(Hash)
+    expect(@opentofu["data"][:aws_ami][:main]).to be_a(Hash)
   end
 
   it 'generates empty resource' do
