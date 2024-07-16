@@ -241,3 +241,9 @@
 * [d41f](https://github.com/viatcheslavmogilevsky/struktura23/commit/d41fb3f829d09bcb6e25aa2f9a55c7d65e8e1f5d) `rspec: simple data: metadata (stub at the moment)`
 	* rspec: testing terraform-config/provider-config/locals generation (stub)
 
+
+## 16.07.2024
+
+* [b340](https://github.com/viatcheslavmogilevsky/struktura23/commit/b3402064e4f706a688e3aeb8846cff10e1867afd) `rspec: simple data: datasource aws_ami main`
+	* rspec: testing simple data sources generation: exact datasource tf block
+
