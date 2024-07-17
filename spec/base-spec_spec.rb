@@ -40,7 +40,9 @@ describe AwsAmiDataRootSimple do
 
   it 'generates datasource' do
     expect(@opentofu["data"]).to be_a(Hash)
-    expect(@opentofu["data"][:aws_ami][:main]).to be_a(Hash)
+    expect(@opentofu["data"][:aws_ami][:main]).to eq(
+      @data_aws_ami_schema.input_definition.keys.inject({}) {|res, key| res.merge(key => "var.aws_ami_main_#{key}")}
+    )
   end
 
   it 'generates empty resource' do
