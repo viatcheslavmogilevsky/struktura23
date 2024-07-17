@@ -247,3 +247,8 @@
 * [b340](https://github.com/viatcheslavmogilevsky/struktura23/commit/b3402064e4f706a688e3aeb8846cff10e1867afd) `rspec: simple data: datasource aws_ami main`
 	* rspec: testing simple data sources generation: exact datasource tf block
 
+
+## 17.07.2024
+
+* [e771](https://github.com/viatcheslavmogilevsky/struktura23/commit/e77124d56c09cd569771e9a2358f8cfd888159d8) `rspec: simple data: datasource aws_ami main full block`
+	* rspec: testing simple data sources generation: exact full datasource tf block
