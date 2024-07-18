@@ -252,3 +252,12 @@
 
 * [e771](https://github.com/viatcheslavmogilevsky/struktura23/commit/e77124d56c09cd569771e9a2358f8cfd888159d8) `rspec: simple data: datasource aws_ami main full block`
 	* rspec: testing simple data sources generation: exact full datasource tf block
+
+
+## 18.07.2024
+
+* [202f](https://github.com/viatcheslavmogilevsky/struktura23/commit/202ff6ad51c2a38108877faa3c3c5bc04931d28c) `rspec: rename one test file`
+	* rspec: renaming test file (with AwsAmiDataRootSimple) to correct name
+* [5060](https://github.com/viatcheslavmogilevsky/struktura23/commit/50602d19ec43ac40babcf5f09c4e5b1977d4645f) `rspec: eks with nodes: the beginning`
+	* rspec: testing eks-with-nodes: test opentofu method (basic)
+
