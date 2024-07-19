@@ -261,3 +261,8 @@
 * [5060](https://github.com/viatcheslavmogilevsky/struktura23/commit/50602d19ec43ac40babcf5f09c4e5b1977d4645f) `rspec: eks with nodes: the beginning`
 	* rspec: testing eks-with-nodes: test opentofu method (basic)
 
+
+## 20.07.2024 (19.07.2024 CEST)
+
+* [38a6](https://github.com/viatcheslavmogilevsky/struktura23/commit/38a61ba03553f2a3a28cb6b4c582526377800975) `rspec: simple data: metadata (stub at the moment)`
+	* rspec: testing eks-with-nodes terraform-config/provider-config/locals generation (stub)
