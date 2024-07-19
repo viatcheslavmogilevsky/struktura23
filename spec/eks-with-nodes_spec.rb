@@ -104,4 +104,11 @@ describe EksWithNodes do
   it 'generates some opentofu' do
     expect(@opentofu).to be_a(Hash)
   end
+
+  # TODO: to be continued
+  it 'generates empty provider/locals/terraform' do
+    expect(@opentofu["provider"]).to eq({})
+    expect(@opentofu["locals"]).to eq({})
+    expect(@opentofu["terraform"]).to eq({})
+  end
 end
