@@ -105,6 +105,22 @@ describe EksWithNodes do
     expect(@opentofu).to be_a(Hash)
   end
 
+  it 'generates non-empty variables' do
+    expect(@opentofu["variables"]).to have_attributes(size: (be > 0))
+  end
+
+  it 'generates empty resource' do
+    expect(@opentofu["resource"]).to eq({})
+  end
+
+  it 'generates empty datasource' do
+    expect(@opentofu["data"]).to eq({})
+  end
+
+  it 'generates non-empty module' do
+    expect(@opentofu["variables"]).to have_attributes(size: (be > 0))
+  end
+
   # TODO: to be continued
   it 'generates empty provider/locals/terraform' do
     expect(@opentofu["provider"]).to eq({})
