@@ -266,3 +266,9 @@
 
 * [38a6](https://github.com/viatcheslavmogilevsky/struktura23/commit/38a61ba03553f2a3a28cb6b4c582526377800975) `rspec: simple data: metadata (stub at the moment)`
 	* rspec: testing eks-with-nodes terraform-config/provider-config/locals generation (stub)
+
+
+## 20.07.2024
+
+* [face](https://github.com/viatcheslavmogilevsky/struktura23/commit/face42fcece83389a6b4f8530c315cc69af504b0) `rspec: eks with nodes: variables/resource/data/module`
+	* rspec: testing eks-with-nodes high-level: variables, resources (empty at top-level), datasources(empty at top-level) and modules(some)
