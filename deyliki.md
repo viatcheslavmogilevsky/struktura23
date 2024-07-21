@@ -272,3 +272,9 @@
 
 * [face](https://github.com/viatcheslavmogilevsky/struktura23/commit/face42fcece83389a6b4f8530c315cc69af504b0) `rspec: eks with nodes: variables/resource/data/module`
 	* rspec: testing eks-with-nodes high-level: variables, resources (empty at top-level), datasources(empty at top-level) and modules(some)
+
+
+## 21.07.2024
+
+* [a298](https://github.com/viatcheslavmogilevsky/struktura23/commit/a2985464d9f199b663cd816f3274d566ca2078ab) `rspec: eks with nodes: output`
+	* rspec: testing eks-with-nodes high-level: output (some)
