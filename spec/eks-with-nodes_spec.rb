@@ -121,6 +121,10 @@ describe EksWithNodes do
     expect(@opentofu["variables"]).to have_attributes(size: (be > 0))
   end
 
+  it 'generates non-empty output' do
+    expect(@opentofu["output"]).to have_attributes(size: (be > 0))
+  end
+
   # TODO: to be continued
   it 'generates empty provider/locals/terraform' do
     expect(@opentofu["provider"]).to eq({})
