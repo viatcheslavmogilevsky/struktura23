@@ -278,3 +278,9 @@
 
 * [a298](https://github.com/viatcheslavmogilevsky/struktura23/commit/a2985464d9f199b663cd816f3274d566ca2078ab) `rspec: eks with nodes: output`
 	* rspec: testing eks-with-nodes high-level: output (some)
+
+
+## 22.07.2024
+
+* [1370](https://github.com/viatcheslavmogilevsky/struktura23/commit/13700c25bc47e244510d996915ed4f9b16300e7e)
+	* rspec: testing eks-with-nodes high-level: variables - test inclustion of aws_ami data source (aws_eks_cluster_main_aws_launch_template_common_launch_template_aws_ami_main) 
