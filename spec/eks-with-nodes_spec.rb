@@ -99,6 +99,9 @@ end
 describe EksWithNodes do
   before :each do
     @opentofu = EksWithNodes.to_opentofu
+    @data_aws_ami_schema = EksWithNodes.schemas.select do |s|
+      s.name == :aws_ami && s.group_name == :data
+    end.first
   end
 
   it 'generates some opentofu' do
@@ -107,6 +110,9 @@ describe EksWithNodes do
 
   it 'generates non-empty variables' do
     expect(@opentofu["variables"]).to have_attributes(size: (be > 0))
+    expect(@opentofu["variables"].keys).to include(
+      *@data_aws_ami_schema.input_definition.keys.map {|k| "aws_eks_cluster_main_aws_launch_template_common_launch_template_aws_ami_main_#{k}"}
+    )
   end
 
   it 'generates empty resource' do
@@ -118,7 +124,7 @@ describe EksWithNodes do
   end
 
   it 'generates non-empty module' do
-    expect(@opentofu["variables"]).to have_attributes(size: (be > 0))
+    expect(@opentofu["module"]).to have_attributes(size: (be > 0))
   end
 
   it 'generates non-empty output' do
