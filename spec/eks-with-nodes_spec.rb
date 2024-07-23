@@ -113,6 +113,12 @@ describe EksWithNodes do
     expect(@opentofu["variables"].keys).to include(
       *@data_aws_ami_schema.input_definition.keys.map {|k| "aws_eks_cluster_main_aws_launch_template_common_launch_template_aws_ami_main_#{k}"}
     )
+    expect(@opentofu["variables"].keys).to include(
+      *@data_aws_ami_schema.input_definition.keys.map {|k| "aws_eks_cluster_main_aws_eks_node_group_main_aws_launch_template_main_aws_ami_main_#{k}"}
+    )
+    expect(@opentofu["variables"].keys).to include(
+      *@data_aws_ami_schema.input_definition.keys.map {|k| "aws_launch_template_launch_template_aws_ami_main_#{k}"}
+    )
   end
 
   it 'generates empty resource' do
