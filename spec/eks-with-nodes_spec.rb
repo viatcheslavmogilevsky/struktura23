@@ -102,6 +102,9 @@ describe EksWithNodes do
     @data_aws_ami_schema = EksWithNodes.schemas.select do |s|
       s.name == :aws_ami && s.group_name == :data
     end.first
+    @resource_aws_launch_template_schema = EksWithNodes.schemas.select do |s|
+      s.name == :aws_launch_template && s.group_name == :resource
+    end.first
   end
 
   it 'generates some opentofu' do
@@ -118,6 +121,9 @@ describe EksWithNodes do
     )
     expect(@opentofu["variables"].keys).to include(
       *@data_aws_ami_schema.input_definition.keys.map {|k| "aws_launch_template_launch_template_aws_ami_main_#{k}"}
+    )
+    expect(@opentofu["variables"].keys).to include(
+      *@resource_aws_launch_template_schema.input_definition.keys.map {|k| "aws_launch_template_launch_template_#{k}"}
     )
   end
 
