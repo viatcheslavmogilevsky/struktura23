@@ -290,3 +290,9 @@
 
 * [5a2a](https://github.com/viatcheslavmogilevsky/struktura23/commit/5a2aef3889e89b3d6bb8890553fe490c34c6bed7) `rspec: eks with nodes: variables of aws_ami datasource (all)`
 	* rspec: testing eks-with-nodes high-level: variables - test inclustion of aws_ami data sources (all cases)
+
+
+## 24.07.2024
+
+* [e06a](https://github.com/viatcheslavmogilevsky/struktura23/commit/e06ae21a5a2dde1dbdce96c5716d30c48ada1ed7) `rspec: eks with nodes: "(at)resource_aws_launch_template_schema" intro`
+	* rspec: testing eks-with-nodes high-level: variables - introduction the schema of launch template
