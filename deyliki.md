@@ -296,3 +296,9 @@
 
 * [e06a](https://github.com/viatcheslavmogilevsky/struktura23/commit/e06ae21a5a2dde1dbdce96c5716d30c48ada1ed7) `rspec: eks with nodes: "(at)resource_aws_launch_template_schema" intro`
 	* rspec: testing eks-with-nodes high-level: variables - introduction the schema of launch template
+
+
+## 25.07.2024
+
+* [65a7](https://github.com/viatcheslavmogilevsky/struktura23/commit/65a7891e2ca75e22f8d0c5248877754e67579d55) `rspec: eks with nodes: "(at)resource_aws_launch_template_schema": variables`
+	* rspec: testing eks-with-nodes high-level: variables - the schema of launch template - cover all related variables
