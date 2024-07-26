@@ -302,3 +302,9 @@
 
 * [65a7](https://github.com/viatcheslavmogilevsky/struktura23/commit/65a7891e2ca75e22f8d0c5248877754e67579d55) `rspec: eks with nodes: "(at)resource_aws_launch_template_schema": variables`
 	* rspec: testing eks-with-nodes high-level: variables - the schema of launch template - cover all related variables
+
+
+## 26.07.2024
+
+* [26c5](https://github.com/viatcheslavmogilevsky/struktura23/commit/26c54a0b09612339ac757da7b015ccc19911f033) `rspec: eks with nodes: variables: test flag_to_enable`
+	* rspec: testing eks-with-nodes high-level: variables: test of 'flag_to_enable' of Struktura23::Node::Optional
