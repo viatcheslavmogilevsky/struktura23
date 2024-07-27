@@ -152,6 +152,9 @@ describe EksWithNodes do
 
   it 'generates non-empty output' do
     expect(@opentofu["output"]).to have_attributes(size: (be > 0))
+    expect(@opentofu["output"].keys).to include(
+      *@data_aws_ami_schema.definition.keys.map {|k| "aws_eks_cluster_main_aws_launch_template_common_launch_template_aws_ami_main_#{k}"}
+    )
   end
 
   # TODO: to be continued
