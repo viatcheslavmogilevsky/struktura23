@@ -308,3 +308,9 @@
 
 * [26c5](https://github.com/viatcheslavmogilevsky/struktura23/commit/26c54a0b09612339ac757da7b015ccc19911f033) `rspec: eks with nodes: variables: test flag_to_enable`
 	* rspec: testing eks-with-nodes high-level: variables: test of 'flag_to_enable' of Struktura23::Node::Optional
+
+
+## 27.07.2024
+
+* [d4b2](https://github.com/viatcheslavmogilevsky/struktura23/commit/d4b2ad6db60a6fa6e1b2249491badf850ef82124) `rspec: eks with nodes: output: aws_ami related output (one case)`
+	* rspec: eks-with-nodes high-level testing: output: test inclustion of aws_ami data source (just one case)
