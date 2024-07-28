@@ -314,3 +314,9 @@
 
 * [d4b2](https://github.com/viatcheslavmogilevsky/struktura23/commit/d4b2ad6db60a6fa6e1b2249491badf850ef82124) `rspec: eks with nodes: output: aws_ami related output (one case)`
 	* rspec: eks-with-nodes high-level testing: output: test inclustion of aws_ami data source (just one case)
+
+
+## 28.07.2024
+
+* [df89](https://github.com/viatcheslavmogilevsky/struktura23/commit/df89330943c6a43ddfa6bf16b4200dc8340e0a55) `rspec: eks with nodes: output: aws_ami related output (all cases)`
+	* rspec: eks-with-nodes high-level testing: output: the schema of aws ami datasource - cover all related cases
