@@ -320,3 +320,9 @@
 
 * [df89](https://github.com/viatcheslavmogilevsky/struktura23/commit/df89330943c6a43ddfa6bf16b4200dc8340e0a55) `rspec: eks with nodes: output: aws_ami related output (all cases)`
 	* rspec: eks-with-nodes high-level testing: output: the schema of aws ami datasource - cover all related cases
+
+
+## 29.07.2024
+
+* [7322](https://github.com/viatcheslavmogilevsky/struktura23/commit/7322a32a5c2f41ce084da7c61c5e91f64d63fa51) `rspec: eks with nodes: output: aws launch template related output (one case)`
+	* rspec: eks-with-nodes high-level testing: output: test inclustion of aws_launch_template resource (just one case)
