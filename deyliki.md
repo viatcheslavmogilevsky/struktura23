@@ -326,3 +326,9 @@
 
 * [7322](https://github.com/viatcheslavmogilevsky/struktura23/commit/7322a32a5c2f41ce084da7c61c5e91f64d63fa51) `rspec: eks with nodes: output: aws launch template related output (one case)`
 	* rspec: eks-with-nodes high-level testing: output: test inclustion of aws_launch_template resource (just one case)
+
+
+## 30.07.2024
+
+* [5ef8](https://github.com/viatcheslavmogilevsky/struktura23/commit/5ef8217f2c23ae2e7d4e0b9fedba709fe17d78a4) `rspec: eks with nodes: module: existence of modules and their 'contents'`
+	* rspec: eks-with-nodes high-level testing: modules: existing of target modules and check value at their 'content' key
