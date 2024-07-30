@@ -148,6 +148,10 @@ describe EksWithNodes do
 
   it 'generates non-empty module' do
     expect(@opentofu["module"]).to have_attributes(size: (be > 0))
+    expect(@opentofu["module"]["aws_eks_cluster_main"]).to have_attributes(size: (be > 0))
+    expect(@opentofu["module"]["aws_launch_template_launch_template"]).to have_attributes(size: (be > 0))
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]).to have_attributes(size: (be > 0))
+    expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]).to have_attributes(size: (be > 0))
   end
 
   it 'generates non-empty output' do
