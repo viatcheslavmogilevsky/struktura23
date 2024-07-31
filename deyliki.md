@@ -332,3 +332,9 @@
 
 * [5ef8](https://github.com/viatcheslavmogilevsky/struktura23/commit/5ef8217f2c23ae2e7d4e0b9fedba709fe17d78a4) `rspec: eks with nodes: module: existence of modules and their 'contents'`
 	* rspec: eks-with-nodes high-level testing: modules: existing of target modules and check value at their 'content' key
+
+
+## 31.07.2024
+
+* [53a7](https://github.com/viatcheslavmogilevsky/struktura23/commit/53a72324d57c16d037cdc7afcdcace4709dc49b0) `rspec: eks with nodes: module: contents of 'contents' (aws_launch_template)`
+	* rspec: eks-with-nodes high-level testing: modules: check internals of 'contants' (no passed yet)
