@@ -156,7 +156,7 @@ describe EksWithNodes do
       *@resource_aws_launch_template_schema.input_definition.keys.map {|k| "aws_launch_template_common_launch_template_#{k}"}
     )
     expect(@opentofu["module"]["aws_eks_cluster_main"].keys).to include(
-      *@resource_aws_launch_template_schema.input_definition.keys.map {|k| "aws_eks_node_group_main_aws_launch_template_#{k}"}
+      *@resource_aws_launch_template_schema.input_definition.keys.map {|k| "aws_eks_node_group_main_aws_launch_template_main_#{k}"}
     )
   end
 
