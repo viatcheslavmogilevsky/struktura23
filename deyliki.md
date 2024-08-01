@@ -337,4 +337,11 @@
 ## 31.07.2024
 
 * [53a7](https://github.com/viatcheslavmogilevsky/struktura23/commit/53a72324d57c16d037cdc7afcdcace4709dc49b0) `rspec: eks with nodes: module: contents of 'contents' (aws_launch_template)`
-	* rspec: eks-with-nodes high-level testing: modules: check internals of 'contants' (no passed yet)
+	* rspec: eks-with-nodes high-level testing: modules: check internals of 'module' (no passed yet)
+
+## 1.08.2024
+
+* [fce8](https://github.com/viatcheslavmogilevsky/struktura23/commit/fce8e1bccc99371587049a6670471d781302883c) `rspec: eks with nodes: module: contents of 'contents' (aws_launch_template): fix`
+	* rspec: eks-with-nodes high-level testing: modules: check internals of 'module' (fix tests)
+* [2e29](https://github.com/viatcheslavmogilevsky/struktura23/commit/2e29502ce6bbe4bcfe15dba9ac1d22aa86bdc2ac) `rspec: eks with nodes: module: contents of 'contents' (aws_ami datasource)`
+	* rspec: eks-with-nodes high-level testing: modules: check aws_ami-related internals of 'module
