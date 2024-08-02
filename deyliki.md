@@ -345,3 +345,9 @@
 	* rspec: eks-with-nodes high-level testing: modules: check internals of 'module' (fix tests)
 * [2e29](https://github.com/viatcheslavmogilevsky/struktura23/commit/2e29502ce6bbe4bcfe15dba9ac1d22aa86bdc2ac) `rspec: eks with nodes: module: contents of 'contents' (aws_ami datasource)`
 	* rspec: eks-with-nodes high-level testing: modules: check aws_ami-related internals of 'module
+
+
+## 3.08.2024 (2.08.2024 CEST)
+
+* [6c14](https://github.com/viatcheslavmogilevsky/struktura23/commit/6c14677d4653186ca086c2df90daf9d040a96614) `rspec: eks with nodes: aws_eks_cluster_main module: test flag_to_enable`
+	* rspec: testing eks-with-nodes: test of 'flag_to_enable' of Struktura23::Node::Optional (in aws_eks_cluster_main's module)
