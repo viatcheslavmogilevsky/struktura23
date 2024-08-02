@@ -164,6 +164,10 @@ describe EksWithNodes do
     expect(@opentofu["module"]["aws_eks_cluster_main"].keys).to include(
       *@data_aws_ami_schema.input_definition.keys.map {|k| "aws_eks_node_group_main_aws_launch_template_main_aws_ami_main_#{k}"}
     )
+    expect(@opentofu["module"]["aws_eks_cluster_main"].keys).to include(
+      "aws_launch_template_common_launch_template_enable_aws_ami_main",
+      "aws_eks_node_group_main_aws_launch_template_main_enable_aws_ami_main"
+    )
   end
 
   it 'generates non-empty output' do
