@@ -351,3 +351,9 @@
 
 * [6c14](https://github.com/viatcheslavmogilevsky/struktura23/commit/6c14677d4653186ca086c2df90daf9d040a96614) `rspec: eks with nodes: aws_eks_cluster_main module: test flag_to_enable`
 	* rspec: testing eks-with-nodes: test of 'flag_to_enable' of Struktura23::Node::Optional (in aws_eks_cluster_main's module)
+
+
+## 3.08.2024
+
+* [bc79](https://github.com/viatcheslavmogilevsky/struktura23/commit/bc79723abb1b909c0a2e63a9f56c595f48b5f4ee) `rspec: eks with nodes: aws_eks_cluster_main module: contents (variables count)`
+	* rspec: eks-with-nodes high-level testing: modules: contents: dedicated examples plus checks count of keys of 'variables' 
