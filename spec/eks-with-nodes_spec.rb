@@ -170,9 +170,22 @@ describe EksWithNodes do
 
   it 'generates non-empty module contents' do
     expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]).to have_attributes(size: (be > 0))
-    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["variables"]).to have_attributes(size: (be > 0))
+    # expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["variables"]).to have_attributes(size: (be > 0))
     expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]).to have_attributes(size: (be > 0))
     expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]["variables"]).to have_attributes(size: (be > 0))
+
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["variables"].keys).to include(
+      *@resource_aws_launch_template_schema.input_definition.keys.map {|k| "aws_launch_template_common_launch_template_#{k}"}
+    )
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["variables"].keys).to include(
+      *@resource_aws_launch_template_schema.input_definition.keys.map {|k| "aws_eks_node_group_main_aws_launch_template_main_#{k}"}
+    )
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["variables"].keys).to include(
+      *@data_aws_ami_schema.input_definition.keys.map {|k| "aws_launch_template_common_launch_template_aws_ami_main_#{k}"}
+    )
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["variables"].keys).to include(
+      *@data_aws_ami_schema.input_definition.keys.map {|k| "aws_eks_node_group_main_aws_launch_template_main_aws_ami_main_#{k}"}
+    )
   end
 
   it 'generates non-empty output' do
