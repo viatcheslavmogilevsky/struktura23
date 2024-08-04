@@ -356,4 +356,10 @@
 ## 3.08.2024
 
 * [bc79](https://github.com/viatcheslavmogilevsky/struktura23/commit/bc79723abb1b909c0a2e63a9f56c595f48b5f4ee) `rspec: eks with nodes: aws_eks_cluster_main module: contents (variables count)`
-	* rspec: eks-with-nodes high-level testing: modules: contents: dedicated examples plus checks count of keys of 'variables' 
+	* rspec: eks-with-nodes high-level testing: modules: contents: dedicated examples plus checks count of keys of 'variables'
+
+
+## 4.08.2024
+
+* [4aa3](https://github.com/viatcheslavmogilevsky/struktura23/commit/4aa36396c720644b7ddddb70d4aaad5c0fce5174) `rspec: eks with nodes: aws_eks_cluster_main module: contents (what is includes in 'variables')`
+	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'variables' (instead of count)
