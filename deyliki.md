@@ -363,3 +363,9 @@
 
 * [4aa3](https://github.com/viatcheslavmogilevsky/struktura23/commit/4aa36396c720644b7ddddb70d4aaad5c0fce5174) `rspec: eks with nodes: aws_eks_cluster_main module: contents (what is includes in 'variables')`
 	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'variables' (instead of count)
+
+
+## 5.08.2024
+
+* [85a0](https://github.com/viatcheslavmogilevsky/struktura23/commit/85a06ea9d8a492fcb807709adb864a6ecefd7f2e) `rspec: eks with nodes: aws_launch_template_launch_template module: contents (what is includes in 'variables')`
+	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'variables' (instead of count, aws_launch_template_launch_template)
