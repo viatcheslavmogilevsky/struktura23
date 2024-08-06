@@ -171,7 +171,9 @@ describe EksWithNodes do
   it 'generates non-empty module contents' do
     expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]).to have_attributes(size: (be > 0))
     expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]).to have_attributes(size: (be > 0))
+  end
 
+  it 'generates non-empty module contents variables' do
     expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["variables"].keys).to include(
       *@resource_aws_launch_template_schema.input_definition.keys.map {|k| "aws_launch_template_common_launch_template_#{k}"}
     )
