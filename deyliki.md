@@ -369,3 +369,9 @@
 
 * [85a0](https://github.com/viatcheslavmogilevsky/struktura23/commit/85a06ea9d8a492fcb807709adb864a6ecefd7f2e) `rspec: eks with nodes: aws_launch_template_launch_template module: contents (what is includes in 'variables')`
 	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'variables' (instead of count, aws_launch_template_launch_template)
+
+
+## 6.08.2024
+
+* [7413](https://github.com/viatcheslavmogilevsky/struktura23/commit/741348b8f58d4d682a17079733487c228af6343f) `rspec: eks with nodes: module contents variable: move to dedicated example`
+	* rspec: eks-with-nodes high-level testing: modules: contents: variables: move checks under dedicated example
