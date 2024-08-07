@@ -169,8 +169,12 @@ describe EksWithNodes do
   end
 
   it 'generates non-empty module contents' do
-    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]).to have_attributes(size: (be > 0))
-    expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]).to have_attributes(size: (be > 0))
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]).to include(
+      "variables", "resource", "data", "output", "module", "provider", "locals", "terraform"
+    )
+    expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]).to include(
+      "variables", "resource", "data", "output", "module", "provider", "locals", "terraform"
+    )
   end
 
   it 'generates non-empty module contents variables' do
