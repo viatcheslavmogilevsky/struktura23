@@ -375,3 +375,9 @@
 
 * [7413](https://github.com/viatcheslavmogilevsky/struktura23/commit/741348b8f58d4d682a17079733487c228af6343f) `rspec: eks with nodes: module contents variable: move to dedicated example`
 	* rspec: eks-with-nodes high-level testing: modules: contents: variables: move checks under dedicated example
+
+
+## 7.08.2024
+
+* [cc9f](https://github.com/viatcheslavmogilevsky/struktura23/commit/cc9f5915f3202edde0681d39b4b89c46d031a692) `rspec: eks with nodes: module contents: check what is included`
+	* rspec: eks-with-nodes high-level testing: modules: contents: check whether known keys ("variables", "resource", "data", "output", "module", ...) are included 
