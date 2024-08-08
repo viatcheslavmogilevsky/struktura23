@@ -380,4 +380,10 @@
 ## 7.08.2024
 
 * [cc9f](https://github.com/viatcheslavmogilevsky/struktura23/commit/cc9f5915f3202edde0681d39b4b89c46d031a692) `rspec: eks with nodes: module contents: check what is included`
-	* rspec: eks-with-nodes high-level testing: modules: contents: check whether known keys ("variables", "resource", "data", "output", "module", ...) are included 
+	* rspec: eks-with-nodes high-level testing: modules: contents: check whether known keys ("variables", "resource", "data", "output", "module", ...) are included
+
+
+## 8.08.2024 :cat:
+
+* [c67f](https://github.com/viatcheslavmogilevsky/struktura23/commit/c67ffe0c76fb0dbebdd330bc4bc60a1cfd2ba35a) `rspec: eks with nodes: module contents: resource`
+	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'resource'
