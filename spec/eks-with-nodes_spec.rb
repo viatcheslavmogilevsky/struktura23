@@ -199,6 +199,20 @@ describe EksWithNodes do
     )
   end
 
+  it 'generates non-empty module contents resource' do
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["resource"]).to include(
+      {
+        :aws_iam_openid_connect_provider=>{:main=>{:tag=>"var.aws_iam_openid_connect_provider_main_tag", "count"=>"var.enable_aws_iam_openid_connect_provider_main ? 1 : 0"}},
+        :aws_eks_addon=>{:main=>{:tag=>"var.aws_eks_addon_main_tag"}},
+        "aws_eks_cluster"=>{"core"=>{:tag=>"var.tag"}}
+      }
+    )
+
+    expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]["resource"]["aws_launch_template"]["core"].keys).to include(
+      *@resource_aws_launch_template_schema.input_definition.keys
+    )
+  end
+
   it 'generates non-empty output' do
     expect(@opentofu["output"]).to have_attributes(size: (be > 0))
     expect(@opentofu["output"].keys).to include(
