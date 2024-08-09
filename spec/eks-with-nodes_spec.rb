@@ -213,6 +213,18 @@ describe EksWithNodes do
     )
   end
 
+  it 'generates non-empty module contents data' do
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["data"]).to eq(
+      {:tls_certificate=>{:main=>{}}}
+    )
+    expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]["data"][:aws_ami][:main]).to include(
+      Hash[@data_aws_ami_schema.input_definition.keys.map {|k| [k, "var.aws_ami_main_#{k}"]}]
+    )
+    expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]["data"][:aws_ami][:main]).to include(
+      {"count"=>"var.enable_aws_ami_main ? 1 : 0"}
+    )
+  end
+
   it 'generates non-empty output' do
     expect(@opentofu["output"]).to have_attributes(size: (be > 0))
     expect(@opentofu["output"].keys).to include(
