@@ -387,3 +387,9 @@
 
 * [c67f](https://github.com/viatcheslavmogilevsky/struktura23/commit/c67ffe0c76fb0dbebdd330bc4bc60a1cfd2ba35a) `rspec: eks with nodes: module contents: resource`
 	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'resource'
+
+
+## 9.08.2024
+
+* [6b91](https://github.com/viatcheslavmogilevsky/struktura23/commit/6b916e2ab25d0a4f4d5b3c34f693ebcd4045098a) `rspec: eks with nodes: module contents: data`
+	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'data'
