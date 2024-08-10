@@ -393,3 +393,9 @@
 
 * [6b91](https://github.com/viatcheslavmogilevsky/struktura23/commit/6b916e2ab25d0a4f4d5b3c34f693ebcd4045098a) `rspec: eks with nodes: module contents: data`
 	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'data'
+
+
+## 10.08.2024
+
+* [f16b](https://github.com/viatcheslavmogilevsky/struktura23/commit/f16b96cbaecca5b436d89bbf6bfe0bc8f703b094) `rspec: eks with nodes: module contents: output (1)`
+	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'output' (aws_launch_template_launch_template)
