@@ -225,6 +225,15 @@ describe EksWithNodes do
     )
   end
 
+  it 'generates non-empty module contents output' do
+    expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]["output"]).to include(
+      Hash[@data_aws_ami_schema.definition.keys.map {|k| ["aws_ami_main_#{k}", {:value=>"${data.aws_ami.main.#{k}}"}]}]
+    )
+    expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]["output"]).to include(
+      Hash[@resource_aws_launch_template_schema.definition.keys.map {|k| [k, {:value=>"${aws_launch_template.core.#{k}}"}]}]
+    )
+  end
+
   it 'generates non-empty output' do
     expect(@opentofu["output"]).to have_attributes(size: (be > 0))
     expect(@opentofu["output"].keys).to include(
