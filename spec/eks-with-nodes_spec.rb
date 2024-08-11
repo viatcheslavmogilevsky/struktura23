@@ -237,7 +237,6 @@ describe EksWithNodes do
       Hash[@resource_aws_launch_template_schema.definition.keys.map {|k| [k, {:value=>"${aws_launch_template.core.#{k}}"}]}]
     )
   end
-  # aws_launch_template_common_launch_template_aws_ami_main_
 
   it 'generates non-empty output' do
     expect(@opentofu["output"]).to have_attributes(size: (be > 0))
