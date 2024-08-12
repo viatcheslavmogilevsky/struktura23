@@ -401,8 +401,14 @@
 	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'output' (aws_launch_template_launch_template)
 
 
-## 11.08.2023
+## 11.08.2024
 
 * [cb84](https://github.com/viatcheslavmogilevsky/struktura23/commit/cb84694c33c6c82999b7d90bb233bf199646786d) `rspec: eks with nodes: module contents: output (2)`
 * [4860](https://github.com/viatcheslavmogilevsky/struktura23/commit/4860c47baa5fc894fed460f99b434b0de914de7c) `rspec: eks with nodes: module contents: output (2)`
 	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'output' (aws_eks_cluster_main)
+
+
+## 12.08.2024
+
+* [da89](https://github.com/viatcheslavmogilevsky/struktura23/commit/da89b038b772f9a541deab62b6e50492debe4fa7) `rspec: eks with nodes: module contents: output (3)`
+	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'output' (aws_eks_cluster_main) - other case
