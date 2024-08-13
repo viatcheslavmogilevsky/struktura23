@@ -233,6 +233,13 @@ describe EksWithNodes do
       Hash[@resource_aws_launch_template_schema.definition.keys.map {|k| ["aws_launch_template_common_launch_template_#{k}", {:value=>"${module.aws_launch_template_common_launch_template.#{k}}"}]}]
     )
 
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["output"]).to include(
+      Hash[@data_aws_ami_schema.definition.keys.map {|k| ["aws_eks_node_group_main_aws_launch_template_main_aws_ami_main_#{k}", {:value=>"${module.aws_eks_node_group_main.aws_launch_template_main_aws_ami_main_#{k}}"}]}]
+    )
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["output"]).to include(
+      Hash[@resource_aws_launch_template_schema.definition.keys.map {|k| ["aws_eks_node_group_main_aws_launch_template_main_#{k}", {:value=>"${module.aws_eks_node_group_main.aws_launch_template_main_#{k}}"}]}]
+    )
+
     expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]["output"]).to include(
       Hash[@data_aws_ami_schema.definition.keys.map {|k| ["aws_ami_main_#{k}", {:value=>"${data.aws_ami.main.#{k}}"}]}]
     )
