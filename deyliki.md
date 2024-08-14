@@ -418,3 +418,9 @@
 
 * [ee10](https://github.com/viatcheslavmogilevsky/struktura23/commit/ee103b10a002706b2d34f2bc3c945d75053c7ce4) `rspec: eks with nodes: module contents: output (4)`
 	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'output' (aws_eks_cluster_main) - almost all cases
+
+
+## 14.08.2024
+
+* [9922](https://github.com/viatcheslavmogilevsky/struktura23/commit/9922bf28c28f7a753db87ea3824f8a9642288c84) `rspec: eks with nodes: module contents: output: module (keys)`
+	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'modules' - keys
