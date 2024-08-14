@@ -248,6 +248,12 @@ describe EksWithNodes do
     )
   end
 
+  it 'generates non-empty module contents module' do
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["module"].keys).to include(
+      "aws_launch_template_common_launch_template", "aws_eks_node_group_main"
+    )
+  end
+
   it 'generates non-empty output' do
     expect(@opentofu["output"]).to have_attributes(size: (be > 0))
     expect(@opentofu["output"].keys).to include(
