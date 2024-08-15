@@ -424,3 +424,9 @@
 
 * [9922](https://github.com/viatcheslavmogilevsky/struktura23/commit/9922bf28c28f7a753db87ea3824f8a9642288c84) `rspec: eks with nodes: module contents: output: module (keys)`
 	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'modules' - keys
+
+
+## 15.08.2024
+
+* [913f](https://github.com/viatcheslavmogilevsky/struktura23/commit/913fca79e6cac190592f2b841468ae11b2cee136) `rspec: eks with nodes: module contents: output: provider/locals/terraform`
+	* rspec: eks-with-nodes high-level testing: modules: contents: terraform-config/provider-config/locals generation (stub)
