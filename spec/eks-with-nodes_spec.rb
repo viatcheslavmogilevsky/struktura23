@@ -254,6 +254,17 @@ describe EksWithNodes do
     )
   end
 
+  # TODO: to be continued
+  it 'generates empty module contents provider/locals/terraform' do
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["provider"]).to eq({})
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["provider"]).to eq({})
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["provider"]).to eq({})
+
+    expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]["provider"]).to eq({})
+    expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]["provider"]).to eq({})
+    expect(@opentofu["module"]["aws_launch_template_launch_template"]["contents"]["provider"]).to eq({})
+  end
+
   it 'generates non-empty output' do
     expect(@opentofu["output"]).to have_attributes(size: (be > 0))
     expect(@opentofu["output"].keys).to include(
