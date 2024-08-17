@@ -258,11 +258,17 @@ describe EksWithNodes do
     expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["module"]["aws_launch_template_common_launch_template"].keys).to include(
       *@data_aws_ami_schema.input_definition.keys.map {|k| "aws_ami_main_#{k}"}
     )
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["module"]["aws_launch_template_common_launch_template"].keys).to include(
+      "enable_aws_ami_main"
+    )
     expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["module"]["aws_eks_node_group_main"].keys).to include(
       *@resource_aws_launch_template_schema.input_definition.keys.map {|k| "aws_launch_template_main_#{k}"}
     )
     expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["module"]["aws_eks_node_group_main"].keys).to include(
       *@data_aws_ami_schema.input_definition.keys.map {|k| "aws_launch_template_main_aws_ami_main_#{k}"}
+    )
+    expect(@opentofu["module"]["aws_eks_cluster_main"]["contents"]["module"]["aws_eks_node_group_main"].keys).to include(
+      "enable_aws_launch_template_main"
     )
   end
 
