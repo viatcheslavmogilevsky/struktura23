@@ -436,3 +436,9 @@
 
 * [c7d6](https://github.com/viatcheslavmogilevsky/struktura23/commit/c7d6a6a6bb89538ddacce7806bdfca2058e136cd) `rspec: eks with nodes: module contents: output: module (what is included)`
 	* spec: eks-with-nodes high-level testing: modules: contents: check what is included in 'modules' - it's own internal contents - module blocks
+
+
+## 17.08.2024
+
+* [2a8f](https://github.com/viatcheslavmogilevsky/struktura23/commit/2a8f46720d9d5d30f7e1a45b6edf2cc4e2f8ac6d) `rspec: eks with nodes: module contents: output: module (flag to enable)`
+	rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'modules' - test of 'flag_to_enable' of Struktura23::Node::Optional
