@@ -441,4 +441,10 @@
 ## 17.08.2024
 
 * [2a8f](https://github.com/viatcheslavmogilevsky/struktura23/commit/2a8f46720d9d5d30f7e1a45b6edf2cc4e2f8ac6d) `rspec: eks with nodes: module contents: output: module (flag to enable)`
-	rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'modules' - test of 'flag_to_enable' of Struktura23::Node::Optional
+	* rspec: eks-with-nodes high-level testing: modules: contents: check what is included in 'modules' - test of 'flag_to_enable' of Struktura23::Node::Optional
+
+
+## 19.08.2024
+
+* [a0af](https://github.com/viatcheslavmogilevsky/struktura23/commit/a0afde26a2699987259a2903a090ea1058b64c54) `rspec: eks with nodes: module contents: module (recursive)`
+	* rspec: eks-with-nodes high-level testing: modules: contents: check recursive 'modulea/contents'
