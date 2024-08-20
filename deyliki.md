@@ -448,3 +448,9 @@
 
 * [a0af](https://github.com/viatcheslavmogilevsky/struktura23/commit/a0afde26a2699987259a2903a090ea1058b64c54) `rspec: eks with nodes: module contents: module (recursive)`
 	* rspec: eks-with-nodes high-level testing: modules: contents: check recursive 'modulea/contents'
+
+
+## 20.08.2024
+
+* [e49d](https://github.com/viatcheslavmogilevsky/struktura23/commit/e49d92e857530f56a27a7e22d52c13b056b1b83b) `docs: start working on new design`
+	* docs: need to switch to new design :)
