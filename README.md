@@ -8,7 +8,9 @@ No features yet :no_mouth:
 
 1. Focused: TBD: opentofu module generator (JSON Configuration Syntax)
 	* generating recursively :heavy_check_mark:
-	* tests/fixtures :dart:
+	* tests/fixtures :heavy_check_mark:
+	* new design? :dart:
+		* do not wrap into tf-module?
 	* optional nodes support: fix outputs (use 'one' function?)
 	* plural nodes support: fix input (use object input type)
 	* pulling schemas from providers (js/ts?) instead of mocking
