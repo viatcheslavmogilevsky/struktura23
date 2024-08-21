@@ -454,3 +454,9 @@
 
 * [e49d](https://github.com/viatcheslavmogilevsky/struktura23/commit/e49d92e857530f56a27a7e22d52c13b056b1b83b) `docs: start working on new design`
 	* docs: need to switch to new design :)
+
+
+## 21.08.2024
+
+* [4de6](https://github.com/viatcheslavmogilevsky/struktura23/commit/4de6bc817635872ef7b308ea27f58ed540dfc004) `docs: start working on new design: new file`
+	* docs: need to switch to new design - started new file
