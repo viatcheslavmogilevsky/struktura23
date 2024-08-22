@@ -464,5 +464,5 @@
 
 ## 22.08.2024
 
-* [a4d5]https://github.com/viatcheslavmogilevsky/struktura23/commit/a4d54be367defc3bb625ae804920304e2df81cf9 `Update new_design.md`
+* [a4d5](https://github.com/viatcheslavmogilevsky/struktura23/commit/a4d54be367defc3bb625ae804920304e2df81cf9) `Update new_design.md`
 	* docs: new design: example as class definition
