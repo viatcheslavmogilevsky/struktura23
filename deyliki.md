@@ -460,3 +460,9 @@
 
 * [4de6](https://github.com/viatcheslavmogilevsky/struktura23/commit/4de6bc817635872ef7b308ea27f58ed540dfc004) `docs: start working on new design: new file`
 	* docs: need to switch to new design - started new file
+
+
+## 22.08.2024
+
+* [a4d5]https://github.com/viatcheslavmogilevsky/struktura23/commit/a4d54be367defc3bb625ae804920304e2df81cf9 `Update new_design.md`
+	* docs: new design: example as class definition
