@@ -466,3 +466,9 @@
 
 * [a4d5](https://github.com/viatcheslavmogilevsky/struktura23/commit/a4d54be367defc3bb625ae804920304e2df81cf9) `Update new_design.md`
 	* docs: new design: example as class definition
+
+
+## 23.08.2024
+
+* [9684](https://github.com/viatcheslavmogilevsky/struktura23/commit/96844771cf97fa2d155dd9ee647163964eb51d1f) `docs: start working on new design: new file: has_root/has_anything`
+	* docs: new design: example of spec's root and has_xyz (simple)
