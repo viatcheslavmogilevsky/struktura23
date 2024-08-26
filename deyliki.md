@@ -474,7 +474,7 @@
 	* docs: new design: example of spec's root and has_xyz (simple)
 
 
-## 24.08.2024
+## 26.08.2024
 
 * [85e5](https://github.com/viatcheslavmogilevsky/struktura23/commit/85e531a9c5a1ba20cfc5ccefa268a8f5fc8dd164) `docs: start working on new design: remember to make scheme`
 	* docs: new design: remember to draw scheme (diagram) later
