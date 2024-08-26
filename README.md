@@ -11,6 +11,7 @@ No features yet :no_mouth:
 	* tests/fixtures :heavy_check_mark:
 	* new design? :dart:
 		* do not wrap into tf-module?
+		* scheme???
 	* optional nodes support: fix outputs (use 'one' function?)
 	* plural nodes support: fix input (use object input type)
 	* pulling schemas from providers (js/ts?) instead of mocking
