@@ -472,3 +472,9 @@
 
 * [9684](https://github.com/viatcheslavmogilevsky/struktura23/commit/96844771cf97fa2d155dd9ee647163964eb51d1f) `docs: start working on new design: new file: has_root/has_anything`
 	* docs: new design: example of spec's root and has_xyz (simple)
+
+
+## 24.08.2024
+
+* [85e5](https://github.com/viatcheslavmogilevsky/struktura23/commit/85e531a9c5a1ba20cfc5ccefa268a8f5fc8dd164) `docs: start working on new design: remember to make scheme`
+	* docs: new design: remember to draw scheme (diagram) later
