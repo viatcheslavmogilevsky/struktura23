@@ -1,5 +1,12 @@
 # New design
 
+## Idea
+
+```
+str23 class -> opentofu code (module)
+            -> query -> opentofu code (module usage)
+```
+
 
 ## Example
 
