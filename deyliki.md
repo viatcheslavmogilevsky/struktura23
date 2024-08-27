@@ -478,3 +478,10 @@
 
 * [85e5](https://github.com/viatcheslavmogilevsky/struktura23/commit/85e531a9c5a1ba20cfc5ccefa268a8f5fc8dd164) `docs: start working on new design: remember to make scheme`
 	* docs: new design: remember to draw scheme (diagram) later
+
+
+## 27.08.2024
+
+* [5ffb](https://github.com/viatcheslavmogilevsky/struktura23/commit/5ffb7df5d542b7045d50df4da04acc86961d74d5) `docs: start working on new design: scheme start`
+	* docs: new design: starting drawing diagram (idea)
+
