@@ -485,3 +485,10 @@
 * [5ffb](https://github.com/viatcheslavmogilevsky/struktura23/commit/5ffb7df5d542b7045d50df4da04acc86961d74d5) `docs: start working on new design: scheme start`
 	* docs: new design: starting drawing diagram (idea)
 
+
+## 28.08.2024
+
+* [4676](https://github.com/viatcheslavmogilevsky/struktura23/commit/46762239100bb5260e295a99bddb0613bddd0a4b) `docs: start working on new design: simplify user code`
+	* docs: new design: simple code example (single line lambda)
+
+
