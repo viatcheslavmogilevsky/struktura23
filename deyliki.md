@@ -492,3 +492,9 @@
 	* docs: new design: simple code example (single line lambda)
 
 
+## 29.08.2024
+
+* [663a](https://github.com/viatcheslavmogilevsky/struktura23/commit/663a183d5084e6fbc6189d5b526cd3c8b1a70edb) `docs: start working on new design: compound example: the beginning`
+	* docs: new design: simple code example: starting to write example of reusable structs (compound???)
+
+
