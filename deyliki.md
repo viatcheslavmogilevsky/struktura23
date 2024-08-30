@@ -498,3 +498,9 @@
 	* docs: new design: simple code example: starting to write example of reusable structs (compound???)
 
 
+## 30.08.2024
+
+* [4c69](https://github.com/viatcheslavmogilevsky/struktura23/commit/4c69aa5339136ff18f1cd89036ac44f877096de8) `docs: start working on new design: has_many eks node group`
+	* docs: new design: simple code example: exampple of eks-cluster - eks-node-group ownership (not finished)
+
+
