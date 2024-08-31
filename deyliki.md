@@ -504,3 +504,8 @@
 	* docs: new design: simple code example: exampple of eks-cluster - eks-node-group ownership (not finished)
 
 
+## 31.08.2024
+
+* [bffb](https://github.com/viatcheslavmogilevsky/struktura23/commit/bffba36041f60af34efe2b121c94439d0e2cbbc9) `docs: start working on new design: belongs_to`
+	* docs: new design: simple code example: introduction of belongs_to - reverse relationship (not finished)
+
