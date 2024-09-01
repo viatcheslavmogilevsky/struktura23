@@ -21,6 +21,6 @@ class ExampleStruktura < Struktura23::BaseSpec
   eks_cluster.has_many(:aws_eks_addon).identify {|found_addon| found_addon.name}.where {|cluster| cluster_name: cluster.found.id}
 
   node_groups = eks_cluster.has_many(:aws_eks_node_group).where {|cluster| cluster_name: cluster.found.id }.identify {|found_group| found_group.node_group_name}
-  node_groups.belongs_to(:aws_launch_template).where {||}
+  node_groups.belongs_to(:aws_launch_template).where {|node_group| name: node_group.launch_template.name}
 end
 ```
