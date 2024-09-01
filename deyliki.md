@@ -509,3 +509,11 @@
 * [bffb](https://github.com/viatcheslavmogilevsky/struktura23/commit/bffba36041f60af34efe2b121c94439d0e2cbbc9) `docs: start working on new design: belongs_to`
 	* docs: new design: simple code example: introduction of belongs_to - reverse relationship (not finished)
 
+
+## 1.09.2024
+
+* [5d64](https://github.com/viatcheslavmogilevsky/struktura23/commit/5d649fee4f7ac03c091f0a88c22cd7f0b51640b2) `docs: new design: rename arg for readability`
+	* docs: new design: rename arg for 'where' func to be consistent with cases where 'belongs_to' is used
+* [7c98](https://github.com/viatcheslavmogilevsky/struktura23/commit/7c985fd85e9ee06cc38f231ddda882b92a6b68f2) `docs: new design: belongs_to (complete)`
+	*  docs: new design: simple code example: introduction of belongs_to - reverse relationship (finished)
+
