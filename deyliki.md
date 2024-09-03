@@ -517,3 +517,12 @@
 * [7c98](https://github.com/viatcheslavmogilevsky/struktura23/commit/7c985fd85e9ee06cc38f231ddda882b92a6b68f2) `docs: new design: belongs_to (complete)`
 	*  docs: new design: simple code example: introduction of belongs_to - reverse relationship (finished)
 
+
+## 3.09.2024
+
+* [579e](https://github.com/viatcheslavmogilevsky/struktura23/commit/579e36565ba6cc8975a374a0c59576bae5d4ed8f) `docs: new design: enforce example (not 100 percent complete)`
+	*  docs: new design: simple code example: introduction of enforce - 2nd time, and there are more questions now
+
+
+
+
