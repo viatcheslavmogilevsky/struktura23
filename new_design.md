@@ -22,5 +22,6 @@ class ExampleStruktura < Struktura23::BaseSpec
 
   node_groups = eks_cluster.has_many(:aws_eks_node_group).where {|cluster| cluster_name: cluster.found.id }.identify {|found_group| found_group.node_group_name}
   node_groups.belongs_to(:aws_launch_template).where {|node_group| name: node_group.launch_template.name}
+  node_groups.enforce(:"launch_template.version") {|node_group|  node_group.belongs_to.aws_launch_template.latest_version}
 end
 ```
