@@ -528,3 +528,9 @@
 
 * [e9ff](https://github.com/viatcheslavmogilevsky/struktura23/commit/e9ff9c55b42c36a781d421404c45afc62c2db457) `docs: new design: enforce example: aws_ami and launch template`
 	* docs: new design: simple code example: optinal ami for launch template (not complete I think)
+
+
+## 5.09.2024
+
+* [6929](https://github.com/viatcheslavmogilevsky/struktura23/commit/6929ae98f945518d63d7866e20333076e1e8afe0) `docs: new design: enforce example: node/optional_node`
+	* docs: new design: introduction of node/oprional_node for enforcing (still not complete I think)
