@@ -534,3 +534,10 @@
 
 * [6929](https://github.com/viatcheslavmogilevsky/struktura23/commit/6929ae98f945518d63d7866e20333076e1e8afe0) `docs: new design: enforce example: node/optional_node`
 	* docs: new design: introduction of node/oprional_node for enforcing (still not complete I think)
+
+
+## 6.09.2024
+
+* [31be](https://github.com/viatcheslavmogilevsky/struktura23/commit/31bef2e5804c8ef354cd8a6ea3ad4e88d695e9fc) `docs: new design: enforce example: found_node`
+	* docs: new design: found_node instead of plain 'node' - but it's still not complete yet
+
