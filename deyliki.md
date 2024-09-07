@@ -541,3 +541,9 @@
 * [31be](https://github.com/viatcheslavmogilevsky/struktura23/commit/31bef2e5804c8ef354cd8a6ea3ad4e88d695e9fc) `docs: new design: enforce example: found_node`
 	* docs: new design: found_node instead of plain 'node' - but it's still not complete yet
 
+
+## 7.09.2024
+
+* [9b07](https://github.com/viatcheslavmogilevsky/struktura23/commit/9b078cd620d4801d770e798ca091018d3a641f91) `docs: new design: found_at: intro`
+	* docs: new design: found_at - introduction plus optional chaining example (aws_ami)
+
