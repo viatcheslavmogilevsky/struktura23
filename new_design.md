@@ -24,6 +24,8 @@ class ExampleStruktura < Struktura23::BaseSpec
   node_groups.enforce(:"launch_template.version") {|node_group| launch_template.found_at(node_group).latest_version}
 
   ami = launch_template.has_optional_data(:aws_ami)
-  launch_template.enforce(:image_id) {|lt, default| ami.found_at(lt)&.image_id || default }
+  launch_template.enforce_expr(:image_id, "%{is_data_enabled} ? %{image_from_data} : %{default}") do |lt, default|
+    {:is_data_enabled=>ami.found_at?(lt), :image_from_data=>ami.found_at(lt)&.image_id, :default=>default}
+  end
 end
 ```
