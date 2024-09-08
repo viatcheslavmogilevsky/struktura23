@@ -547,3 +547,9 @@
 * [9b07](https://github.com/viatcheslavmogilevsky/struktura23/commit/9b078cd620d4801d770e798ca091018d3a641f91) `docs: new design: found_at: intro`
 	* docs: new design: found_at - introduction plus optional chaining example (aws_ami)
 
+
+## 8.09.2024
+
+* [fd69](https://github.com/viatcheslavmogilevsky/struktura23/commit/fd693ee1358150a190444a36b3d89d58fcfcc405) `docs: new design: found_at: enforce_expr intro`
+	* docs: new design: intro of found_at? and enforce_expr - to apply complex assignments
+
