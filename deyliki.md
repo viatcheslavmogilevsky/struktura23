@@ -553,3 +553,8 @@
 * [fd69](https://github.com/viatcheslavmogilevsky/struktura23/commit/fd693ee1358150a190444a36b3d89d58fcfcc405) `docs: new design: found_at: enforce_expr intro`
 	* docs: new design: intro of found_at? and enforce_expr - to apply complex assignments
 
+
+## 9.08.2024
+
+* [cd4a](https://github.com/viatcheslavmogilevsky/struktura23/commit/cd4a1cf8f28b3ca6c6fd27729845a9b183e33b47) `docs: new design: found_at: recursive example (not nice yet)`
+	* docs: new design: enforce by non-owner (recursive) - not a nice example
