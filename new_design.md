@@ -15,8 +15,10 @@ str23 class -> opentofu code (module)
 class ExampleStruktura < Struktura23::BaseSpec
   eks_cluster = has_root(:aws_eks_cluster).identify {|found_cluster| found_cluster.id}
 
-  eks_cluster.has_one_data(:tls_certificate).where {|cluster| url: cluster.found.identity[0].oidc[0].issuer}
-  eks_cluster.has_optional(:aws_iam_openid_connect_provider).where {|cluster| url: cluster.found.identity[0].oidc[0].issuer}
+  tls_certificate = eks_cluster.has_one_data(:tls_certificate).where {|cluster| url: cluster.found.identity[0].oidc[0].issuer}
+  connect_provider = eks_cluster.has_optional(:aws_iam_openid_connect_provider).where {|cluster| url: cluster.found.identity[0].oidc[0].issuer}
+  connect_provider.enforce(:thumbprint_list) {|provider| [tls_certificate.found_at(eks_cluster.found_at(provider)).certificates[0].sha1_fingerprint]} 
+ 
   eks_cluster.has_many(:aws_eks_addon).identify {|found_addon| found_addon.name}.where {|cluster| cluster_name: cluster.found.id}
 
   node_groups = eks_cluster.has_many(:aws_eks_node_group).where {|cluster| cluster_name: cluster.found.id }.identify {|found_group| found_group.node_group_name}
