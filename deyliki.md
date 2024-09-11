@@ -564,3 +564,10 @@
 
 * [766f](https://github.com/viatcheslavmogilevsky/struktura23/commit/766f8cbd43c9d9f5fa037af5f438bcf2b4ba5732) `docs: new design: found_at: 'recursive example' (better)`
 	* docs: new design: enforce by non-owner (recursive) - better example
+
+
+## 11.09.2024
+
+* [3774](https://github.com/viatcheslavmogilevsky/struktura23/commit/377493ce5835b1b276731ed167f6c708fd033de6) `docs: new design: new variant of example`
+	* docs: new design: more simple variant of example - avoid using anonymous functions (lambdas) where possible
+
