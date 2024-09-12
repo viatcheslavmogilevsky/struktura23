@@ -27,9 +27,8 @@ class ExampleStruktura < Struktura23::BaseSpec
 
   ami = launch_template.has_optional_data(:aws_ami)
   launch_template.enforce_expression(
-    :image_id,
-    "%{is_data_enabled} ? %{image_from_data} : %{default}",
-    is_data_enabled: ami.enabled?, image_from_data: ami.resolved.image_id
+    {image_id: "%{is_data_enabled} ? %{image_from_data} : %{default}"},
+    {is_data_enabled: ami.enabled?, image_from_data: ami.resolved.image_id}
   )
 end
 ```
