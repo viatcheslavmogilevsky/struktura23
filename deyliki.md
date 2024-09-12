@@ -571,3 +571,14 @@
 * [3774](https://github.com/viatcheslavmogilevsky/struktura23/commit/377493ce5835b1b276731ed167f6c708fd033de6) `docs: new design: new variant of example`
 	* docs: new design: more simple variant of example - avoid using anonymous functions (lambdas) where possible
 
+
+## 12.09.2024
+
+* [322a](https://github.com/viatcheslavmogilevsky/struktura23/commit/322a4bdbdb8fa56eb5bfbbffa18e22c27bd6274a) `docs: new design: identify_by instead of identify_by`
+	* identify_by is 'bidirectional' can be used for importing existing resources and to 'enforce' for_each
+* [cebd](https://github.com/viatcheslavmogilevsky/struktura23/commit/cebde16bbe7daa8725e155468324dcb6101f555f) `docs: new design:  better enforce_expression`
+	* enforce_expression interface is closer to enforce (attr=>val)
+* [60f4](https://github.com/viatcheslavmogilevsky/struktura23/commit/60f474546c5a9cceae1a9e5cd178ef2b80ff49b8) `docs: new design: launch template: identify_by name instead of id`
+	* id is not so good to be used as resource key
+
+
