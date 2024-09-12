@@ -22,7 +22,7 @@ class ExampleStruktura < Struktura23::BaseSpec
   eks_cluster.has_many(:aws_eks_addon).where(cluster_name: eks_cluster.resolved.id).identify_by(:name)
 
   node_groups = eks_cluster.has_many(:aws_eks_node_group).where(cluster_name: eks_cluster.resolved.id).identify_by(:node_group_name)
-  launch_template = node_groups.belongs_to(:aws_launch_template).where(name: node_groups.resolved.launch_template.name).identify_by(:id)
+  launch_template = node_groups.belongs_to(:aws_launch_template).where(name: node_groups.resolved.launch_template.name).identify_by(:name)
   node_groups.enforce(node_groups.resolved.launch_template.version=>launch_template.resolved.latest_version)
 
   ami = launch_template.has_optional_data(:aws_ami)
