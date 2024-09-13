@@ -32,3 +32,11 @@ class ExampleStruktura < Struktura23::BaseSpec
   )
 end
 ```
+
+```sh
+# generate opentofu code (modules)
+bundle exec str23 generate
+
+# run dashboard
+bundle exec str23 server
+```
