@@ -585,5 +585,11 @@
 ## 13.09.2024
 
 * [3636](https://github.com/viatcheslavmogilevsky/struktura23/commit/363658e3f42a1e208153c872eaebe9d32d437809) `docs: example of how to use specs (not clear yet)`
-	* an non-clear example of Struktur23 usage - focus on generating opentofu first? 
+	* an non-clear example of Struktur23 usage - focus on generating opentofu first?
+
+
+## 14.09.2024
+
+* [3387](https://github.com/viatcheslavmogilevsky/struktura23/commit/3387b83bb8fcf066e355af4083efd7b0e85cc4a7) `module-spec instead of base-spec: the beginning`
+	* starting implementing 'new design' in different class
 
