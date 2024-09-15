@@ -593,3 +593,8 @@
 * [3387](https://github.com/viatcheslavmogilevsky/struktura23/commit/3387b83bb8fcf066e355af4083efd7b0e85cc4a7) `module-spec instead of base-spec: the beginning`
 	* starting implementing 'new design' in different class
 
+
+## 15.09.2024
+
+* [5db5](https://github.com/viatcheslavmogilevsky/struktura23/commit/5db531872cb56b2137063a36fb9e25586900449b) `new design: example of result spec in quasi-hcl (quasi opentofu)`
+	* how a generated opentofu module would be like in quasi-hcl (indeed real modules will be in JSON), next: how queries would like
