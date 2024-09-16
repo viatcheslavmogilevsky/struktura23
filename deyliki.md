@@ -598,3 +598,13 @@
 
 * [5db5](https://github.com/viatcheslavmogilevsky/struktura23/commit/5db531872cb56b2137063a36fb9e25586900449b) `new design: example of result spec in quasi-hcl (quasi opentofu)`
 	* how a generated opentofu module would be like in quasi-hcl (indeed real modules will be in JSON), next: how queries would like
+
+
+## 16.09.2024
+
+* [fbaf](https://github.com/viatcheslavmogilevsky/struktura23/commit/fbaf80edf1aa08bd267a7cd483dd18b0233963f0) `new design: tls_certificate belongs to open_connect_provider`
+	* tls_certificate here does make sense to enforce attribute of openid_connect_provider, and if latter is optional the tls_certificate is optional too
+* [3e07](https://github.com/viatcheslavmogilevsky/struktura23/commit/3e0753dac57933fed02c1e3897bddebf5634f8cb) `new design: example of result query in quasi-sql`
+	* how quasi-SQL queries would look like (actually they are 'describe' API requests) - it still is not 100% informative because 'import script' is not shown yet
+
+
