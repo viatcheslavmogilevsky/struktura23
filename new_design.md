@@ -16,8 +16,8 @@ str23 class -> opentofu code (module)
 class ExampleStruktura < Struktura23::ModuleSpec
   eks_cluster = has_root(:aws_eks_cluster).identify_by(:id)
 
-  tls_certificate = eks_cluster.has_one_data(:tls_certificate).where(url: eks_cluster.resolved.identity[0].oidc[0].issuer)
   connect_provider = eks_cluster.has_optional(:aws_iam_openid_connect_provider).where(url: eks_cluster.resolved.identity[0].oidc[0].issuer)
+  tls_certificate = connect_provider.has_one_data(:tls_certificate).where(url: eks_cluster.resolved.identity[0].oidc[0].issuer)
   connect_provider.enforce(thumbprint_list: [tls_certificate.resolved.certificates[0].sha1_fingerprint])
  
   eks_cluster.has_many(:aws_eks_addon).where(cluster_name: eks_cluster.resolved.id).identify_by(:name)
@@ -52,13 +52,14 @@ bundle exec str23 server
 resource aws_eks_cluster this {}
 
 data tls_certificate this {
+  count = var.enable_aws_iam_openid_connect_provider ? 1 : 0
   url = aws_eks_cluster.main.identity[0].oidc[0].issuer
 }
 
 resource aws_iam_openid_connect_provider this {
   count = var.enable_aws_iam_openid_connect_provider ? 1 : 0
   url = aws_eks_cluster.main.identity[0].oidc[0].issuer
-  thumbprint_list = [data.tls_certificate.this.certificates[0].sha1_fingerprint]
+  thumbprint_list = [one(data.tls_certificate.this[*].certificates[0].sha1_fingerprint)]
 }
 
 resource aws_eks_addon this {
