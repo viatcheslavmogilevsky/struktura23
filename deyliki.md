@@ -608,3 +608,10 @@
 	* how quasi-SQL queries would look like (actually they are 'describe' API requests) - it still is not 100% informative because 'import script' is not shown yet
 
 
+## 17.09.2024
+
+* [7da0](https://github.com/viatcheslavmogilevsky/struktura23/commit/7da028f32c787b4f9e143ceeb4b116731dd71ad3) `new design: example of result query in quasi-API-requests`
+	* quasi-API-request are more 'real' than quasi-SQL, but some jq stuff is still missing
+
+
+
