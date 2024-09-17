@@ -122,16 +122,16 @@ resource aws_eks_node_group this {
 ```
 
 
-### Internal: query (in quasi-SQL)
+### Internal: query (in quasi-API-requests)
 
 ```
-SELECT * FROM eks_clusters;
+aws eks describe-clusters;
 
-SELECT * FROM openid_connect_providers;
+aws iam describe-openid-connect-providers
 
-SELECT * FROM eks_addons;
+aws eks describe-addons;
 
-SELECT * FROM eks_node_groups;
+aws eks node-groups;
 
-SELECT * FROM launch_templates;
+aws ec2 describe-launch-templates;
 ```
