@@ -125,13 +125,24 @@ resource aws_eks_node_group this {
 ### Internal: query (in quasi-API-requests)
 
 ```
-aws eks describe-clusters;
+clusters=$(aws eks describe-clusters)
+clusters_map=$(clusters as map(cluster-id=>cluster-data))
 
-aws iam describe-openid-connect-providers
+connectproviders=$(aws iam describe-openid-connect-providers)
+connectproviders_map=$(connectproviders as map(cluster-id=>connectprovider-id=>connectprovider-data))
+validate connectproviders_map # only one or zero connectprovider per cluster
+# mark non-valid cluster as rejected
 
-aws eks describe-addons;
+addons=$(aws eks describe-addons)
+addons_map=$(addons as map(cluster-id=>addon-id=>addon-data))
 
-aws eks node-groups;
+nodegroups=$(aws eks node-groups)
+nodegroups_map=$(nodegroups as map(cluster-id=>nodegroup-id=>nodegroup-data))
 
-aws ec2 describe-launch-templates;
+launchtemplates=$(aws ec2 describe-launch-templates)
+launchtemplates_map$(launchtemplates as map(launchtemplate-id=>(launchtemplate-data;cluster-id=>nodegroup-id))
+# mark launch-templates with many cluster-id keys as skipped (+warning)
+# move launch-templates with one cluster-id with many nodegroup-ids as common
+# move launch-templates with one cluster-id with one nodegroup-id as dedicated
+
 ```
