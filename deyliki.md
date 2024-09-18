@@ -614,4 +614,8 @@
 	* quasi-API-request are more 'real' than quasi-SQL, but some jq stuff is still missing
 
 
+## 18.09.2024
+
+* [cc94](https://github.com/viatcheslavmogilevsky/struktura23/commit/cc94b89d584171960c569ba6afe98ea5ec2e1a28) `new design: example of result query in quasi-API-requests/validations/transformations`
+	* pseudocode of how to query such spec
 
