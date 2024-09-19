@@ -619,3 +619,9 @@
 * [cc94](https://github.com/viatcheslavmogilevsky/struktura23/commit/cc94b89d584171960c569ba6afe98ea5ec2e1a28) `new design: example of result query in quasi-API-requests/validations/transformations`
 	* pseudocode of how to query such spec
 
+
+## 19.09.2024
+
+* [f605](https://github.com/viatcheslavmogilevsky/struktura23/commit/f605089b50fbe3f1013dd1341e7cf482a6680e29) `start impl of new design`
+	* start of implementation new design - renamed Node from old implementation to BaseNode, and create new file for new one
+
