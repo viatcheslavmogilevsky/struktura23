@@ -226,7 +226,7 @@ module Struktura23
   end
 
   module Node
-    class Base
+    class BaseNode
       include Enforceable
 
       attr_reader :schema, :label, :wrapped_by, :input_enabled, :output_enabled
@@ -420,7 +420,7 @@ module Struktura23
       end
     end
 
-    class Collection < Base
+    class Collection < BaseNode
       def initialize(*args)
         super(*args)
         @identify_by = nil
@@ -438,14 +438,14 @@ module Struktura23
       end
     end
 
-    class Singular < Base
+    class Singular < BaseNode
       def one
         # TODO: it is stub
         PromiseChain.new(self)
       end
     end
 
-    class Optional < Base
+    class Optional < BaseNode
       def one
         # TODO: it is stub
         PromiseChain.new(self)
@@ -614,7 +614,7 @@ module Struktura23
     end
   end
 
-  # TODO: this should be united with Node::Base
+  # TODO: this should be united with Node::BaseNode
   class WrapperCore
     include Enforceable
 
