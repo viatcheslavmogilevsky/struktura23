@@ -625,3 +625,8 @@
 * [f605](https://github.com/viatcheslavmogilevsky/struktura23/commit/f605089b50fbe3f1013dd1341e7cf482a6680e29) `start impl of new design`
 	* start of implementation new design - renamed Node from old implementation to BaseNode, and create new file for new one
 
+
+## 20.09.2024
+
+* [e12e](https://github.com/viatcheslavmogilevsky/struktura23/commit/e12e09b53a1917299a06b5883ee250d709d6019c) `node-base and node-singular - the beginning`
+	* start of implementation new design - rename more old Node clasess, and started to implement some basic stuff for new class of 'singular' node
