@@ -420,7 +420,7 @@ module Struktura23
       end
     end
 
-    class Collection < BaseNode
+    class CollectionNode < BaseNode
       def initialize(*args)
         super(*args)
         @identify_by = nil
@@ -438,14 +438,14 @@ module Struktura23
       end
     end
 
-    class Singular < BaseNode
+    class SingularNode < BaseNode
       def one
         # TODO: it is stub
         PromiseChain.new(self)
       end
     end
 
-    class Optional < BaseNode
+    class OptionalNode < BaseNode
       def one
         # TODO: it is stub
         PromiseChain.new(self)
@@ -526,11 +526,11 @@ module Struktura23
 
         node = case $1
         when "many"
-          Node::Collection.new(schema, *args[1..-1])
+          Node::CollectionNode.new(schema, *args[1..-1])
         when "one"
-          Node::Singular.new(schema, *args[1..-1])
+          Node::SingularNode.new(schema, *args[1..-1])
         when "optional"
-          Node::Optional.new(schema, *args[1..-1])
+          Node::OptionalNode.new(schema, *args[1..-1])
         end
         node.schema_provider = schema_provider
         has!(node, &block)
