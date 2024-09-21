@@ -14,7 +14,7 @@ str23 class -> opentofu code (module)
 
 ```rb
 class ExampleStruktura < Struktura23::ModuleSpec
-  eks_cluster = has_root(:aws_eks_cluster).identify_by(:id)
+  eks_cluster = root(has_one(:aws_eks_cluster).identify_by(:id))
 
   connect_provider = eks_cluster.has_optional(:aws_iam_openid_connect_provider).where(url: eks_cluster.resolved.identity[0].oidc[0].issuer)
   tls_certificate = connect_provider.has_one_data(:tls_certificate).where(url: eks_cluster.resolved.identity[0].oidc[0].issuer)
