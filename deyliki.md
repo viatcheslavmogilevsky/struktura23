@@ -630,3 +630,10 @@
 
 * [e12e](https://github.com/viatcheslavmogilevsky/struktura23/commit/e12e09b53a1917299a06b5883ee250d709d6019c) `node-base and node-singular - the beginning`
 	* start of implementation new design - rename more old Node clasess, and started to implement some basic stuff for new class of 'singular' node
+
+
+## 21.09.2024
+
+* [2598](https://github.com/viatcheslavmogilevsky/struktura23/commit/2598256d3b3767bf49ce0b349c0bac5bb7dcd82d) `root claim insteas of has_root`
+	* plural/optional node can be root as well as singular one
+
