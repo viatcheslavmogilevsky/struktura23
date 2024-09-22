@@ -637,3 +637,9 @@
 * [2598](https://github.com/viatcheslavmogilevsky/struktura23/commit/2598256d3b3767bf49ce0b349c0bac5bb7dcd82d) `root claim insteas of has_root`
 	* plural/optional node can be root as well as singular one
 
+
+## 22.09.2024
+
+* [b327](https://github.com/viatcheslavmogilevsky/struktura23/commit/b3270d11195811c5803a59bb9b8b6d955328a17a) `root and block`
+	* root should work as regular node (block), so both Root and Block classes share the same functionality
+
