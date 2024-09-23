@@ -643,3 +643,10 @@
 * [b327](https://github.com/viatcheslavmogilevsky/struktura23/commit/b3270d11195811c5803a59bb9b8b6d955328a17a) `root and block`
 	* root should work as regular node (block), so both Root and Block classes share the same functionality
 
+
+## 23.09.2024
+
+* [6191](https://github.com/viatcheslavmogilevsky/struktura23/commit/61912f14685fb77c32e2cef27835cce3617bdcdd) `some basic core classes`
+	* this bunch of classes is yet another implementation of graph with parametrized edges
+
+
