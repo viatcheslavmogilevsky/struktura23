@@ -1,8 +1,8 @@
 module Struktura23
   class ModuleSpec
-    def self.as_root
-      raise "Root is already specified" if !!@root
-      @root = Node::Base.new
+    def self.module_itself
+      raise "Root node is already specified" if !!@root
+      @root = Node::Base.new(nil, Connection::Plural.new(nil))
     end
   end
 end

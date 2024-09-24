@@ -3,7 +3,7 @@ module Struktura23
     class Base
       attr_reader :infra_block, :identifier, :query, :enforcers, :connected_nodes, :connection
 
-      def initialize(infra_block=nil, connection=nil)
+      def initialize(infra_block, connection)
         @connected_nodes = []
         @enforcers = {}
         @query = {}
