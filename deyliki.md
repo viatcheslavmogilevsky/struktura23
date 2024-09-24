@@ -650,3 +650,9 @@
 	* this bunch of classes is yet another implementation of graph with parametrized edges
 
 
+## 24.09.2024
+
+* [b0e3](https://github.com/viatcheslavmogilevsky/struktura23/commit/b0e3f976e39848fb22646a44ad19b944e17c1a69) `node: simplify constructor, module's root node is module itself`
+	* node constructor always requires to pass infra-block and type of connection, in some cases (for module_itself class method, ex 'as_root') 'nil'/(connection with ref to 'nil') can be passed 
+* [e4fd](https://github.com/viatcheslavmogilevsky/struktura23/commit/e4fdabd77fc22fc09c813cd761aae2468b4ddafb) `fix example quasi-hcl output`
+	* docs: new design: correct for_each for aws_ami data of aws_launch_template
