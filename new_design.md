@@ -75,7 +75,9 @@ resource aws_launch_template dedicated_to_aws_eks_node_group {
 }
 
 data aws_ami dedicated_to_aws_eks_node_group {
-  for_each = var.aws_eks_node_groups
+  for_each = {for aws_eks_node_group_key, aws_eks_node_group_value in var.aws_eks_node_groups: 
+    aws_eks_node_group_key => aws_eks_node_group_value if aws_eks_node_group_value.enable_aws_ami
+  }
   # any_attr = each.value.aws_launch_template.aws_ami.any_attr
 }
 
@@ -86,7 +88,9 @@ resource aws_launch_template common {
 }
 
 data aws_ami common {
-  for_each = var.common_aws_launch_templates
+  for_each = {for common_aws_launch_template_key, common_aws_launch_template_value in var.common_aws_launch_templates: 
+    common_aws_launch_template_key => common_aws_launch_template_value if common_aws_launch_template_value.enable_aws_ami
+  }
   # any_attr = each.value.aws_ami.any_attr
 }
 
