@@ -1,5 +1,5 @@
 module Struktura23
-  class InfraBlock
+  class BlockInfo
     attr_reader :block_type, :block_label, :datasource
 
     def initialize(datasource, block_type, block_label)

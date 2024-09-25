@@ -1,13 +1,13 @@
 module Struktura23
   module Node
     class Base
-      attr_reader :infra_block, :identifier, :query, :enforcers, :connected_nodes, :connection
+      attr_reader :block_info, :identifier, :query, :enforcers, :connected_nodes, :connection
 
-      def initialize(infra_block, connection)
+      def initialize(block_info, connection)
         @connected_nodes = []
         @enforcers = {}
         @query = {}
-        @infra_block = infra_block
+        @block_info = block_info
         @connection = connection
       end
 
@@ -78,8 +78,8 @@ module Struktura23
       private
 
       def has(connection_class, datasource, block_type, block_label)
-        infra_block = InfraBlock.new(datasource, block_type, block_label)
-        node = Base.new(infra_block, connection_class.new(self))
+        block_info = BlockInfo.new(datasource, block_type, block_label)
+        node = Base.new(block_info, connection_class.new(self))
         @connected_nodes << node
         node
       end
