@@ -656,3 +656,10 @@
 	* node constructor always requires to pass infra-block and type of connection, in some cases (for module_itself class method, ex 'as_root') 'nil'/(connection with ref to 'nil') can be passed 
 * [e4fd](https://github.com/viatcheslavmogilevsky/struktura23/commit/e4fdabd77fc22fc09c813cd761aae2468b4ddafb) `fix example quasi-hcl output`
 	* docs: new design: correct for_each for aws_ami data of aws_launch_template
+
+
+## 25.09.2024
+
+* [1df1](https://github.com/viatcheslavmogilevsky/struktura23/commit/1df1dfc9950bcdb766d7515d329e425a042ad4ae) `infra-block renamed block-info`
+	* infra-block class renamed to block-info - starting implementing templating (internal nodes -> 'ruby' blocks -> opentofu js)
+
