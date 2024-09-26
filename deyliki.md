@@ -663,3 +663,8 @@
 * [1df1](https://github.com/viatcheslavmogilevsky/struktura23/commit/1df1dfc9950bcdb766d7515d329e425a042ad4ae) `infra-block renamed block-info`
 	* infra-block class renamed to block-info - starting implementing templating (internal nodes -> 'ruby' blocks -> opentofu js)
 
+
+## 26.09.2024
+
+* [cdb4](https://github.com/viatcheslavmogilevsky/struktura23/commit/cdb42cc7bf05a4b909df9e777d62f47d3cc95582) `hcl blocks generator: the beginning`
+	* templating tf modules: introducing 'ruby' blocks and implementing 'all_connected_nodes' to recurosively get all nodes to be processed later
