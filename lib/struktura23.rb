@@ -4,6 +4,7 @@ require "struktura23/connections"
 require "struktura23/stub-tools"
 require "struktura23/node"
 require "struktura23/module-spec"
+require "struktura23/hcl-block"
 
 module Struktura23
 end

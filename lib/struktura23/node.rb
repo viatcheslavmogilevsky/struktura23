@@ -75,6 +75,18 @@ module Struktura23
         StubTools::Chain.new(self)
       end
 
+      # Generation starts here
+      def generate_blocks
+      end
+
+      def all_connected_nodes
+        all_connected_nodes = [self]
+        connected_nodes.each do |cn|
+          all_connected_nodes += cn.all_connected_nodes
+        end
+        all_connected_nodes
+      end
+
       private
 
       def has(connection_class, datasource, block_type, block_label)
