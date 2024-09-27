@@ -668,3 +668,10 @@
 
 * [cdb4](https://github.com/viatcheslavmogilevsky/struktura23/commit/cdb42cc7bf05a4b909df9e777d62f47d3cc95582) `hcl blocks generator: the beginning`
 	* templating tf modules: introducing 'ruby' blocks and implementing 'all_connected_nodes' to recurosively get all nodes to be processed later
+
+
+## 27.09.2024
+
+* [a87e](https://github.com/viatcheslavmogilevsky/struktura23/commit/a87e82d28469a7bfad0a633e069c8bd2c2fd21d2) `spec class is hcl-block generator`
+	* Spec class will be responsible to generate hcl-blocks, so that they can be transformed to opentofu-json
+
