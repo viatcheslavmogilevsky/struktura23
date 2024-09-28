@@ -675,3 +675,11 @@
 * [a87e](https://github.com/viatcheslavmogilevsky/struktura23/commit/a87e82d28469a7bfad0a633e069c8bd2c2fd21d2) `spec class is hcl-block generator`
 	* Spec class will be responsible to generate hcl-blocks, so that they can be transformed to opentofu-json
 
+
+## 28.09.2024
+
+* [bca8](https://github.com/viatcheslavmogilevsky/struktura23/commit/bca82af8752657e212f3eabb837928624ea96028) `new_design: correct example`
+	* correcting example: evety local reference should start with `local.`
+* [473a](https://github.com/viatcheslavmogilevsky/struktura23/commit/473af6d190edad69d75c529dd21c73205fd5d01a) `module-spec reverse_connections of every particular node`
+	* reverse connection can be useful to render hcl blocks (for_each, count, variable refs, etc)
+
