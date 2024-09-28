@@ -104,11 +104,11 @@ locals {
   }
 
   launch_template_names = {for aws_eks_node_group_key, aws_eks_node_group_value in var.aws_eks_node_groups :
-    aws_eks_node_group_key => aws_eks_node_group_value.aws_launch_template != null ? aws_launch_template.dedicated_to_aws_eks_node_group[aws_eks_node_group_key].name : common_names[aws_eks_node_group_key]
+    aws_eks_node_group_key => aws_eks_node_group_value.aws_launch_template != null ? aws_launch_template.dedicated_to_aws_eks_node_group[aws_eks_node_group_key].name : local.common_names[aws_eks_node_group_key]
   }
 
   launch_template_versions = {for aws_eks_node_group_key, aws_eks_node_group_value in var.aws_eks_node_groups :
-    aws_eks_node_group_key => aws_eks_node_group_value.aws_launch_template != null ? aws_launch_template.dedicated_to_aws_eks_node_group[aws_eks_node_group_key].latest_version : common_versions[aws_eks_node_group_key]
+    aws_eks_node_group_key => aws_eks_node_group_value.aws_launch_template != null ? aws_launch_template.dedicated_to_aws_eks_node_group[aws_eks_node_group_key].latest_version : local.common_versions[aws_eks_node_group_key]
   }
 }
 
