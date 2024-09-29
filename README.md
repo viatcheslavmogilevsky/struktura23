@@ -29,8 +29,11 @@ load "#{File.dirname(__FILE__)}/examples/native-modules-rb/eks-with-nodes/module
 ```
 
 
-## Daily progress
+## Weekly progress
 
+[Here!](weekly.md)
+
+
+## Daily progress (replaced by weekly)
 
 [Here!](deyliki.md)
- 

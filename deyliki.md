@@ -683,3 +683,7 @@
 * [473a](https://github.com/viatcheslavmogilevsky/struktura23/commit/473af6d190edad69d75c529dd21c73205fd5d01a) `module-spec reverse_connections of every particular node`
 	* reverse connection can be useful to render hcl blocks (for_each, count, variable refs, etc)
 
+
+## 29.09.2024
+
+* that's all with daily progress - swithcing to weekly...
