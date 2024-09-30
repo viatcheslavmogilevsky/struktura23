@@ -44,12 +44,6 @@ module Struktura23
         self
       end
 
-      # Stub
-      def enforce_expression(enforce_hash, template_hash)
-        @enforcers.merge! enforce_hash
-        self
-      end
-
       def identify_by(identifier_hash)
         @identifier = identifier_hash
         self
@@ -58,11 +52,6 @@ module Struktura23
       def where(query_hash)
         @query.merge! query_hash
         self
-      end
-
-      # Stub
-      def enabled?
-        StubTools::Chain.new(self)
       end
 
       # Stub

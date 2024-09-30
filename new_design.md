@@ -27,10 +27,7 @@ class ExampleStruktura < Struktura23::ModuleSpec
   node_groups.enforce(node_groups.resolved.launch_template.version=>launch_template.resolved.latest_version)
 
   ami = launch_template.has_optional_data(:aws_ami)
-  launch_template.enforce_expression(
-    {image_id: "%{is_data_enabled} ? %{image_from_data} : %{default}"},
-    {is_data_enabled: ami.enabled?, image_from_data: ami.resolved.image_id}
-  )
+  launch_template.enforce(image_id: ami.resolved.image_id)
 end
 ```
 
