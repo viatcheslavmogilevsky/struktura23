@@ -13,15 +13,5 @@ module Struktura23
     def self.hcl_blocks
       []
     end
-
-    def self.reverse_connections(node)
-      result = []
-      current_connection = node.connection
-      until current_connection.owner == nil
-        result << current_connection
-        current_connection = current_connection.owner.connection
-      end
-      result
-    end
   end
 end

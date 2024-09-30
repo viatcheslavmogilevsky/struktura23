@@ -87,6 +87,16 @@ module Struktura23
         all_connected_nodes
       end
 
+      def reversed_connections
+        result = []
+        current_connection = connection
+        until current_connection.owner == nil
+          result << current_connection
+          current_connection = current_connection.owner.connection
+        end
+        result
+      end
+
       private
 
       def has(connection_class, datasource, block_type, block_label)
