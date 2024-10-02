@@ -50,7 +50,7 @@ resource aws_eks_cluster this {}
 
 data tls_certificate this {
   count = var.enable_aws_iam_openid_connect_provider ? 1 : 0
-  url = aws_eks_cluster.main.identity[0].oidc[0].issuer
+  url = aws_eks_cluster.this.identity[0].oidc[0].issuer
 }
 
 resource aws_iam_openid_connect_provider this {
