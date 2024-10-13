@@ -19,4 +19,15 @@
 
 ### Shipping
 
+* not done, still wip: made full tf example (tf module and root module)
+
+## 14.10.2024 - 20.10.2024
+
+### Goals
+
+* made full tf example (tf module and root module)
+
+### Shipping
+
 * _TBD_
+
