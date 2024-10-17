@@ -8,7 +8,6 @@ resource "aws_iam_role" "this" {
   path                  = var.path
 }
 
-
 resource "aws_iam_policy" "this" {
   count       = length(var.custom_iam_policies)
   name        = lookup(var.custom_iam_policies[count.index], "name", null)
@@ -16,7 +15,6 @@ resource "aws_iam_policy" "this" {
   policy      = lookup(var.custom_iam_policies[count.index], "policy_document", null)
   path        = lookup(var.custom_iam_policies[count.index], "path", var.path)
 }
-
 
 resource "aws_iam_role_policy_attachment" "custom_policy_attachment" {
   count      = length(var.custom_iam_policies)
