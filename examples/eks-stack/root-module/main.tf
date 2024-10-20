@@ -27,8 +27,8 @@ module "ec2_instance_worker_iam_role" {
   role_name          = "EksClusterWorker"
   assume_role_policy = module.data.ec2_instance_assume_role_policy_json
   custom_iam_policies = [{
-    name        = "EksClusterWorkerCniPolicy"
-    description = ""
+    name            = "EksClusterWorkerCniPolicy"
+    description     = ""
     policy_document = module.data.ec2_instance_custom_policy_json
   }]
 
@@ -59,14 +59,14 @@ module "eks" {
   eks_subnet_ids         = concat(values(module.vpc.public_subnet_az_mapping), values(module.vpc.private_subnet_az_mapping))
   eks_security_group_ids = []
 
-  eks_node_role_arn = module.ec2_instance_worker_iam_role.iam_role_arn
-  eks_node_group_name = "main"
-  eks_node_group_desired_size = 2
-  eks_node_group_max_size     = 3
-  eks_node_group_min_size     = 2
-  eks_node_group_subnet_ids    = values(module.vpc.private_subnet_az_mapping)
-  eks_node_group_capacity_type = "SPOT"
-  eks_node_group_labels        = {}
+  eks_node_role_arn                   = module.ec2_instance_worker_iam_role.iam_role_arn
+  eks_node_group_name                 = "main"
+  eks_node_group_desired_size         = 2
+  eks_node_group_max_size             = 3
+  eks_node_group_min_size             = 2
+  eks_node_group_subnet_ids           = values(module.vpc.private_subnet_az_mapping)
+  eks_node_group_capacity_type        = "SPOT"
+  eks_node_group_labels               = {}
   eks_node_group_launch_template_name = "main"
   eks_node_group_instance_type        = "t4g.medium"
   eks_node_group_ssh_key              = null

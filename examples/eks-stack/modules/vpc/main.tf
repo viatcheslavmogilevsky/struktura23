@@ -53,7 +53,7 @@ resource "aws_subnet" "private" {
 
 
 resource "aws_eip" "nateip" {
-  domain   = "vpc"
+  domain = "vpc"
   # count = length(var.azs) * (var.enable_nat_gateway ? 1 : 0)
   for_each = var.enable_internet_gateway && var.enable_nat_gateway ? local.eips : {}
   tags     = merge(var.tags, tomap({ "Name" = format("%s-%s-NAT-EIP", var.name, each.key) }))

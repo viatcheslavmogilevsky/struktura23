@@ -27,9 +27,9 @@ resource "aws_iam_openid_connect_provider" "this" {
 }
 
 resource "aws_eks_addon" "this" {
-  for_each          = toset(["vpc-cni","kube-proxy","coredns"])
-  cluster_name      = aws_eks_cluster.this.id
-  addon_name        = each.key
+  for_each                    = toset(["vpc-cni", "kube-proxy", "coredns"])
+  cluster_name                = aws_eks_cluster.this.id
+  addon_name                  = each.key
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
 
@@ -71,11 +71,11 @@ data "aws_ami" "this" {
 }
 
 resource "aws_launch_template" "this" {
-  name_prefix            = var.eks_node_group_launch_template_name
-  ebs_optimized          = "true"
-  image_id               = data.aws_ami.this.image_id
-  instance_type          = var.eks_node_group_instance_type
-  key_name               = var.eks_node_group_ssh_key
+  name_prefix   = var.eks_node_group_launch_template_name
+  ebs_optimized = "true"
+  image_id      = data.aws_ami.this.image_id
+  instance_type = var.eks_node_group_instance_type
+  key_name      = var.eks_node_group_ssh_key
 
   vpc_security_group_ids = [
     aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
