@@ -1,34 +1,39 @@
-output "iam_role_arn" {
-  description = "The AWS ARN of the IAM Role"
-  value       = aws_iam_role.iam_role.arn
+output "vpc_id" {
+  description = "The VPC ID"
+  value       = aws_vpc.vpc.id
 }
 
-output "iam_role_id" {
-  description = "The ID of the IAM Role"
-  value       = aws_iam_role.iam_role.id
+output "vpc_cidr_block" {
+  description = "The CIDR block of the VPC"
+  value       = aws_vpc.vpc.cidr_block
 }
 
-output "iam_role_name" {
-  description = "The name of the IAM Role"
-  value       = aws_iam_role.iam_role.name
+output "public_route_table_id_az_mapping" {
+  description = "The AZ-to-id mapping of route tables associated with public subnets"
+  value       = { for az, index in local.public_azs : "${az}" => aws_route_table.public[az].id }
 }
 
-output "iam_role_unique_id" {
-  description = "The stable and unique string identifying the role"
-  value       = aws_iam_role.iam_role.unique_id
+output "private_route_table_id_az_mapping" {
+  description = "The AZ-to-id mapping of route tables associated with public subnets"
+  value       = { for az, index in local.private_azs : "${az}" => aws_route_table.private[az].id }
 }
 
-output "iam_role_policy_names" {
-  description = "A list of IAM policy names attached to the IAM Role"
-  value       = concat(aws_iam_policy.iam_policy.*.name, var.managed_iam_policies)
+output "vpc_main_route_table_id" {
+  description = "The ID of the main route table associated with this VPC"
+  value       = aws_vpc.vpc.main_route_table_id
 }
 
-output "iam_role_policy_arns" {
-  description = " A list of Amazon Resource Names (ARN) of the policies attached to the Role"
-  value       = concat(aws_iam_policy.iam_policy.*.arn, var.managed_iam_policies)
+output "default_route_table_id" {
+  description = "The ID of the default route table in the VPC"
+  value       = aws_vpc.vpc.default_route_table_id
 }
 
-output "iam_role_custom_policy_arns" {
-  description = "ARNs of custom policies created in this module"
-  value       = aws_iam_policy.iam_policy.*.arn
+output "public_subnet_az_mapping" {
+  description = "The AZ-to-id mapping of public subnets"
+  value       = { for az, index in local.public_azs : "${az}" => aws_subnet.public[az].id }
+}
+
+output "private_subnet_az_mapping" {
+  description = "The AZ-to-id mapping of private subnets"
+  value       = { for az, index in local.private_azs : "${az}" => aws_subnet.private[az].id }
 }
