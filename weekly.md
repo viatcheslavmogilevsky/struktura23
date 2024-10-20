@@ -29,5 +29,16 @@
 
 ### Shipping
 
-* _TBD_
+* done: got full tf example (tofu plan works)
 
+## 21.10.2024 - 27.10.2024
+
+### Goals
+
+* apply example
+* transform tf to json
+* ???
+
+### Shipping
+
+* _TBD_
