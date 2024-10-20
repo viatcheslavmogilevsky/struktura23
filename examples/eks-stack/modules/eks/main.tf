@@ -1,7 +1,6 @@
 resource "aws_eks_cluster" "this" {
   name = var.eks_cluster_name
 
-
   role_arn = var.eks_role_arn
 
   enabled_cluster_log_types = var.eks_enabled_log_types
@@ -31,7 +30,8 @@ resource "aws_eks_addon" "this" {
   for_each          = toset(["vpc-cni","kube-proxy","coredns"])
   cluster_name      = aws_eks_cluster.this.id
   addon_name        = each.key
-  resolve_conflicts = "OVERWRITE"
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "OVERWRITE"
 
   depends_on = [
     aws_iam_openid_connect_provider.this,
@@ -76,11 +76,17 @@ resource "aws_launch_template" "this" {
   image_id               = data.aws_ami.this.image_id
   instance_type          = var.eks_node_group_instance_type
   key_name               = var.eks_node_group_ssh_key
-  vpc_security_group_ids = var.eks_node_group_security_group_ids
+
+  vpc_security_group_ids = [
+    aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
+  ]
 
   tag_specifications {
     resource_type = "instance"
-    tags          = var.eks_node_group_tags
+
+    tags = {
+      Name = "${aws_eks_cluster.this.id}-worker"
+    }
   }
 
   lifecycle {

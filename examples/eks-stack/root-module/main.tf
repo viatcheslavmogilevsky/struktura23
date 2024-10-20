@@ -1,0 +1,73 @@
+module "data" {
+  source = "../modules/data"
+}
+
+module "eks_cluster_iam_role" {
+  source = "../modules/iam"
+
+  role_name          = "EksCluster"
+  assume_role_policy = module.data.eks_cluster_assume_role_policy_json
+  custom_iam_policies = [{
+    name            = "EksClusterCustomPolicy"
+    description     = ""
+    policy_document = module.data.eks_cluster_custom_policy_json
+  }]
+
+  managed_iam_policies = [
+    format("arn:%s:iam::aws:policy/AmazonEKSClusterPolicy", module.data.partition),
+    format("arn:%s:iam::aws:policy/AmazonEKSServicePolicy", module.data.partition),
+  ]
+
+  force_detach_policies = false
+}
+
+module "ec2_instance_worker_iam_role" {
+  source = "../modules/iam"
+
+  role_name          = "EksClusterWorker"
+  assume_role_policy = module.data.ec2_instance_assume_role_policy_json
+  custom_iam_policies = [{
+    name        = "EksClusterWorkerCniPolicy"
+    description = ""
+    policy_document = module.data.ec2_instance_custom_policy_json
+  }]
+
+  managed_iam_policies = [
+    format("arn:%s:iam::aws:policy/AmazonEKSWorkerNodePolicy", module.data.partition),
+    format("arn:%s:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly", module.data.partition),
+  ]
+}
+
+module "vpc" {
+  source = "../modules/vpc"
+
+  cidr                = "10.0.0.0/16"
+  azs                 = slice(module.data.availability_zone_names, 0, 2)
+  tags                = {}
+  name                = "compute"
+  public_subnet_tags  = { "kubernetes.io/role/elb" = "1" }
+  private_subnet_tags = { "kubernetes.io/role/internal-elb" = "1" }
+  single_nat_gateway  = true
+}
+
+module "eks" {
+  source = "../modules/eks"
+
+  eks_cluster_name       = "test"
+  eks_role_arn           = module.eks_cluster_iam_role.iam_role_arn
+  eks_tags               = {}
+  eks_subnet_ids         = concat(values(module.vpc.public_subnet_az_mapping), values(module.vpc.private_subnet_az_mapping))
+  eks_security_group_ids = []
+
+  eks_node_role_arn = module.ec2_instance_worker_iam_role.iam_role_arn
+  eks_node_group_name = "main"
+  eks_node_group_desired_size = 2
+  eks_node_group_max_size     = 3
+  eks_node_group_min_size     = 2
+  eks_node_group_subnet_ids    = values(module.vpc.private_subnet_az_mapping)
+  eks_node_group_capacity_type = "SPOT"
+  eks_node_group_labels        = {}
+  eks_node_group_launch_template_name = "main"
+  eks_node_group_instance_type        = "t4g.medium"
+  eks_node_group_ssh_key              = null
+}

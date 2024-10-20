@@ -52,4 +52,5 @@ variable "max_session_duration" {
 variable "tags" {
   description = "A map of tags"
   type        = map(string)
+  default     = {}
 }

@@ -104,18 +104,7 @@ variable "eks_node_group_ssh_key" {
   type        = string
 }
 
-variable "eks_node_group_security_group_ids" {
-  description = "Security groups for the node groups"
-  type        = list(string)
-}
-
 variable "eks_node_group_launch_template_name" {
   description = "Launch template name"
   type        = string
 }
-
-variable "eks_node_group_tags" {
-  description = "Tags for the node groups"
-  type        = map(any)
-}
-
