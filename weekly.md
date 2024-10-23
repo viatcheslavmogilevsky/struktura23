@@ -35,7 +35,7 @@
 
 ### Goals
 
-* apply example
+* apply example :white_check_mark:
 * transform tf to json
 * ???
 
