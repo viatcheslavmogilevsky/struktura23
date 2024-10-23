@@ -42,7 +42,7 @@ module "vpc" {
   source = "../modules/vpc"
 
   cidr                = "10.0.0.0/16"
-  azs                 = slice(module.data.availability_zone_names, 0, 2)
+  azs                 = slice(module.data.availability_zone_names, 0, 3)
   tags                = {}
   name                = "compute"
   public_subnet_tags  = { "kubernetes.io/role/elb" = "1" }
@@ -56,7 +56,18 @@ module "eks" {
   eks_cluster_name       = "test"
   eks_role_arn           = module.eks_cluster_iam_role.iam_role_arn
   eks_tags               = {}
-  eks_subnet_ids         = concat(values(module.vpc.public_subnet_az_mapping), values(module.vpc.private_subnet_az_mapping))
+
+  eks_subnet_ids = concat(
+    [
+      module.vpc.public_subnet_az_mapping["us-west-2a"],
+      module.vpc.public_subnet_az_mapping["us-west-2b"],
+    ],
+    [
+      module.vpc.private_subnet_az_mapping["us-west-2a"],
+      module.vpc.private_subnet_az_mapping["us-west-2b"],
+    ]
+  )
+
   eks_security_group_ids = []
 
   eks_node_role_arn                   = module.ec2_instance_worker_iam_role.iam_role_arn
@@ -65,9 +76,35 @@ module "eks" {
   eks_node_group_max_size             = 3
   eks_node_group_min_size             = 2
   eks_node_group_subnet_ids           = values(module.vpc.private_subnet_az_mapping)
+
   eks_node_group_capacity_type        = "SPOT"
   eks_node_group_labels               = {}
   eks_node_group_launch_template_name = "main"
   eks_node_group_instance_type        = "t4g.medium"
-  eks_node_group_ssh_key              = null
+
+  eks_node_group_instance_types = [
+    "a1.medium",
+    "a1.large",
+    "c6g.medium",
+    "c6g.large",
+    "c6gd.medium",
+    "c6gd.large",
+    "c6gn.medium",
+    "c6gn.large",
+    "c7g.medium",
+    "c7g.large",
+    "c7gd.medium",
+    "c7gd.large",
+    "c7gn.medium",
+    "c7gn.large",
+    "c8g.medium",
+    "c8g.large",
+    "m6g.medium",
+    "m6gd.medium",
+    "m7g.medium",
+    "m7gd.medium",
+    "m8g.medium",
+  ]
+
+  eks_node_group_ssh_key = null
 }

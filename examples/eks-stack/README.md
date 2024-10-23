@@ -26,3 +26,20 @@ tofu plan
 tofu apply
 ```
 
+### How to use k8s cluster
+
+```bash
+# export AWS_PROFILE=example-aws-profile
+aws eks --region us-west-2  update-kubeconfig --name test --kubeconfig=kubeconfig.yaml
+KUBECONFIG=$(pwd)/kubeconfig.yaml kubectl apply -f deployment.yaml
+KUBECONFIG=$(pwd)/kubeconfig.yaml k9s -A
+```
+
+
+### How to destroy k8s cluster
+
+```bash
+# export AWS_PROFILE=example-aws-profile
+cd ./root-module
+tofu destroy
+```

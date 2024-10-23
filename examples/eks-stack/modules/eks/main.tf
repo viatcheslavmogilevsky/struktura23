@@ -45,6 +45,7 @@ resource "aws_eks_node_group" "this" {
   subnet_ids      = var.eks_node_group_subnet_ids
   labels          = var.eks_node_group_labels
   capacity_type   = var.eks_node_group_capacity_type
+  instance_types  = var.eks_node_group_instance_types
 
 
   scaling_config {
@@ -74,7 +75,7 @@ resource "aws_launch_template" "this" {
   name_prefix   = var.eks_node_group_launch_template_name
   ebs_optimized = "true"
   image_id      = data.aws_ami.this.image_id
-  instance_type = var.eks_node_group_instance_type
+  instance_type = var.eks_node_group_instance_types != null ? null : var.eks_node_group_instance_type
   key_name      = var.eks_node_group_ssh_key
 
   vpc_security_group_ids = [

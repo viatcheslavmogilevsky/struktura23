@@ -90,8 +90,14 @@ variable "eks_node_group_min_size" {
 }
 
 variable "eks_node_group_instance_type" {
-  description = "Instance types of the node group (t3.medium, c5,xlarge etc.)"
+  description = "Instance types of the node group (t3.medium, c5.xlarge etc.)"
   type        = string
+}
+
+variable "eks_node_group_instance_types" {
+  description = "Override instance types of the node group by multiple types ([t3.medium, c5.xlarge] etc.)"
+  type        = list(string)
+  default     = null
 }
 
 variable "eks_node_group_labels" {
