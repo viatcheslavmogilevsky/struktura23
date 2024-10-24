@@ -51,7 +51,7 @@ module "vpc" {
 }
 
 module "eks" {
-  source = "../modules/eks"
+  source = "../modules/eks-json"
 
   eks_cluster_name       = "test"
   eks_role_arn           = module.eks_cluster_iam_role.iam_role_arn
