@@ -57,15 +57,9 @@ module "eks" {
   eks_role_arn           = module.eks_cluster_iam_role.iam_role_arn
   eks_tags               = {}
 
-  eks_subnet_ids = concat(
-    [
-      module.vpc.public_subnet_az_mapping["us-west-2a"],
-      module.vpc.public_subnet_az_mapping["us-west-2b"],
-    ],
-    [
-      module.vpc.private_subnet_az_mapping["us-west-2a"],
-      module.vpc.private_subnet_az_mapping["us-west-2b"],
-    ]
+  # NOTE: AZ-set cannot be changed
+  eks_subnet_ids = flatten(
+    [for az in ["us-west-2a", "us-west-2b"] : [module.vpc.public_subnet_az_mapping[az], module.vpc.private_subnet_az_mapping[az]]]
   )
 
   eks_security_group_ids = []
