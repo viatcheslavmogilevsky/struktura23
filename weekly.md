@@ -41,4 +41,16 @@
 
 ### Shipping
 
+* done: apply/destory example
+* undone: transform all tf to json
+
+## 28.10.2024 - 3.11.2024
+
+### Goals
+
+* transform all tf to json and compare with tf-only option
+* json option but generated-like (also compare)
+
+### Shipping
+
 * _TBD_
