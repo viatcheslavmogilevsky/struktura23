@@ -1,15 +1,3 @@
-resource "aws_eks_addon" "this" {
-  for_each                    = toset(["vpc-cni", "kube-proxy", "coredns"])
-  cluster_name                = aws_eks_cluster.this.id
-  addon_name                  = each.key
-  resolve_conflicts_on_create = "OVERWRITE"
-  resolve_conflicts_on_update = "OVERWRITE"
-
-  depends_on = [
-    aws_iam_openid_connect_provider.this,
-  ]
-}
-
 resource "aws_eks_node_group" "this" {
   cluster_name    = aws_eks_cluster.this.id
   node_group_name = var.eks_node_group_name
