@@ -34,6 +34,53 @@
           "aws_iam_openid_connect_provider.this"
         ]
       }
+    },
+    "aws_eks_node_group": {
+      "this": {
+        "cluster_name": "${aws_eks_cluster.this.id}",
+        "node_group_name": "${var.eks_node_group_name}",
+        "node_role_arn": "${var.eks_node_role_arn}",
+        "subnet_ids": "${var.eks_node_group_subnet_ids}",
+        "labels": "${var.eks_node_group_labels}",
+        "capacity_type": "${var.eks_node_group_capacity_type}",
+        "instance_types": "${var.eks_node_group_instance_types}",
+        "scaling_config": {
+          "desired_size": "${var.eks_node_group_desired_size}",
+          "max_size": "${var.eks_node_group_max_size}",
+          "min_size": "${var.eks_node_group_min_size}"
+        },
+        "launch_template": {
+          "name": "${aws_launch_template.this.name}",
+          "version": "${aws_launch_template.this.latest_version}"
+        },
+        "lifecycle": {
+          "ignore_changes": ["scaling_config[0].desired_size"]
+        }
+      }
+    },
+    "aws_launch_template": {
+      "this": {
+        "name_prefix": "${var.eks_node_group_launch_template_name}",
+        "ebs_optimized": "true",
+        "image_id": "${data.aws_ami.this.image_id}",
+        "instance_type": "${var.eks_node_group_instance_types != null ? null : var.eks_node_group_instance_type}",
+        "key_name": "${var.eks_node_group_ssh_key}",
+        "vpc_security_group_ids": [
+          "${aws_eks_cluster.this.vpc_config[0].cluster_security_group_id}"
+        ],
+        "tag_specifications": {
+          "resource_type": "instance",
+          "tags": {
+            "Name": "${aws_eks_cluster.this.id}-worker"
+          }
+        },
+        "lifecycle": {
+          "ignore_changes": [
+            "tag_specifications[0].tags[\"Owner\"]"
+          ]
+        },
+        "user_data": "${base64encode(\"#!/bin/bash -xe\\n\\n# Bootstrap and join the cluster\\n/etc/eks/bootstrap.sh --b64-cluster-ca '${aws_eks_cluster.this.certificate_authority[0].data}' --apiserver-endpoint '${aws_eks_cluster.this.endpoint}' '${aws_eks_cluster.this.id}'\\n\\n# Allow user supplied userdata code\\necho \\\"Node is up...\\\"\\n\")}"
+      }
     }
   },
   "data": {
@@ -41,6 +88,149 @@
       "this": {
         "url": "${aws_eks_cluster.this.identity[0].oidc[0].issuer}"
       }
+    },
+    "aws_ami": {
+      "this": {
+        "most_recent": true,
+        "name_regex": "amazon-eks-arm64-node-${aws_eks_cluster.this.version}-v*",
+        "owners": ["amazon"]
+      }
+    }
+  },
+  "output": {
+    "cluster_id": {
+      "description": "The name/id of the EKS cluster.",
+      "value": "${aws_eks_cluster.this.id}"
+    },
+    "cluster_arn": {
+      "description": "The Amazon Resource Name (ARN) of the cluster.",
+      "value": "${aws_eks_cluster.this.arn}"
+    },
+    "cluster_endpoint": {
+      "description": "The endpoint of the EKS Cluster",
+      "value": "${aws_eks_cluster.this.endpoint}"
+    },
+    "cluster_ca": {
+      "description": "The CA of the EKS Cluster",
+      "value": "${aws_eks_cluster.this.certificate_authority[0].data}"
+    },
+    "oidc_issuer": {
+      "description": "The OIDC issuer for the cluster",
+      "value": "${aws_eks_cluster.this.identity[0].oidc[0].issuer}"
+    },
+    "cluster_security_group_id": {
+      "description": "The ID security group of the EKS Cluster",
+      "value": "${aws_eks_cluster.this.vpc_config[0].cluster_security_group_id}"
+    }
+  },
+  "terraform": {
+    "required_providers": {
+      "aws": {
+        "source": "hashicorp/aws",
+        "version": ">= 5.68.0"
+      },
+      "tls": {
+        "source": "hashicorp/tls",
+        "version": ">= 4.0.6"
+      }
+    }
+  },
+  "variable": {
+    "eks_cluster_name": {
+      "description": "The name of the eks cluster.",
+      "type": "string"
+    },
+    "eks_cluster_version": {
+      "description": "Desired k8s version",
+      "type": "string",
+      "default": "1.29"
+    },
+    "eks_role_arn": {
+      "description": "ARN of the EKS role.",
+      "type": "string"
+    },
+    "eks_enabled_log_types": {
+      "description": "The enabled log types of the EKS cluster.",
+      "type": "list(string)",
+      "default": ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+    },
+    "eks_tags": {
+      "description": "Tags of the EKS Cluster.",
+      "type": "map(any)"
+    },
+    "eks_subnet_ids": {
+      "description": "Subnet IDS of the eks subnet.",
+      "type": "list(string)"
+    },
+    "eks_endpoint_private_access": {
+      "description": "Make the private endpoints in EKS available.",
+      "type": "bool",
+      "default": false
+    },
+    "eks_endpoint_public_access": {
+      "description": "Make the public endpoints in EKS available.",
+      "type": "bool",
+      "default": true
+    },
+    "eks_public_access_cidrs": {
+      "description": "Indicates which CIDR blocks can access the Amazon EKS public API server endpoint when enabled.",
+      "type": "list(string)",
+      "default": ["0.0.0.0/0"]
+    },
+    "eks_security_group_ids": {
+      "description": "EKS Security Groups",
+      "type": "list(string)",
+      "default": null
+    },
+    "eks_node_group_name": {
+      "description": "The name of the node group",
+      "type": "string"
+    },
+    "eks_node_role_arn": {
+      "description": "Role ARN of the EKS nodes",
+      "type": "string"
+    },
+    "eks_node_group_subnet_ids": {
+      "description": "Subnet IDs of the node groups",
+      "type": "list(string)"
+    },
+    "eks_node_group_desired_size": {
+      "description": "Desired size of the eks node group",
+      "type": "number"
+    },
+    "eks_node_group_max_size": {
+      "description": "Max size of the node group",
+      "type": "number"
+    },
+    "eks_node_group_capacity_type": {
+      "description": "Type of capacity associated with the EKS Node Group.",
+      "default": "ON_DEMAND",
+      "type": "string"
+    },
+    "eks_node_group_min_size": {
+      "description": "Minimum size of the node group",
+      "type": "number"
+    },
+    "eks_node_group_instance_type": {
+      "description": "Instance types of the node group (t3.medium, c5.xlarge etc.)",
+      "type": "string"
+    },
+    "eks_node_group_instance_types": {
+      "description": "Override instance types of the node group by multiple types ([t3.medium, c5.xlarge] etc.)",
+      "type": "list(string)",
+      "default": null
+    },
+    "eks_node_group_labels": {
+      "description": "Labels of the node group",
+      "type": "map(any)"
+    },
+    "eks_node_group_ssh_key": {
+      "description": "SSH key for the nodes",
+      "type": "string"
+    },
+    "eks_node_group_launch_template_name": {
+      "description": "Launch template name",
+      "type": "string"
     }
   }
 }

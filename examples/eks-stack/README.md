@@ -43,3 +43,14 @@ KUBECONFIG=$(pwd)/kubeconfig.yaml k9s -A
 cd ./root-module
 tofu destroy
 ```
+
+### Miscellaneous
+
+```bash
+# export AWS_PROFILE=example-aws-profile
+cd ./root-module
+
+tofu plan --out binary-plan
+tofu show -json binary-plan > plan.json
+tofu show -no-color binary-plan > plan.txt 2>&1
+```
