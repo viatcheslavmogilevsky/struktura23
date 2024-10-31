@@ -21,7 +21,7 @@ To initialize and run opentofu, please run:
 ```bash
 # export AWS_PROFILE=example-aws-profile
 cd ./root-module
-tofu init  --backend-config=backend.tfvars
+tofu init --backend-config=backend.tfvars
 tofu plan
 tofu apply
 ```
@@ -50,6 +50,7 @@ tofu destroy
 # export AWS_PROFILE=example-aws-profile
 cd ./root-module
 
+tofu init --backend-config=backend.tfvars
 tofu plan --out binary-plan
 tofu show -json binary-plan > plan.json
 tofu show -no-color binary-plan > plan.txt 2>&1
