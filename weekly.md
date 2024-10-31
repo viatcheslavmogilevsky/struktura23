@@ -48,7 +48,7 @@
 
 ### Goals
 
-* transform all tf to json and compare with tf-only option
+* transform all tf to json and compare with tf-only option :white_check_mark:
 * json option but generated-like (also compare)
 
 ### Shipping
