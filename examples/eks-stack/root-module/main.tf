@@ -51,8 +51,9 @@ module "vpc" {
 }
 
 module "eks" {
-  source = "../modules/eks-json"
-  # source = "../modules/eks"
+  # source = "../modules/eks-json"
+  source = "../modules/eks"
+  # source = "../modules/eks-manually-generated"
 
 
   eks_cluster_name       = "test"
@@ -65,6 +66,20 @@ module "eks" {
   )
 
   eks_security_group_ids = []
+
+  # eks_cluster_name     = "test"
+  # eks_cluster_role_arn = module.eks_cluster_iam_role.iam_role_arn
+  # eks_cluster_tags     = {}
+
+  # eks_cluster_version  = "1.29"
+
+  # eks_cluster_vpc_config = {
+  #   # NOTE: AZ-set cannot be changed
+  #   subnet_ids = flatten(
+  #     [for az in ["us-west-2a", "us-west-2b"] : [module.vpc.public_subnet_az_mapping[az], module.vpc.private_subnet_az_mapping[az]]]
+  #   )
+  #   security_group_ids = []
+  # }
 
   eks_node_role_arn                   = module.ec2_instance_worker_iam_role.iam_role_arn
   eks_node_group_name                 = "main"

@@ -1,57 +1,95 @@
 variable "eks_cluster_name" {
-  type        = string
+  type = string
 }
 
 variable "eks_cluster_version" {
-  type        = string
-  default     = "1.29"
+  type = string
 }
 
 variable "eks_cluster_role_arn" {
-  type        = string
+  type = string
 }
 
 variable "eks_cluster_enabled_cluster_log_types" {
-  type        = list(string)
-  default     = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+  type    = list(string)
+  default = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 }
 
 variable "eks_cluster_tags" {
-  type        = map(string)
+  type = map(string)
 }
 
-variable "eks_cluster_vpc_config_subnet_ids" {
-  type        = list(string)
+variable "eks_cluster_vpc_config" {
+  type = object({
+    subnet_ids              = list(string)
+    endpoint_private_access = optional(bool, false)
+    endpoint_public_access  = optional(bool, true)
+    public_access_cidrs     = optional(list(string), ["0.0.0.0/0"])
+    security_group_ids      = optional(list(string))
+  })
 }
 
-variable "eks_cluster_vpc_config_endpoint_private_access" {
-  type        = bool
-  default     = false
+variable "eks_cluster_bootstrap_self_managed_addons" {
+  type    = bool
+  default = true
 }
 
-variable "eks_cluster_vpc_config_endpoint_public_access" {
-  type        = bool
-  default     = true
+variable "eks_cluster_access_config" {
+  type = object({
+    authentication_mode                         = optional(string)
+    bootstrap_cluster_creator_admin_permissions = optional(bool, false)
+  })
+
+  default = null
 }
 
-variable "eks_cluster_vpc_config_public_access_cidrs" {
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
+variable "eks_cluster_encryption_config" {
+  type = object({
+    provider = object({
+      key_arn = string
+    })
+    resources = list(string)
+  })
+
+  default = null
 }
 
-variable "eks_cluster_vpc_config_security_group_ids" {
-  type        = list(string)
-  default     = null
+variable "eks_cluster_kubernetes_network_config" {
+  type = object({
+    service_ipv4_cidr = optional(string)
+    ip_family         = optional(string, "ipv4")
+  })
+
+  default = null
 }
 
+variable "eks_cluster_outpost_config" {
+  type = object({
+    control_plane_instance_type = string
+    control_plane_placement = optional(object({
+      group_name = string
+    }))
+    outpost_arns = list(string)
+  })
 
+  default = null
+}
 
+variable "eks_cluster_upgrade_policy" {
+  type = object({
+    support_type = optional(string)
+  })
 
+  default = null
+}
 
+# variable "eks_cluster_zonal_shift_config" {
+#   type = object({
+#     enabled = optional(bool)
+#   })
 
-
-
-
+#   default = null
+# }
 
 variable "eks_node_group_name" {
   description = "The name of the node group"

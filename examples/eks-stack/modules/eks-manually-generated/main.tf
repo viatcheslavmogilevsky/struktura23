@@ -10,12 +10,71 @@ resource "aws_eks_cluster" "this" {
   tags                      = var.eks_cluster_tags
 
   vpc_config {
-    subnet_ids              = var.eks_cluster_vpc_config_subnet_ids
-    endpoint_private_access = var.eks_cluster_vpc_config_endpoint_private_access
-    endpoint_public_access  = var.eks_cluster_vpc_config_endpoint_public_access
-    public_access_cidrs     = var.eks_cluster_vpc_config_public_access_cidrs
-    security_group_ids      = var.eks_cluster_vpc_config_security_group_ids
+    subnet_ids              = var.eks_cluster_vpc_config.subnet_ids
+    endpoint_private_access = var.eks_cluster_vpc_config.endpoint_private_access
+    endpoint_public_access  = var.eks_cluster_vpc_config.endpoint_public_access
+    public_access_cidrs     = var.eks_cluster_vpc_config.public_access_cidrs
+    security_group_ids      = var.eks_cluster_vpc_config.security_group_ids
   }
+
+  bootstrap_self_managed_addons = var.eks_cluster_bootstrap_self_managed_addons
+
+  dynamic "access_config" {
+    for_each = var.eks_cluster_access_config != null ? [0] : []
+    content {
+      authentication_mode                         = try(var.eks_cluster_access_config.authentication_mode, null)
+      bootstrap_cluster_creator_admin_permissions = try(var.eks_cluster_access_config.bootstrap_cluster_creator_admin_permissions, null)
+    }
+  }
+
+  dynamic "encryption_config" {
+    for_each = var.eks_cluster_encryption_config != null ? [0] : []
+    content {
+      dynamic "provider" {
+        for_each = var.eks_cluster_encryption_config != null && var.eks_cluster_encryption_config.provider != null ? [0] : []
+        content {
+          key_arn = try(var.eks_cluster_encryption_config.provider.key_arn, null)
+        }
+      }
+      resources = try(var.eks_cluster_encryption_config.resources, null)
+    }
+  }
+
+  dynamic "kubernetes_network_config" {
+    for_each = var.eks_cluster_kubernetes_network_config != null ? [0] : []
+    content {
+      service_ipv4_cidr = try(var.eks_cluster_kubernetes_network_config.service_ipv4_cidr, null)
+      ip_family         = try(var.eks_cluster_kubernetes_network_config.ip_family, null)
+    }
+  }
+
+  dynamic "outpost_config" {
+    for_each = var.eks_cluster_outpost_config != null ? [0] : []
+    content {
+      control_plane_instance_type = try(var.eks_cluster_outpost_config.control_plane_instance_type, null)
+      dynamic "control_plane_placement" {
+        for_each = var.eks_cluster_outpost_config != null && var.eks_cluster_outpost_config.control_plane_placement != null ? [0] : []
+        content {
+          group_name = try(var.eks_cluster_outpost_config.control_plane_placement.group_name, null)
+        }
+      }
+      outpost_arns = try(var.eks_cluster_outpost_config.outpost_arns, null)
+    }
+  }
+
+  dynamic "upgrade_policy" {
+    for_each = var.eks_cluster_upgrade_policy != null ? [0] : []
+    content {
+      support_type = try(var.eks_cluster_upgrade_policy.support_type, null)
+    }
+  }
+
+  # dynamic "zonal_shift_config" {
+  #   for_each = var.eks_cluster_zonal_shift_config != null ? [0] : []
+  #   content {
+  #     enabled = try(var.eks_cluster_zonal_shift_config.enabled, null)
+  #   }
+  # }
 }
 
 data "tls_certificate" "this" {
