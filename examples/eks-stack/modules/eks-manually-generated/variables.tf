@@ -4,6 +4,7 @@ variable "eks_cluster_name" {
 
 variable "eks_cluster_version" {
   type = string
+  default = null
 }
 
 variable "eks_cluster_role_arn" {
@@ -12,19 +13,20 @@ variable "eks_cluster_role_arn" {
 
 variable "eks_cluster_enabled_cluster_log_types" {
   type    = list(string)
-  default = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+  default = null
 }
 
 variable "eks_cluster_tags" {
   type = map(string)
+  default = null
 }
 
 variable "eks_cluster_vpc_config" {
   type = object({
     subnet_ids              = list(string)
-    endpoint_private_access = optional(bool, false)
-    endpoint_public_access  = optional(bool, true)
-    public_access_cidrs     = optional(list(string), ["0.0.0.0/0"])
+    endpoint_private_access = optional(bool)
+    endpoint_public_access  = optional(bool)
+    public_access_cidrs     = optional(list(string))
     security_group_ids      = optional(list(string))
   })
 }
@@ -37,7 +39,7 @@ variable "eks_cluster_bootstrap_self_managed_addons" {
 variable "eks_cluster_access_config" {
   type = object({
     authentication_mode                         = optional(string)
-    bootstrap_cluster_creator_admin_permissions = optional(bool, false)
+    bootstrap_cluster_creator_admin_permissions = optional(bool)
   })
 
   default = null
@@ -57,7 +59,7 @@ variable "eks_cluster_encryption_config" {
 variable "eks_cluster_kubernetes_network_config" {
   type = object({
     service_ipv4_cidr = optional(string)
-    ip_family         = optional(string, "ipv4")
+    ip_family         = optional(string)
   })
 
   default = null

@@ -51,10 +51,8 @@ module "vpc" {
 }
 
 module "eks" {
-  # source = "../modules/eks-json"
   source = "../modules/eks"
-  # source = "../modules/eks-manually-generated"
-
+  # source = "../modules/eks-json"
 
   eks_cluster_name       = "test"
   eks_role_arn           = module.eks_cluster_iam_role.iam_role_arn
@@ -66,6 +64,8 @@ module "eks" {
   )
 
   eks_security_group_ids = []
+
+  # source = "../modules/eks-manually-generated"
 
   # eks_cluster_name     = "test"
   # eks_cluster_role_arn = module.eks_cluster_iam_role.iam_role_arn
@@ -80,6 +80,8 @@ module "eks" {
   #   )
   #   security_group_ids = []
   # }
+
+  # eks_cluster_access_config = {}
 
   eks_node_role_arn                   = module.ec2_instance_worker_iam_role.iam_role_arn
   eks_node_group_name                 = "main"

@@ -1,4 +1,4 @@
-# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eks_cluster
+# https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/eks_cluster
 
 resource "aws_eks_cluster" "this" {
   name = var.eks_cluster_name
@@ -20,61 +20,54 @@ resource "aws_eks_cluster" "this" {
   bootstrap_self_managed_addons = var.eks_cluster_bootstrap_self_managed_addons
 
   dynamic "access_config" {
-    for_each = var.eks_cluster_access_config != null ? [0] : []
+    for_each = var.eks_cluster_access_config != null ? [var.eks_cluster_access_config] : []
     content {
-      authentication_mode                         = try(var.eks_cluster_access_config.authentication_mode, null)
-      bootstrap_cluster_creator_admin_permissions = try(var.eks_cluster_access_config.bootstrap_cluster_creator_admin_permissions, null)
+      authentication_mode                         = access_config.value.authentication_mode
+      bootstrap_cluster_creator_admin_permissions = access_config.value.bootstrap_cluster_creator_admin_permissions
     }
   }
 
   dynamic "encryption_config" {
-    for_each = var.eks_cluster_encryption_config != null ? [0] : []
+    for_each = var.eks_cluster_encryption_config != null ? [var.eks_cluster_encryption_config] : []
     content {
       dynamic "provider" {
-        for_each = var.eks_cluster_encryption_config != null && var.eks_cluster_encryption_config.provider != null ? [0] : []
+        for_each = [encryption_config.value.provider]
         content {
-          key_arn = try(var.eks_cluster_encryption_config.provider.key_arn, null)
+          key_arn = provider.value.key_arn
         }
       }
-      resources = try(var.eks_cluster_encryption_config.resources, null)
+      resources = encryption_config.value.resources
     }
   }
 
   dynamic "kubernetes_network_config" {
-    for_each = var.eks_cluster_kubernetes_network_config != null ? [0] : []
+    for_each = var.eks_cluster_kubernetes_network_config != null ? [var.eks_cluster_kubernetes_network_config] : []
     content {
-      service_ipv4_cidr = try(var.eks_cluster_kubernetes_network_config.service_ipv4_cidr, null)
-      ip_family         = try(var.eks_cluster_kubernetes_network_config.ip_family, null)
+      service_ipv4_cidr = kubernetes_network_config.value.service_ipv4_cidr
+      ip_family         = kubernetes_network_config.value.ip_family
     }
   }
 
   dynamic "outpost_config" {
-    for_each = var.eks_cluster_outpost_config != null ? [0] : []
+    for_each = var.eks_cluster_outpost_config != null ? [var.eks_cluster_outpost_config] : []
     content {
-      control_plane_instance_type = try(var.eks_cluster_outpost_config.control_plane_instance_type, null)
+      control_plane_instance_type = outpost_config.value.control_plane_instance_type
       dynamic "control_plane_placement" {
-        for_each = var.eks_cluster_outpost_config != null && var.eks_cluster_outpost_config.control_plane_placement != null ? [0] : []
+        for_each = outpost_config.value.control_plane_placement != null ? [outpost_config.value.control_plane_placement] : []
         content {
-          group_name = try(var.eks_cluster_outpost_config.control_plane_placement.group_name, null)
+          group_name = control_plane_placement.value.group_name
         }
       }
-      outpost_arns = try(var.eks_cluster_outpost_config.outpost_arns, null)
+      outpost_arns = outpost_config.value.outpost_arns
     }
   }
 
   dynamic "upgrade_policy" {
-    for_each = var.eks_cluster_upgrade_policy != null ? [0] : []
+    for_each = var.eks_cluster_upgrade_policy != null ? [var.eks_cluster_upgrade_policy] : []
     content {
-      support_type = try(var.eks_cluster_upgrade_policy.support_type, null)
+      support_type = upgrade_policy.value.support_type
     }
   }
-
-  # dynamic "zonal_shift_config" {
-  #   for_each = var.eks_cluster_zonal_shift_config != null ? [0] : []
-  #   content {
-  #     enabled = try(var.eks_cluster_zonal_shift_config.enabled, null)
-  #   }
-  # }
 }
 
 data "tls_certificate" "this" {
