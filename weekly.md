@@ -49,8 +49,25 @@
 ### Goals
 
 * transform all tf to json and compare with tf-only option :white_check_mark:
-* json option but generated-like (also compare)
+* json option but generated-like (also compare) 
 
-### Shipping
+### Also done
 
-* _TBD_
+* full eks cluster example (resource part)
+
+## 28.10.2024 - 3.11.2024
+
+### Goals
+
+* transform all tf to json and compare with tf-only option :white_check_mark:
+* json option but generated-like (also compare) :x:
+
+### Also done
+
+* full eks cluster example (resource part)
+
+## 4.11.2024 - 10.11.2024
+
+### Goals
+
+* full module example (hcl-version) (input/resources/data/output)
