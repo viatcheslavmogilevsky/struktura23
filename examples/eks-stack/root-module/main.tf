@@ -67,12 +67,10 @@ module "eks" {
 
   source = "../modules/eks-manually-generated"
 
-  eks_cluster_name     = "test"
-  eks_cluster_role_arn = module.eks_cluster_iam_role.iam_role_arn
-  eks_cluster_tags     = {}
-
-  eks_cluster_version  = "1.29"
-
+  eks_cluster_name       = "test"
+  eks_cluster_role_arn   = module.eks_cluster_iam_role.iam_role_arn
+  eks_cluster_tags       = {}
+  eks_cluster_version    = "1.29"
   eks_cluster_vpc_config = {
     # NOTE: AZ-set cannot be changed
     subnet_ids = flatten(
@@ -80,6 +78,11 @@ module "eks" {
     )
     security_group_ids = []
   }
+
+  iam_openid_connect_provider = {
+    client_id_list = ["sts.amazonaws.com"]
+  }
+
 
 
   eks_node_role_arn                   = module.ec2_instance_worker_iam_role.iam_role_arn

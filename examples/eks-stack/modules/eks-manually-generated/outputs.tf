@@ -1,3 +1,5 @@
+# eks_cluster
+
 output "eks_cluster_name" {
   value = aws_eks_cluster.this.name
 }
@@ -85,3 +87,44 @@ output "eks_cluster_status" {
 output "eks_cluster_tags_all" {
   value = aws_eks_cluster.this.tags_all
 }
+
+# certificate
+
+output "certificate_url" {
+  value = one(data.tls_certificate.this[*].url)
+}
+
+output "certificate_id" {
+  value = one(data.tls_certificate.this[*].id)
+}
+
+output "certificate_certificates" {
+  value = one(data.tls_certificate.this[*].certificates)
+}
+
+# iam_openid_connect_provider
+
+output "iam_openid_connect_provider_url" {
+  value = one(aws_iam_openid_connect_provider.this[*].url)
+}
+
+output "iam_openid_connect_provider_client_id_list" {
+  value = one(aws_iam_openid_connect_provider.this[*].client_id_list)
+}
+
+output "iam_openid_connect_provider_thumbprint_list" {
+  value = one(aws_iam_openid_connect_provider.this[*].thumbprint_list)
+}
+
+output "iam_openid_connect_provider_tags" {
+  value = one(aws_iam_openid_connect_provider.this[*].tags)
+}
+
+output "iam_openid_connect_provider_arn" {
+  value = one(aws_iam_openid_connect_provider.this[*].arn)
+}
+
+output "iam_openid_connect_provider_tags_all" {
+  value = one(aws_iam_openid_connect_provider.this[*].tags_all)
+}
+

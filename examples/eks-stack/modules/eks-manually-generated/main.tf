@@ -70,22 +70,39 @@ resource "aws_eks_cluster" "this" {
   }
 }
 
+# https://registry.terraform.io/providers/hashicorp/tls/4.0.6/docs/data-sources/certificate
+
 data "tls_certificate" "this" {
+  count = var.iam_openid_connect_provider != null ? 1 : 0
+
   url = aws_eks_cluster.this.identity[0].oidc[0].issuer
 }
 
+# https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/iam_openid_connect_provider
+
 resource "aws_iam_openid_connect_provider" "this" {
+  count = var.iam_openid_connect_provider != null ? 1 : 0
+
   url             = aws_eks_cluster.this.identity[0].oidc[0].issuer
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.this.certificates[0].sha1_fingerprint]
+  client_id_list  = try(var.iam_openid_connect_provider.client_id_list)
+  thumbprint_list = [one(data.tls_certificate.this[*].certificates[0].sha1_fingerprint)]
+  tags            = try(var.iam_openid_connect_provider.tags)
 }
 
+# https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/eks_addon
+
 resource "aws_eks_addon" "this" {
-  for_each                    = toset(["vpc-cni", "kube-proxy", "coredns"])
+  for_each = { for k, v in var.eks_addons : k => merge(var.eks_addons_common, v) }
+
   cluster_name                = aws_eks_cluster.this.id
   addon_name                  = each.key
-  resolve_conflicts_on_create = "OVERWRITE"
-  resolve_conflicts_on_update = "OVERWRITE"
+  resolve_conflicts_on_create = each.value.resolve_conflicts_on_create
+  resolve_conflicts_on_update = each.value.resolve_conflicts_on_update
+  addon_version               = each.value.addon_version
+  configuration_values        = each.value.configuration_values
+  tags                        = each.value.tags
+  preserve                    = each.value.preserve
+  service_account_role_arn    = each.value.service_account_role_arn
 
   depends_on = [
     aws_iam_openid_connect_provider.this,

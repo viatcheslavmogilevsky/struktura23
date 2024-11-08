@@ -20,7 +20,8 @@ class ExampleStruktura < Struktura23::ModuleSpec
   tls_certificate = connect_provider.has_one_data(:tls_certificate).where(url: eks_cluster.resolved.identity[0].oidc[0].issuer)
   connect_provider.enforce(thumbprint_list: [tls_certificate.resolved.certificates[0].sha1_fingerprint])
  
-  eks_cluster.has_many(:aws_eks_addon).where(cluster_name: eks_cluster.resolved.id).identify_by(:name)
+  eks_addons = eks_cluster.has_many(:aws_eks_addon).where(cluster_name: eks_cluster.resolved.id).identify_by(:name)
+  eks_addons.enforce(depends_on: connect_provider)
 
   node_groups = eks_cluster.has_many(:aws_eks_node_group).where(cluster_name: eks_cluster.resolved.id).identify_by(:node_group_name)
   launch_template = node_groups.belongs_to(:aws_launch_template).where(name: node_groups.resolved.launch_template.name).identify_by(:name)
@@ -63,6 +64,10 @@ resource aws_eks_addon this {
   for_each = var.aws_eks_addons
   name = each.key
   cluster_name = aws_eks_cluster.main.id
+
+  depends_on = [
+    aws_iam_openid_connect_provider.this,
+  ]
 }
 
 data aws_ami this {

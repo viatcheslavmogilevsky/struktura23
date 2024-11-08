@@ -1,3 +1,5 @@
+# eks_cluster
+
 variable "eks_cluster_name" {
   type = string
 }
@@ -85,13 +87,16 @@ variable "eks_cluster_upgrade_policy" {
   default = null
 }
 
-# variable "eks_cluster_zonal_shift_config" {
-#   type = object({
-#     enabled = optional(bool)
-#   })
+# iam_openid_connect_provider
 
-#   default = null
-# }
+variable "iam_openid_connect_provider" {
+  type = object({
+    client_id_list = list(string)
+    tags = optional(map(string))
+  })
+
+  default = null
+}
 
 variable "eks_node_group_name" {
   description = "The name of the node group"
