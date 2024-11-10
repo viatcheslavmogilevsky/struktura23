@@ -70,4 +70,14 @@
 
 ### Goals
 
+* full module example (hcl-version) (input/resources/data/output) :x:
+
+
+## 11.11.2024 - 17.11.2024
+
+### Goals
+
+* computed attrs should be used as output
+* common/uncommon attrs and defaults
 * full module example (hcl-version) (input/resources/data/output)
+
