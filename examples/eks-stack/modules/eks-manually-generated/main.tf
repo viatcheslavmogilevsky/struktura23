@@ -90,6 +90,7 @@ resource "aws_iam_openid_connect_provider" "this" {
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/eks_addon
+# https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/eks/addon.go
 
 resource "aws_eks_addon" "this" {
   for_each = { for k, v in var.eks_addons : k => merge(var.eks_addons_common, v) if v.enabled }

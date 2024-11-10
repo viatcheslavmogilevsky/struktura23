@@ -5,7 +5,7 @@ variable "eks_cluster_name" {
 }
 
 variable "eks_cluster_version" {
-  type = string
+  type    = string
   default = null
 }
 
@@ -19,7 +19,7 @@ variable "eks_cluster_enabled_cluster_log_types" {
 }
 
 variable "eks_cluster_tags" {
-  type = map(string)
+  type    = map(string)
   default = null
 }
 
@@ -92,7 +92,7 @@ variable "eks_cluster_upgrade_policy" {
 variable "iam_openid_connect_provider" {
   type = object({
     client_id_list = list(string)
-    tags = optional(map(string))
+    tags           = optional(map(string))
   })
 
   default = null
@@ -106,11 +106,11 @@ variable "eks_addons" {
 
     resolve_conflicts_on_create = optional(string)
     resolve_conflicts_on_update = optional(string)
-    addon_version = optional(string)
-    configuration_values = optional(string)
-    tags = optional(map(string))
-    preserve = optional(bool)
-    service_account_role_arn = optional(string)
+    addon_version               = optional(string)
+    configuration_values        = optional(string)
+    tags                        = optional(map(string))
+    preserve                    = optional(bool)
+    service_account_role_arn    = optional(string)
   }))
 
   default = {}
@@ -122,11 +122,11 @@ variable "eks_addons_common" {
 
     resolve_conflicts_on_create = optional(string)
     resolve_conflicts_on_update = optional(string)
-    addon_version = optional(string)
-    configuration_values = optional(string)
-    tags = optional(map(string))
-    preserve = optional(bool)
-    service_account_role_arn = optional(string)
+    addon_version               = optional(string)
+    configuration_values        = optional(string)
+    tags                        = optional(map(string))
+    preserve                    = optional(bool)
+    service_account_role_arn    = optional(string)
   })
 
   default = {
