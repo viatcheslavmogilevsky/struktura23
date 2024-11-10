@@ -110,15 +110,21 @@ resource "aws_eks_addon" "this" {
   ]
 }
 
+# https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/eks_node_group
+# https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/eks/node_group.go
+
 resource "aws_eks_node_group" "this" {
-  cluster_name    = aws_eks_cluster.this.id
-  node_group_name = var.eks_node_group_name
+  for_each = { for k, v in var.eks_node_groups : k => merge(var.var.eks_node_groups_common, v) }
+
+  cluster_name           = aws_eks_cluster.this.id
+  node_group_name        = each.value.use_key && each.value.use_key_as_node_group_name ? each.key : null
+  node_group_name_prefix = each.value.use_key && !each.value.use_key_as_node_group_name ? each.key : null
+
   node_role_arn   = var.eks_node_role_arn
   subnet_ids      = var.eks_node_group_subnet_ids
   labels          = var.eks_node_group_labels
   capacity_type   = var.eks_node_group_capacity_type
   instance_types  = var.eks_node_group_instance_types
-
 
   scaling_config {
     desired_size = var.eks_node_group_desired_size

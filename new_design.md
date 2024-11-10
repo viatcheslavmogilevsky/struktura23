@@ -21,11 +21,13 @@ class ExampleStruktura < Struktura23::ModuleSpec
   connect_provider.enforce(thumbprint_list: [tls_certificate.resolved.certificates[0].sha1_fingerprint])
  
   eks_addons = eks_cluster.has_many(:aws_eks_addon).where(cluster_name: eks_cluster.resolved.id).identify_by(:name)
-  eks_addons.enforce(depends_on: connect_provider)
+  eks_addons.enforce(depends_on: connect_provider.meta)
 
   node_groups = eks_cluster.has_many(:aws_eks_node_group).where(cluster_name: eks_cluster.resolved.id).identify_by(:node_group_name)
-  launch_template = node_groups.belongs_to(:aws_launch_template).where(name: node_groups.resolved.launch_template.name).identify_by(:name)
-  node_groups.enforce(node_groups.resolved.launch_template.version=>launch_template.resolved.latest_version)
+  node_groups.has_prefix(node_group_name: :node_group_name_prefix)
+  launch_template = node_groups.belongs_to(:aws_launch_template).to_enforce(node_groups.meta.launch_template.name=>:name).identify_by(:name)
+  node_groups.enforce(node_groups.meta.launch_template.version=>launch_template.resolved.latest_version)
+  node_groups.enforce(node_groups.meta.lifecycle.ignore_changes=>[node_groups.meta.scaling_config[0].desired_size])
 
   ami = launch_template.has_optional_data(:aws_ami)
   launch_template.enforce(image_id: ami.resolved.image_id)
@@ -83,7 +85,8 @@ resource aws_launch_template this {
 
 resource aws_eks_node_group this {
   for_each = var.aws_eks_node_groups
-  node_group_name = each.key
+  node_group_name = each.value.use_key && each.value.use_key_as_node_group_name ? each.key : null
+  node_group_name_prefix = each.value.use_key && !each.value.use_key_as_node_group_name ? each.key : null
   cluster_name = aws_eks_cluster.this.id
 
   launch_template {
