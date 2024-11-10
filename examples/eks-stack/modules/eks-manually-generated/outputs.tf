@@ -1,31 +1,7 @@
 # eks_cluster
 
-output "eks_cluster_name" {
-  value = aws_eks_cluster.this.name
-}
-
-output "eks_cluster_version" {
-  value = aws_eks_cluster.this.version
-}
-
-output "eks_cluster_role_arn" {
-  value = aws_eks_cluster.this.role_arn
-}
-
-output "eks_cluster_enabled_cluster_log_types" {
-  value = aws_eks_cluster.this.enabled_cluster_log_types
-}
-
-output "eks_cluster_tags" {
-  value = aws_eks_cluster.this.tags
-}
-
 output "eks_cluster_vpc_config" {
   value = one(aws_eks_cluster.this.vpc_config[*])
-}
-
-output "eks_cluster_bootstrap_self_managed_addons" {
-  value = aws_eks_cluster.this.bootstrap_self_managed_addons
 }
 
 output "eks_cluster_access_config" {
@@ -90,10 +66,6 @@ output "eks_cluster_tags_all" {
 
 # certificate
 
-output "certificate_url" {
-  value = one(data.tls_certificate.this[*].url)
-}
-
 output "certificate_id" {
   value = one(data.tls_certificate.this[*].id)
 }
@@ -104,20 +76,8 @@ output "certificate_certificates" {
 
 # iam_openid_connect_provider
 
-output "iam_openid_connect_provider_url" {
-  value = one(aws_iam_openid_connect_provider.this[*].url)
-}
-
-output "iam_openid_connect_provider_client_id_list" {
-  value = one(aws_iam_openid_connect_provider.this[*].client_id_list)
-}
-
 output "iam_openid_connect_provider_thumbprint_list" {
   value = one(aws_iam_openid_connect_provider.this[*].thumbprint_list)
-}
-
-output "iam_openid_connect_provider_tags" {
-  value = one(aws_iam_openid_connect_provider.this[*].tags)
 }
 
 output "iam_openid_connect_provider_arn" {
@@ -128,3 +88,24 @@ output "iam_openid_connect_provider_tags_all" {
   value = one(aws_iam_openid_connect_provider.this[*].tags_all)
 }
 
+# eks_addon
+
+output "eks_addon_arn_mapping" {
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].arn if v.enabled }
+}
+
+output "eks_addon_id_mapping" {
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].id if v.enabled }
+}
+
+output "eks_addon_created_at_mapping" {
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].created_at if v.enabled }
+}
+
+output "eks_addon_modified_at_mapping" {
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].modified_at if v.enabled }
+}
+
+output "eks_addon_tags_all_mapping" {
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].tags_all if v.enabled }
+}

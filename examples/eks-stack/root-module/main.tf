@@ -76,13 +76,23 @@ module "eks" {
     subnet_ids = flatten(
       [for az in ["us-west-2a", "us-west-2b"] : [module.vpc.public_subnet_az_mapping[az], module.vpc.private_subnet_az_mapping[az]]]
     )
-    security_group_ids = []
   }
 
   iam_openid_connect_provider = {
     client_id_list = ["sts.amazonaws.com"]
   }
 
+  eks_addons = {
+    "vpc-cni" = {
+      enabled = true
+    },
+    "kube-proxy" = {
+      enabled = true
+    },
+    "coredns" = {
+      enabled = true
+    },
+  }
 
 
   eks_node_role_arn                   = module.ec2_instance_worker_iam_role.iam_role_arn

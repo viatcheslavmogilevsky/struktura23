@@ -1,29 +1,7 @@
-output "eks_cluster_name" {
-  value = module.eks.eks_cluster_name
-}
-
-output "eks_cluster_version" {
-  value = module.eks.eks_cluster_version
-}
-
-output "eks_cluster_role_arn" {
-  value = module.eks.eks_cluster_role_arn
-}
-
-output "eks_cluster_enabled_cluster_log_types" {
-  value = module.eks.eks_cluster_enabled_cluster_log_types
-}
-
-output "eks_cluster_tags" {
-  value = module.eks.eks_cluster_tags
-}
+# eks_cluster
 
 output "eks_cluster_vpc_config" {
   value = module.eks.eks_cluster_vpc_config
-}
-
-output "eks_cluster_bootstrap_self_managed_addons" {
-  value = module.eks.eks_cluster_bootstrap_self_managed_addons
 }
 
 output "eks_cluster_access_config" {
@@ -84,4 +62,50 @@ output "eks_cluster_status" {
 
 output "eks_cluster_tags_all" {
   value = module.eks.eks_cluster_tags_all
+}
+
+# certificate
+
+output "certificate_id" {
+  value = module.eks.certificate_id
+}
+
+output "certificate_certificates" {
+  value = module.eks.certificate_certificates
+}
+
+# iam_openid_connect_provider
+
+output "iam_openid_connect_provider_thumbprint_list" {
+  value = module.eks.iam_openid_connect_provider_thumbprint_list
+}
+
+output "iam_openid_connect_provider_arn" {
+  value = module.eks.iam_openid_connect_provider_arn
+}
+
+output "iam_openid_connect_provider_tags_all" {
+  value = module.eks.iam_openid_connect_provider_tags_all
+}
+
+# eks_addon
+
+output "eks_addon_arn_mapping" {
+  value = module.eks.eks_addon_arn_mapping
+}
+
+output "eks_addon_id_mapping" {
+  value = module.eks.eks_addon_id_mapping
+}
+
+output "eks_addon_created_at_mapping" {
+  value = module.eks.eks_addon_created_at_mapping
+}
+
+output "eks_addon_modified_at_mapping" {
+  value = module.eks.eks_addon_modified_at_mapping
+}
+
+output "eks_addon_tags_all_mapping" {
+  value = module.eks.eks_addon_tags_all_mapping
 }

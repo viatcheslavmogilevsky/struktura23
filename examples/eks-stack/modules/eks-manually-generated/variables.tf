@@ -98,6 +98,43 @@ variable "iam_openid_connect_provider" {
   default = null
 }
 
+# eks_addon
+
+variable "eks_addons" {
+  type = map(object({
+    enabled = bool
+
+    resolve_conflicts_on_create = optional(string)
+    resolve_conflicts_on_update = optional(string)
+    addon_version = optional(string)
+    configuration_values = optional(string)
+    tags = optional(map(string))
+    preserve = optional(bool)
+    service_account_role_arn = optional(string)
+  }))
+
+  default = {}
+}
+
+variable "eks_addons_common" {
+  type = object({
+    enabled = optional(bool, true)
+
+    resolve_conflicts_on_create = optional(string)
+    resolve_conflicts_on_update = optional(string)
+    addon_version = optional(string)
+    configuration_values = optional(string)
+    tags = optional(map(string))
+    preserve = optional(bool)
+    service_account_role_arn = optional(string)
+  })
+
+  default = {
+    enabled = true
+  }
+}
+
+
 variable "eks_node_group_name" {
   description = "The name of the node group"
   type        = string

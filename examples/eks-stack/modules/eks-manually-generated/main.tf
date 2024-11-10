@@ -92,7 +92,7 @@ resource "aws_iam_openid_connect_provider" "this" {
 # https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/eks_addon
 
 resource "aws_eks_addon" "this" {
-  for_each = { for k, v in var.eks_addons : k => merge(var.eks_addons_common, v) }
+  for_each = { for k, v in var.eks_addons : k => merge(var.eks_addons_common, v) if v.enabled }
 
   cluster_name                = aws_eks_cluster.this.id
   addon_name                  = each.key
