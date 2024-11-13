@@ -86,22 +86,30 @@ output "iam_openid_connect_provider_tags_all" {
 
 # eks_addon
 
-output "eks_addon_arn_mapping" {
-  value = module.eks.eks_addon_arn_mapping
+output "eks_addon_arn_map" {
+  value = module.eks.eks_addon_arn_map
 }
 
-output "eks_addon_id_mapping" {
-  value = module.eks.eks_addon_id_mapping
+output "eks_addon_id_map" {
+  value = module.eks.eks_addon_id_map
 }
 
-output "eks_addon_created_at_mapping" {
-  value = module.eks.eks_addon_created_at_mapping
+output "eks_addon_created_at_map" {
+  value = module.eks.eks_addon_created_at_map
 }
 
-output "eks_addon_modified_at_mapping" {
-  value = module.eks.eks_addon_modified_at_mapping
+output "eks_addon_modified_at_map" {
+  value = module.eks.eks_addon_modified_at_map
 }
 
-output "eks_addon_tags_all_mapping" {
-  value = module.eks.eks_addon_tags_all_mapping
+output "eks_addon_tags_all_map" {
+  value = module.eks.eks_addon_tags_all_map
+}
+
+output "eks_addon_addon_version_map" {
+  value = module.eks.eks_addon_addon_version_map
+}
+
+output "eks_addon_configuration_values_map" {
+  value = module.eks.eks_addon_configuration_values_map
 }

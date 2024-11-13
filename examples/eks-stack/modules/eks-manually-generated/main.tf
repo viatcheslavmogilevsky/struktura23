@@ -76,6 +76,7 @@ resource "aws_eks_cluster" "this" {
 }
 
 # https://registry.terraform.io/providers/hashicorp/tls/4.0.6/docs/data-sources/certificate
+# https://github.com/hashicorp/terraform-provider-tls/blob/v4.0.6/internal/provider/data_source_certificate.go
 
 data "tls_certificate" "this" {
   count = var.iam_openid_connect_provider != null ? 1 : 0
@@ -84,6 +85,7 @@ data "tls_certificate" "this" {
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/iam_openid_connect_provider
+# https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/iam/openid_connect_provider.go
 
 resource "aws_iam_openid_connect_provider" "this" {
   count = var.iam_openid_connect_provider != null ? 1 : 0

@@ -102,7 +102,7 @@ variable "iam_openid_connect_provider" {
 
 variable "eks_addons" {
   type = map(object({
-    enabled = bool
+    enabled = optional(bool, true)
 
     resolve_conflicts_on_create = optional(string)
     resolve_conflicts_on_update = optional(string)

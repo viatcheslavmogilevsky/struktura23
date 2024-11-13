@@ -24,7 +24,12 @@ class ExampleStruktura < Struktura23::ModuleSpec
   eks_addons.enforce(depends_on: connect_provider.meta)
 
   node_groups = eks_cluster.has_many(:aws_eks_node_group).where(cluster_name: eks_cluster.resolved.id).identify_by(:node_group_name)
-  node_groups.has_prefix(node_group_name: :node_group_name_prefix)
+
+  # _prefix attributes detected automatically, to specify behaviour use .has_prefix
+  # provide block to specify how to recover prefix if standard way is not suitable
+  # node_groups.has_prefix(:node_group_name, :node_group_name_prefix) {|full| ...}
+  # node_groups.has_no_prefixes # <- add attributes to disable particularly for those attributes
+
   launch_template = node_groups.belongs_to(:aws_launch_template).to_enforce(node_groups.meta.launch_template.name=>:name).identify_by(:name)
   node_groups.enforce(node_groups.meta.launch_template.version=>launch_template.resolved.latest_version)
   node_groups.enforce(node_groups.meta.lifecycle.ignore_changes=>[node_groups.meta.scaling_config[0].desired_size])

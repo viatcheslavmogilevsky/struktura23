@@ -60,7 +60,6 @@ output "eks_cluster_id" {
   value = aws_eks_cluster.this.id
 }
 
-
 # certificate
 
 output "certificate_id" {
@@ -87,22 +86,30 @@ output "iam_openid_connect_provider_tags_all" {
 
 # eks_addon
 
-output "eks_addon_arn_mapping" {
+output "eks_addon_arn_map" {
   value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].arn if v.enabled }
 }
 
-output "eks_addon_id_mapping" {
+output "eks_addon_id_map" {
   value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].id if v.enabled }
 }
 
-output "eks_addon_created_at_mapping" {
+output "eks_addon_created_at_map" {
   value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].created_at if v.enabled }
 }
 
-output "eks_addon_modified_at_mapping" {
+output "eks_addon_modified_at_map" {
   value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].modified_at if v.enabled }
 }
 
-output "eks_addon_tags_all_mapping" {
+output "eks_addon_tags_all_map" {
   value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].tags_all if v.enabled }
+}
+
+output "eks_addon_addon_version_map" {
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].addon_version if v.enabled }
+}
+
+output "eks_addon_configuration_values_map" {
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].configuration_values if v.enabled }
 }
