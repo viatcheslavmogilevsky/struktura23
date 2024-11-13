@@ -1,27 +1,7 @@
 # eks_cluster
 
-output "eks_cluster_vpc_config" {
-  value = one(aws_eks_cluster.this.vpc_config[*])
-}
-
 output "eks_cluster_access_config" {
   value = one(aws_eks_cluster.this.access_config[*])
-}
-
-output "eks_cluster_encryption_config" {
-  value = one(aws_eks_cluster.this.encryption_config[*])
-}
-
-output "eks_cluster_kubernetes_network_config" {
-  value = one(aws_eks_cluster.this.kubernetes_network_config[*])
-}
-
-output "eks_cluster_outpost_config" {
-  value = one(aws_eks_cluster.this.outpost_config[*])
-}
-
-output "eks_cluster_upgrade_policy" {
-  value = one(aws_eks_cluster.this.upgrade_policy[*])
 }
 
 output "eks_cluster_arn" {
@@ -44,12 +24,12 @@ output "eks_cluster_endpoint" {
   value = aws_eks_cluster.this.endpoint
 }
 
-output "eks_cluster_id" {
-  value = aws_eks_cluster.this.id
-}
-
 output "eks_cluster_identity" {
   value = one(aws_eks_cluster.this.identity[*])
+}
+
+output "eks_cluster_kubernetes_network_config" {
+  value = one(aws_eks_cluster.this.kubernetes_network_config[*])
 }
 
 output "eks_cluster_platform_version" {
@@ -63,6 +43,23 @@ output "eks_cluster_status" {
 output "eks_cluster_tags_all" {
   value = aws_eks_cluster.this.tags_all
 }
+
+output "eks_cluster_upgrade_policy" {
+  value = one(aws_eks_cluster.this.upgrade_policy[*])
+}
+
+output "eks_cluster_version" {
+  value = aws_eks_cluster.this.version
+}
+
+output "eks_cluster_vpc_config" {
+  value = one(aws_eks_cluster.this.vpc_config[*])
+}
+
+output "eks_cluster_id" {
+  value = aws_eks_cluster.this.id
+}
+
 
 # certificate
 

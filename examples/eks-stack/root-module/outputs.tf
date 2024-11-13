@@ -1,27 +1,7 @@
 # eks_cluster
 
-output "eks_cluster_vpc_config" {
-  value = module.eks.eks_cluster_vpc_config
-}
-
 output "eks_cluster_access_config" {
   value = module.eks.eks_cluster_access_config
-}
-
-output "eks_cluster_encryption_config" {
-  value = module.eks.eks_cluster_encryption_config
-}
-
-output "eks_cluster_kubernetes_network_config" {
-  value = module.eks.eks_cluster_kubernetes_network_config
-}
-
-output "eks_cluster_outpost_config" {
-  value = module.eks.eks_cluster_outpost_config
-}
-
-output "eks_cluster_upgrade_policy" {
-  value = module.eks.eks_cluster_upgrade_policy
 }
 
 output "eks_cluster_arn" {
@@ -44,12 +24,12 @@ output "eks_cluster_endpoint" {
   value = module.eks.eks_cluster_endpoint
 }
 
-output "eks_cluster_id" {
-  value = module.eks.eks_cluster_id
-}
-
 output "eks_cluster_identity" {
   value = module.eks.eks_cluster_identity
+}
+
+output "eks_cluster_kubernetes_network_config" {
+  value = module.eks.eks_cluster_kubernetes_network_config
 }
 
 output "eks_cluster_platform_version" {
@@ -62,6 +42,22 @@ output "eks_cluster_status" {
 
 output "eks_cluster_tags_all" {
   value = module.eks.eks_cluster_tags_all
+}
+
+output "eks_cluster_upgrade_policy" {
+  value = module.eks.eks_cluster_upgrade_policy
+}
+
+output "eks_cluster_version" {
+  value = module.eks.eks_cluster_version
+}
+
+output "eks_cluster_vpc_config" {
+  value = module.eks.eks_cluster_vpc_config
+}
+
+output "eks_cluster_id" {
+  value = module.eks.eks_cluster_id
 }
 
 # certificate

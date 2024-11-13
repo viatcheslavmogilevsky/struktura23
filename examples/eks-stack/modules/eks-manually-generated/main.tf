@@ -1,4 +1,5 @@
 # https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/eks_cluster
+# https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/eks/cluster.go
 
 resource "aws_eks_cluster" "this" {
   name = var.eks_cluster_name
