@@ -121,11 +121,11 @@ resource "aws_eks_addon" "this" {
 # https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/eks/node_group.go
 
 resource "aws_eks_node_group" "this" {
-  for_each = { for k, v in var.eks_node_groups : k => merge(var.var.eks_node_groups_common, v) }
+  for_each = { for k, v in var.eks_node_groups : k => merge(var.var.eks_node_groups_common, v) if v.enabled }
 
   cluster_name           = aws_eks_cluster.this.id
-  node_group_name        = each.value.use_key && each.value.use_key_as_node_group_name ? each.key : null
-  node_group_name_prefix = each.value.use_key && !each.value.use_key_as_node_group_name ? each.key : null
+  node_group_name        = each.value.use_key_as == "node_group_name" ? each.key : null
+  node_group_name_prefix = each.value.use_key_as == "node_group_name_prefix" ? each.key : null
 
   node_role_arn   = var.eks_node_role_arn
   subnet_ids      = var.eks_node_group_subnet_ids
