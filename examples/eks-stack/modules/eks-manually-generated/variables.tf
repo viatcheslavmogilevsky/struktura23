@@ -138,13 +138,15 @@ variable "eks_addons_common" {
 
 variable "eks_node_groups" {
   type = map(object({
-    node_role_arn = string
-    scaling_config = object({
+    enabled = optional(bool, true)
+
+    node_role_arn = optional(string)
+    scaling_config = optional(object({
       desired_size = number
       max_size = number
       min_size = number
-    })
-    subnet_ids = list(string)
+    }))
+    subnet_ids = optional(list(string))
 
     ami_type = optional(string)
     capacity_type = optional(string)
@@ -173,6 +175,14 @@ variable "eks_node_groups" {
       max_unavailable_percentage = optional(number)
     }))
     version = optional(string)
+
+    additional_subnet_ids = optional(list(string), [])
+    additional_instance_types = optional(list(string), [])
+    additional_taint = optional(set(object({
+      key = string
+      value = optional(string)
+      effect = optional(string)
+    })), [])
   }))
 
   default = {}
@@ -182,13 +192,41 @@ variable "eks_node_groups_common" {
   type = object({
     enabled = optional(bool, true)
 
-    resolve_conflicts_on_create = optional(string)
-    resolve_conflicts_on_update = optional(string)
-    addon_version               = optional(string)
-    configuration_values        = optional(string)
-    tags                        = optional(map(string))
-    preserve                    = optional(bool)
-    service_account_role_arn    = optional(string)
+    node_role_arn = optional(string)
+    scaling_config = optional(object({
+      desired_size = number
+      max_size = number
+      min_size = number
+    }))
+    subnet_ids = optional(list(string))
+
+    ami_type = optional(string)
+    capacity_type = optional(string)
+    disk_size = optional(number)
+    force_update_version = optional(bool)
+    instance_types = optional(list(string))
+    labels = optional(map(string))
+    launch_template = optional(object({
+      id = optional(string)
+      name = optional(string)
+      version = string
+    }))
+    release_version = optional(string)
+    remote_access = optional(object({
+      ec2_ssh_key = optional(string)
+      source_security_group_ids = optional(list(string))
+    }))
+    tags = optional(map(string))
+    taint = optional(set(object({
+      key = string
+      value = optional(string)
+      effect = optional(string)
+    })))
+    update_config = optional(object({
+      max_unavailable = optional(number)
+      max_unavailable_percentage = optional(number)
+    }))
+    version = optional(string)
   })
 
   default = {
