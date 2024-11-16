@@ -111,6 +111,8 @@ variable "eks_addons" {
     tags                        = optional(map(string))
     preserve                    = optional(bool)
     service_account_role_arn    = optional(string)
+
+    additional_tags             = optional(map(string))
   }))
 
   default = {}
@@ -136,9 +138,13 @@ variable "eks_addons_common" {
 
 # eks_node_group
 
+# use preconditions?
+# https://developer.hashicorp.com/terraform/language/expressions/custom-conditions#preconditions-and-postconditions
+
 variable "eks_node_groups" {
   type = map(object({
     enabled = optional(bool, true)
+    use_key_as = optional(string, "node_group_name_prefix")
 
     node_role_arn = optional(string)
     scaling_config = optional(object({
@@ -183,6 +189,8 @@ variable "eks_node_groups" {
       value = optional(string)
       effect = optional(string)
     })), [])
+    additional_labels = optional(map(string), {})
+    additional_tags = optional(map(string), {})
   }))
 
   default = {}
