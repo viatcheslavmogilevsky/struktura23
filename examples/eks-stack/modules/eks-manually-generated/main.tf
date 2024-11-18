@@ -1,3 +1,13 @@
+locals {
+  eks_addons = { for k, v in var.eks_addons : k => merge(var.eks_addons_common, v) if v.enabled }
+
+  eks_node_groups = { for k, v in var.eks_node_groups : k => merge(var.var.eks_node_groups_common, v) if v.enabled }
+  lt_name = { for k, v in var.eks_node_groups : k => v.launch_template_key != null ? aws_launch_template.this[v.launch_template_key].name : try(v.launch_template.name) if v.enabled }
+  lt_version = { for k, v in var.eks_node_groups : k => v.launch_template_key != null ? aws_launch_template.this[v.launch_template_key].latest_version : try(v.launch_template.version) if v.enabled }
+  lt_blocks = { for k, v in var.eks_node_groups : k => local.lt_name[k] != null ? [0] : [] if v.enabled }
+}
+
+
 # https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/eks_cluster
 # https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/eks/cluster.go
 
@@ -100,7 +110,7 @@ resource "aws_iam_openid_connect_provider" "this" {
 # https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/eks/addon.go
 
 resource "aws_eks_addon" "this" {
-  for_each = { for k, v in var.eks_addons : k => merge(var.eks_addons_common, v) if v.enabled }
+  for_each = local.eks_addons
 
   cluster_name                = aws_eks_cluster.this.id
   addon_name                  = each.key
@@ -120,18 +130,36 @@ resource "aws_eks_addon" "this" {
 # https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/eks_node_group
 # https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/eks/node_group.go
 
+
 resource "aws_eks_node_group" "this" {
-  for_each = { for k, v in var.eks_node_groups : k => merge(var.var.eks_node_groups_common, v) if v.enabled }
+  for_each = local.eks_node_groups
 
   cluster_name           = aws_eks_cluster.this.id
   node_group_name        = each.value.use_key_as == "node_group_name" ? each.key : null
   node_group_name_prefix = each.value.use_key_as == "node_group_name_prefix" ? each.key : null
+  node_role_arn   = each.value.node_role_arn
 
-  node_role_arn   = var.eks_node_role_arn
-  subnet_ids      = var.eks_node_group_subnet_ids
-  labels          = var.eks_node_group_labels
-  capacity_type   = var.eks_node_group_capacity_type
-  instance_types  = var.eks_node_group_instance_types
+  scaling_config {
+    desired_size = try(each.value.scaling_config.desired_size)
+    max_size     = try(each.value.scaling_config.max_size)
+    min_size     = try(each.value.scaling_config.min_size)
+  }
+
+  subnet_ids = each.value.subnet_ids != null ? concat(each.value.subnet_ids, each.value.additional_subnet_ids) : null
+  ami_type = each.value.ami_type
+  capacity_type = each.value.capacity_type
+  disk_size = each.value.disk_size
+  force_update_version = each.value.force_update_version
+  instance_types  = each.value.instance_types != null ? concat(each.value.instance_types, each.value.additional_instance_types) : null
+  labels          = each.value.labels != null ? merge(each.value.labels, each.value.additional_labels) : null
+
+  dynamic "launch_template" {
+    for_each = local.lt_blocks[each.key]
+    content {
+      name    = local.lt_name[each.key]
+      version = local.lt_version[each.key]
+    }
+  }
 
   scaling_config {
     desired_size = var.eks_node_group_desired_size
@@ -139,10 +167,7 @@ resource "aws_eks_node_group" "this" {
     min_size     = var.eks_node_group_min_size
   }
 
-  launch_template {
-    name    = aws_launch_template.this.name
-    version = aws_launch_template.this.latest_version
-  }
+
 
   lifecycle {
     ignore_changes = [scaling_config[0].desired_size]

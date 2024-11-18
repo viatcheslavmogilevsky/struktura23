@@ -145,6 +145,7 @@ variable "eks_node_groups" {
   type = map(object({
     enabled = optional(bool, true)
     use_key_as = optional(string, "node_group_name_prefix")
+    launch_template_key = optional(string)
 
     node_role_arn = optional(string)
     scaling_config = optional(object({
@@ -161,7 +162,7 @@ variable "eks_node_groups" {
     instance_types = optional(list(string))
     labels = optional(map(string))
     launch_template = optional(object({
-      id = optional(string)
+      # id = optional(string) - name is enforced
       name = optional(string)
       version = string
     }))
@@ -199,6 +200,7 @@ variable "eks_node_groups" {
 variable "eks_node_groups_common" {
   type = object({
     enabled = optional(bool, true)
+    launch_template_key = optional(string)
 
     node_role_arn = optional(string)
     scaling_config = optional(object({
@@ -215,7 +217,7 @@ variable "eks_node_groups_common" {
     instance_types = optional(list(string))
     labels = optional(map(string))
     launch_template = optional(object({
-      id = optional(string)
+      # id = optional(string) - name is enforced
       name = optional(string)
       version = string
     }))

@@ -21,7 +21,7 @@ class ExampleStruktura < Struktura23::ModuleSpec
   connect_provider.enforce(thumbprint_list: [tls_certificate.resolved.certificates[0].sha1_fingerprint])
  
   eks_addons = eks_cluster.has_many(:aws_eks_addon).where(cluster_name: eks_cluster.resolved.id).identify_by(:name)
-  eks_addons.enforce(depends_on: connect_provider.meta)
+  eks_addons.enforce(depends_on: [connect_provider.resolved])
 
   node_groups = eks_cluster.has_many(:aws_eks_node_group).where(cluster_name: eks_cluster.resolved.id).identify_by(:node_group_name)
 
@@ -30,9 +30,30 @@ class ExampleStruktura < Struktura23::ModuleSpec
   # node_groups.has_prefix(:node_group_name, :node_group_name_prefix) {|full| ...}
   # node_groups.has_no_prefixes # <- add attributes to disable particularly for those attributes
 
-  launch_template = node_groups.belongs_to(:aws_launch_template).to_enforce(node_groups.meta.launch_template.name=>:name).identify_by(:name)
-  node_groups.enforce(node_groups.meta.launch_template.version=>launch_template.resolved.latest_version)
-  node_groups.enforce(node_groups.meta.lifecycle.ignore_changes=>[node_groups.meta.scaling_config[0].desired_size])
+  launch_template = node_groups.optionally_belongs_to(:aws_launch_template)
+    .where_not(name: nil)
+    .where(name: node_groups.resolved.launch_template.name)
+    .skip_reverse_enforcing
+    .identify_by(:name)
+
+  lt_name = node_groups.let(lt_name: launch_template.resolved.name)
+  lt_version = node_groups.let(lt_version: launch_template.resolved.latest_version)
+  lt_blocks = node_groups.let_expression({:lt_blocks=>"%{lt_name} != null ? [0] : []"}, {:lt_name=>lt_name.resolved})
+
+  node_groups.enforce({
+    launch_template: {
+      for_each: lt_blocks.resolved
+      content: {
+        name: lt_name.resolved
+        version: lt_version.resolved
+      }
+    },
+    lifecycle: {
+      ignore_changes: [
+        node_groups.resolved.scaling_config[0].desired_size
+      ]
+    }
+  })
 
   ami = launch_template.has_optional_data(:aws_ami)
   launch_template.enforce(image_id: ami.resolved.image_id)
