@@ -77,7 +77,15 @@
 
 ### Goals
 
-* computed attrs should be used as output
-* common/uncommon attrs and defaults
+* computed attrs should be used as output :white_check_mark: (not all resorces/data)
+* common/uncommon attrs and defaults :white_check_mark: (not tested)
+* full module example (hcl-version) (input/resources/data/output) :x:
+
+
+## 18.11.2024 - 24.11.2024
+
+### Goals
+
+* test resouces which already "canonical"
 * full module example (hcl-version) (input/resources/data/output)
 
