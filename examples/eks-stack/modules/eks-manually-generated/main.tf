@@ -2,9 +2,6 @@ locals {
   eks_addons = { for k, v in var.eks_addons : k => merge(var.eks_addons_common, v) if v.enabled }
 
   eks_node_groups = { for k, v in var.eks_node_groups : k => merge(var.var.eks_node_groups_common, v) if v.enabled }
-  lt_name = { for k, v in var.eks_node_groups : k => v.launch_template_key != null ? aws_launch_template.this[v.launch_template_key].name : try(v.launch_template.name) if v.enabled }
-  lt_version = { for k, v in var.eks_node_groups : k => v.launch_template_key != null ? aws_launch_template.this[v.launch_template_key].latest_version : try(v.launch_template.version) if v.enabled }
-  lt_blocks = { for k, v in var.eks_node_groups : k => local.lt_name[k] != null ? [0] : [] if v.enabled }
 }
 
 
@@ -135,9 +132,13 @@ resource "aws_eks_node_group" "this" {
   for_each = local.eks_node_groups
 
   cluster_name           = aws_eks_cluster.this.id
+
+  # ..name_prefix can be found from ..name
+  # suffix example: 20241118090004730600000001
+
   node_group_name        = each.value.use_key_as == "node_group_name" ? each.key : null
   node_group_name_prefix = each.value.use_key_as == "node_group_name_prefix" ? each.key : null
-  node_role_arn   = each.value.node_role_arn
+  node_role_arn          = each.value.node_role_arn
 
   scaling_config {
     desired_size = try(each.value.scaling_config.desired_size)
@@ -154,19 +155,12 @@ resource "aws_eks_node_group" "this" {
   labels          = each.value.labels != null ? merge(each.value.labels, each.value.additional_labels) : null
 
   dynamic "launch_template" {
-    for_each = local.lt_blocks[each.key]
+    for_each = each.value.launch_template != null ? [each.value.launch_template] : []
     content {
-      name    = local.lt_name[each.key]
-      version = local.lt_version[each.key]
+      name    = coalesce(launch_template.value.name, try(aws_launch_template.this[launch_template.value.launch_template_key].name))
+      version = coalesce(launch_template.value.version, try(aws_launch_template.this[launch_template.value.launch_template_key].latest_version))
     }
   }
-
-  scaling_config {
-    desired_size = var.eks_node_group_desired_size
-    max_size     = var.eks_node_group_max_size
-    min_size     = var.eks_node_group_min_size
-  }
-
 
 
   lifecycle {
