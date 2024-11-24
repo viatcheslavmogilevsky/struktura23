@@ -113,3 +113,6 @@ output "eks_addon_addon_version_map" {
 output "eks_addon_configuration_values_map" {
   value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].configuration_values if v.enabled }
 }
+
+
+# WIP: node_groups, launch_templates, AMIs

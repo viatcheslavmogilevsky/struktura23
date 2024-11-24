@@ -145,7 +145,6 @@ variable "eks_node_groups" {
   type = map(object({
     enabled = optional(bool, true)
     use_key_as = optional(string, "node_group_name_prefix")
-    launch_template_key = optional(string)
 
     node_role_arn = optional(string)
     scaling_config = optional(object({
@@ -164,7 +163,8 @@ variable "eks_node_groups" {
     launch_template = optional(object({
       # id = optional(string) - name is enforced
       name = optional(string)
-      version = string
+      version = optional(string) # because it is enforced
+      launch_template_key = optional(string) # belongs_to
     }))
     release_version = optional(string)
     remote_access = optional(object({
@@ -219,7 +219,8 @@ variable "eks_node_groups_common" {
     launch_template = optional(object({
       # id = optional(string) - name is enforced
       name = optional(string)
-      version = string
+      version = optional(string) # because it is enforced
+      launch_template_key = optional(string) # belongs_to
     }))
     release_version = optional(string)
     remote_access = optional(object({
@@ -244,64 +245,65 @@ variable "eks_node_groups_common" {
   }
 }
 
+# WIP: node_groups, launch_templates, AMIs
 
-variable "eks_node_group_name" {
-  description = "The name of the node group"
-  type        = string
-}
+# variable "eks_node_group_name" {
+#   description = "The name of the node group"
+#   type        = string
+# }
 
-variable "eks_node_role_arn" {
-  description = "Role ARN of the EKS nodes"
-  type        = string
-}
+# variable "eks_node_role_arn" {
+#   description = "Role ARN of the EKS nodes"
+#   type        = string
+# }
 
-variable "eks_node_group_subnet_ids" {
-  description = "Subnet IDs of the node groups"
-  type        = list(string)
-}
+# variable "eks_node_group_subnet_ids" {
+#   description = "Subnet IDs of the node groups"
+#   type        = list(string)
+# }
 
-variable "eks_node_group_desired_size" {
-  description = "Desired size of the eks node group"
-  type        = number
-}
+# variable "eks_node_group_desired_size" {
+#   description = "Desired size of the eks node group"
+#   type        = number
+# }
 
-variable "eks_node_group_max_size" {
-  description = "Max size of the node group"
-  type        = number
-}
+# variable "eks_node_group_max_size" {
+#   description = "Max size of the node group"
+#   type        = number
+# }
 
-variable "eks_node_group_capacity_type" {
-  description = "Type of capacity associated with the EKS Node Group."
-  default     = "ON_DEMAND"
-  type        = string
-}
-variable "eks_node_group_min_size" {
-  description = "Minimum size of the node group"
-  type        = number
-}
+# variable "eks_node_group_capacity_type" {
+#   description = "Type of capacity associated with the EKS Node Group."
+#   default     = "ON_DEMAND"
+#   type        = string
+# }
+# variable "eks_node_group_min_size" {
+#   description = "Minimum size of the node group"
+#   type        = number
+# }
 
-variable "eks_node_group_instance_type" {
-  description = "Instance types of the node group (t3.medium, c5.xlarge etc.)"
-  type        = string
-}
+# variable "eks_node_group_instance_type" {
+#   description = "Instance types of the node group (t3.medium, c5.xlarge etc.)"
+#   type        = string
+# }
 
-variable "eks_node_group_instance_types" {
-  description = "Override instance types of the node group by multiple types ([t3.medium, c5.xlarge] etc.)"
-  type        = list(string)
-  default     = null
-}
+# variable "eks_node_group_instance_types" {
+#   description = "Override instance types of the node group by multiple types ([t3.medium, c5.xlarge] etc.)"
+#   type        = list(string)
+#   default     = null
+# }
 
-variable "eks_node_group_labels" {
-  description = "Labels of the node group"
-  type        = map(any)
-}
+# variable "eks_node_group_labels" {
+#   description = "Labels of the node group"
+#   type        = map(any)
+# }
 
-variable "eks_node_group_ssh_key" {
-  description = "SSH key for the nodes"
-  type        = string
-}
+# variable "eks_node_group_ssh_key" {
+#   description = "SSH key for the nodes"
+#   type        = string
+# }
 
-variable "eks_node_group_launch_template_name" {
-  description = "Launch template name"
-  type        = string
-}
+# variable "eks_node_group_launch_template_name" {
+#   description = "Launch template name"
+#   type        = string
+# }

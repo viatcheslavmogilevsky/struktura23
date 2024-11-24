@@ -30,31 +30,12 @@ class ExampleStruktura < Struktura23::ModuleSpec
   # node_groups.has_prefix(:node_group_name, :node_group_name_prefix) {|full| ...}
   # node_groups.has_no_prefixes # <- add attributes to disable particularly for those attributes
 
-  launch_template_blk = node_groups.has_optional_block(:launch_template)
+  launch_template_blk = node_groups.override_block(:launch_template)
   launch_template = launch_template_blk.belongs_to(:aws_launch_template)
-    .where(name: launch_template_blk.found.name)
+    .where(name: launch_template_blk.resolved.name)
     .identify_by(:name)
-  launch_template_blk.enforce(name: launch_template.resolved.name)
   launch_template_blk.enforce(version: launch_template.resolved.latest_version)
 
-  
-
-
-  # launch_template = node_groups.optionally_belongs_to(:aws_launch_template).where do |found_ng|
-  #   found_ng
-  # end
-
-  # launch_template.identify_by(:name)
-
-  #   .where(!node_groups.resolved.launch_template.not_null?)
-  #   .where(name: node_groups.resolved.launch_template[0].name)
-    
-
-  # # lt_name = node_groups.let(lt_name: launch_template.resolved.name)
-  # # lt_blocks = node_groups.let_expression({:lt_blocks=>"%{lt_name} != null ? [0] : []"}, {:lt_name=>lt_name.resolved})
-
-  # node_groups.enforce(:dynamic, :launch_template, for_each: node_groups.expression("%{lt_exists} ? [0] : []", lt_exists: launch_template.exists))
-  # node_groups.enforce(:dynamic, :launch_template, :content, version: launch_template.resolved.latest_version)
   node_groups.enforce(:lifecycle, ignore_changes: [node_groups.meta.scaling_config[0].desired_size])
 
   ami = launch_template.has_optional_data(:aws_ami)

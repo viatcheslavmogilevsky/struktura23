@@ -1,7 +1,11 @@
 locals {
-  eks_addons = { for k, v in var.eks_addons : k => merge(var.eks_addons_common, v) if v.enabled }
+  launch_templates = {
+    for k, v in var.launch_templates : k => merge(var.launch_templates_common, v) if v.enabled
+  }
 
-  eks_node_groups = { for k, v in var.eks_node_groups : k => merge(var.var.eks_node_groups_common, v) if v.enabled }
+  amis = {
+    for k, v in local.launch_templates : k => v.ami if v.ami != null
+  }
 }
 
 
@@ -107,7 +111,9 @@ resource "aws_iam_openid_connect_provider" "this" {
 # https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/eks/addon.go
 
 resource "aws_eks_addon" "this" {
-  for_each = local.eks_addons
+  for_each = {
+    for k, v in var.eks_addons : k => merge(var.eks_addons_common, v) if v.enabled
+  }
 
   cluster_name                = aws_eks_cluster.this.id
   addon_name                  = each.key
@@ -129,9 +135,11 @@ resource "aws_eks_addon" "this" {
 
 
 resource "aws_eks_node_group" "this" {
-  for_each = local.eks_node_groups
+  for_each = {
+    for k, v in var.eks_node_groups : k => merge(var.eks_node_groups_common, v) if v.enabled
+  }
 
-  cluster_name           = aws_eks_cluster.this.id
+  cluster_name = aws_eks_cluster.this.id
 
   # ..name_prefix can be found from ..name
   # suffix example: 20241118090004730600000001
@@ -157,57 +165,104 @@ resource "aws_eks_node_group" "this" {
   dynamic "launch_template" {
     for_each = each.value.launch_template != null ? [each.value.launch_template] : []
     content {
-      name    = coalesce(launch_template.value.name, try(aws_launch_template.this[launch_template.value.launch_template_key].name))
-      version = coalesce(launch_template.value.version, try(aws_launch_template.this[launch_template.value.launch_template_key].latest_version))
+      name    = launch_template.value.name != null ? launch_template.value.name : (launch_template.value.launch_template_key != null ? aws_launch_template.this[launch_template.value.launch_template_key] : null)
+      version = launch_template.value.version != null ? launch_template.value.version : (launch_template.value.launch_template_key != null ? aws_launch_template.this[launch_template.value.launch_template_key].latest_version : null)
     }
   }
 
+  release_version = each.value.release_version
+
+  dynamic "remote_access" {
+    for_each = each.value.remote_access != null ? [each.value.remote_access] : []
+    content {
+      ec2_ssh_key = remote_access.value.ec2_ssh_key
+      source_security_group_ids = remote_access.value.source_security_group_ids
+    }
+  }
+
+  tags = each.value.tags != null ? merge(each.value.tags, each.value.additional_tags) : null
+  taint = each.value.taint != null ? toset(concat(each.value.taint, each.value.additional_taint)) : null
+
+  dynamic "update_config" {
+    for_each = each.value.update_config != null ? [each.value.update_config] : []
+    content {
+      max_unavailable = update_config.value.max_unavailable
+      max_unavailable_percentage = update_config.value.max_unavailable_percentage
+    }
+  }
+
+  version = each.value.version
 
   lifecycle {
     ignore_changes = [scaling_config[0].desired_size]
   }
 }
 
+# https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/data-sources/ami
+# https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/ec2/ec2_ami_data_source.go
+
 data "aws_ami" "this" {
-  most_recent = true
-  name_regex  = "amazon-eks-arm64-node-${aws_eks_cluster.this.version}-v*"
+  for_each = local.amis
 
-  owners = ["amazon"]
-}
+  owners      = each.value.owners
+  most_recent = each.value.most_recent
+  executable_users = each.value.executable_users
+  include_deprecated = each.value.include_deprecated
+  name_regex  =  each.value.name_regex
 
-resource "aws_launch_template" "this" {
-  name_prefix   = var.eks_node_group_launch_template_name
-  ebs_optimized = "true"
-  image_id      = data.aws_ami.this.image_id
-  instance_type = var.eks_node_group_instance_types != null ? null : var.eks_node_group_instance_type
-  key_name      = var.eks_node_group_ssh_key
-
-  vpc_security_group_ids = [
-    aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
-  ]
-
-  tag_specifications {
-    resource_type = "instance"
-
-    tags = {
-      Name = "${aws_eks_cluster.this.id}-worker"
+  dynamic "filter" {
+    for_each = each.value.filter != null ? each.value.filter : []
+    content {
+      name = filter.value.name
+      values = filter.value.values
     }
   }
-
-  lifecycle {
-    ignore_changes = [
-      tag_specifications[0].tags["Owner"]
-    ]
-  }
-
-  user_data = base64encode(<<-EOT
-    #!/bin/bash -xe
-
-    # Bootstrap and join the cluster
-    /etc/eks/bootstrap.sh --b64-cluster-ca '${aws_eks_cluster.this.certificate_authority[0].data}' --apiserver-endpoint '${aws_eks_cluster.this.endpoint}' '${aws_eks_cluster.this.id}'
-
-    # Allow user supplied userdata code
-    echo "Node is up..."
-  EOT
-  )
 }
+
+# https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/launch_template
+# https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/ec2/ec2_launch_template.go
+
+resource "aws_launch_template" "this" {
+  for_each = local.launch_templates
+  # WIP
+}
+
+# resource "aws_launch_template" "this" {
+#   for_each = local.launch_templates
+
+
+#   name_prefix   = var.eks_node_group_launch_template_name
+#   ebs_optimized = "true"
+#   image_id      = data.aws_ami.this.image_id
+#   instance_type = var.eks_node_group_instance_types != null ? null : var.eks_node_group_instance_type
+#   key_name      = var.eks_node_group_ssh_key
+
+#   vpc_security_group_ids = [
+#     aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
+#   ]
+
+#   tag_specifications {
+#     resource_type = "instance"
+
+#     tags = {
+#       Name = "${aws_eks_cluster.this.id}-worker"
+#     }
+#   }
+
+#   lifecycle {
+#     ignore_changes = [
+#       tag_specifications[0].tags["Owner"]
+#     ]
+#   }
+
+#   user_data = base64encode(<<-EOT
+#     #!/bin/bash -xe
+
+#     # Bootstrap and join the cluster
+#     /etc/eks/bootstrap.sh --b64-cluster-ca '${aws_eks_cluster.this.certificate_authority[0].data}' --apiserver-endpoint '${aws_eks_cluster.this.endpoint}' '${aws_eks_cluster.this.id}'
+
+#     # Allow user supplied userdata code
+#     echo "Node is up..."
+#   EOT
+#   )
+# }
