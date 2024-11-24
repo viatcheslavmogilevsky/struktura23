@@ -86,6 +86,13 @@
 
 ### Goals
 
-* test resouces which already "canonical"
-* full module example (hcl-version) (input/resources/data/output)
+* test resouces which already "canonical" :x:
+* full module example (hcl-version) (input/resources/data/output) :x:
 
+
+## 25.11.2024 - 1.12.2024
+
+### Goals
+
+* test resouces which already "canonical" 
+* full module example (hcl-version) (input/resources/data/output)
