@@ -154,7 +154,7 @@ resource "aws_eks_node_group" "this" {
     min_size     = try(each.value.scaling_config.min_size)
   }
 
-  subnet_ids = each.value.subnet_ids != null ? concat(each.value.subnet_ids, each.value.additional_subnet_ids) : null
+  subnet_ids = each.value.override_subnet_ids ? var.eks_node_groups[each.key].subnet_ids : concat(coalesce(var.eks_node_groups[each.key].subnet_ids, []), coalesce(var.eks_node_groups_common.subnet_ids, []))
   ami_type = each.value.ami_type
   capacity_type = each.value.capacity_type
   disk_size = each.value.disk_size
