@@ -94,5 +94,15 @@
 
 ### Goals
 
+* test resouces which already "canonical" :x:
+* full module example (hcl-version) (input/resources/data/output) :x:
+
+
+## 2.12.2024 - 8.12.2024
+
+### Goals
+
 * test resouces which already "canonical" 
 * full module example (hcl-version) (input/resources/data/output)
+* check coalesce with '[]'
+* rewrite to 'override_*'
