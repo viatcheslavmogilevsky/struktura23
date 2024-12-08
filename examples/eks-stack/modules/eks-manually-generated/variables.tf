@@ -112,28 +112,10 @@ variable "eks_addons" {
     preserve                    = optional(bool)
     service_account_role_arn    = optional(string)
 
-    additional_tags             = optional(map(string))
+    merge_common = optional(list(string), [])
   }))
 
   default = {}
-}
-
-variable "eks_addons_common" {
-  type = object({
-    enabled = optional(bool, true)
-
-    resolve_conflicts_on_create = optional(string)
-    resolve_conflicts_on_update = optional(string)
-    addon_version               = optional(string)
-    configuration_values        = optional(string)
-    tags                        = optional(map(string))
-    preserve                    = optional(bool)
-    service_account_role_arn    = optional(string)
-  })
-
-  default = {
-    enabled = true
-  }
 }
 
 # eks_node_group
@@ -183,61 +165,16 @@ variable "eks_node_groups" {
     }))
     version = optional(string)
 
-    override_subnet_ids = optional(bool, false)
-    override_instance_types = optional(bool, false)
-    override_taint = optional(bool, false)
-    override_labels = optional(bool, false)
-    override_tags = optional(bool, false)
+    # override_subnet_ids = optional(bool, false)
+    # override_instance_types = optional(bool, false)
+    # override_taint = optional(bool, false)
+    # override_labels = optional(bool, false)
+    # override_tags = optional(bool, false)
+    concat_common = optional(list(string), [])
+    merge_common = optional(list(string), [])
   }))
 
   default = {}
-}
-
-variable "eks_node_groups_common" {
-  type = object({
-    enabled = optional(bool, true)
-
-    node_role_arn = optional(string)
-    scaling_config = optional(object({
-      desired_size = number
-      max_size = number
-      min_size = number
-    }))
-    subnet_ids = optional(list(string))
-
-    ami_type = optional(string)
-    capacity_type = optional(string)
-    disk_size = optional(number)
-    force_update_version = optional(bool)
-    instance_types = optional(list(string))
-    labels = optional(map(string))
-    launch_template = optional(object({
-      # id = optional(string) - name is enforced
-      name = optional(string)
-      version = optional(string) # because it is enforced
-      launch_template_key = optional(string) # belongs_to
-    }))
-    release_version = optional(string)
-    remote_access = optional(object({
-      ec2_ssh_key = optional(string)
-      source_security_group_ids = optional(list(string))
-    }))
-    tags = optional(map(string))
-    taint = optional(set(object({
-      key = string
-      value = optional(string)
-      effect = optional(string)
-    })))
-    update_config = optional(object({
-      max_unavailable = optional(number)
-      max_unavailable_percentage = optional(number)
-    }))
-    version = optional(string)
-  })
-
-  default = {
-    enabled = true
-  }
 }
 
 variable "launch_templates" {
@@ -479,17 +416,6 @@ variable "launch_templates" {
   }))
 
   default = {}
-}
-
-variable "launch_templates_common" {
-  type = object({
-    enabled = optional(bool, true)
-
-  })
-
-  default = {
-    enabled = true
-  }
 }
 
 # WIP: node_groups, launch_templates, AMIs

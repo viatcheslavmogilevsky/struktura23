@@ -112,7 +112,7 @@ resource "aws_iam_openid_connect_provider" "this" {
 
 resource "aws_eks_addon" "this" {
   for_each = {
-    for k, v in var.eks_addons : k => merge(var.eks_addons_common, v) if v.enabled
+    for k, v in var.eks_addons : k => merge(var.eks_addons["_common"], v) if v.enabled && k != "_common"
   }
 
   cluster_name                = aws_eks_cluster.this.id
@@ -121,7 +121,7 @@ resource "aws_eks_addon" "this" {
   resolve_conflicts_on_update = each.value.resolve_conflicts_on_update
   addon_version               = each.value.addon_version
   configuration_values        = each.value.configuration_values
-  tags                        = each.value.tags
+  tags                        = contains(var.eks_addons[each.key].merge_common, "tags") && var.eks_addons["_common"].tags != null ? merge(var.eks_addons["_common"], var.eks_addons[each.key].tags) : var.eks_addons[each.key].tags
   preserve                    = each.value.preserve
   service_account_role_arn    = each.value.service_account_role_arn
 
@@ -155,6 +155,9 @@ resource "aws_eks_node_group" "this" {
   }
 
   subnet_ids = each.value.override_subnet_ids ? var.eks_node_groups[each.key].subnet_ids : concat(coalesce(var.eks_node_groups[each.key].subnet_ids, []), coalesce(var.eks_node_groups_common.subnet_ids, []))
+
+
+
   ami_type = each.value.ami_type
   capacity_type = each.value.capacity_type
   disk_size = each.value.disk_size
