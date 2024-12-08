@@ -106,3 +106,11 @@
 * full module example (hcl-version) (input/resources/data/output)
 * check coalesce with '[]'
 * rewrite to 'override_*'
+
+
+## 9.12.2024 - 15.12.2024
+
+### Goals
+
+* terraform_data root module (testing)
+
