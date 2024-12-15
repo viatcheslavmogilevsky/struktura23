@@ -1,60 +1,152 @@
 locals {
-  # main = "1"
-
-  empty_eks_addon = {
-    enabled = true
-
-    resolve_conflicts_on_create = null
-    resolve_conflicts_on_update = null
-    addon_version               = null
-    configuration_values        = null
-    tags                        = null
-    preserve                    = null
-    service_account_role_arn    = null
-
-    customize_common = {}
+  for_each_input = {
+    eks_addons = {
+      input = var.eks_addons
+      set_attrs = []
+      key_attrs = [
+        "addon_name",
+      ]
+      no_key_attrs = [
+        "resolve_conflicts_on_create",
+        "resolve_conflicts_on_update",
+        "addon_version",
+        "configuration_values",
+        "tags",
+        "preserve",
+        "service_account_role_arn",
+      ]
+    },
+    eks_node_groups = {
+      input = var.eks_node_groups
+      set_attrs = [
+        "taint",
+      ]
+      key_attrs = [
+        "node_group_name",
+        "node_group_name_prefix",
+      ]
+      no_key_attrs = [
+        "node_role_arn",
+        "scaling_config",
+        "subnet_ids",
+        "ami_type",
+        "capacity_type",
+        "disk_size",
+        "force_update_version",
+        "instance_types",
+        "labels",
+        "launch_template",
+        "release_version",
+        "remote_access",
+        "tags",
+        "taint",
+        "update_config",
+        "version",
+      ]
+    },
+    launch_templates = {
+      input = var.launch_templates
+      set_attrs = [
+        "license_specification",
+        "security_group_names",
+        "vpc_security_group_ids",
+      ]
+      key_attrs = [
+        "node_group_name",
+        "node_group_name_prefix",
+      ]
+      no_key_attrs = [
+        "ami",
+        "block_device_mappings",
+        "capacity_reservation_specification",
+        "cpu_options",
+        "credit_specification",
+        "default_version",
+        "description",
+        "disable_api_stop",
+        "disable_api_termination",
+        "ebs_optimized",
+        "elastic_gpu_specifications",
+        "elastic_inference_accelerator",
+        "enclave_options",
+        "hibernation_options",
+        "iam_instance_profile",
+        "image_id",
+        "instance_initiated_shutdown_behavior",
+        "instance_market_options",
+        "instance_requirements",
+        "instance_type",
+        "kernel_id",
+        "key_name",
+        "license_specification",
+        "maintenance_options",
+        "metadata_options",
+        "monitoring",
+        "network_interfaces",
+        "placement",
+        "private_dns_name_options",
+        "ram_disk_id",
+        "security_group_names",
+        "tag_specifications",
+        "tags",
+        "update_default_version",
+        "vpc_security_group_ids",
+      ]
+    },
   }
 
-  common_eks_addon = lookup(var.eks_addons, "_common", local.empty_eks_addon)
-
-  eks_addons_set_attrs = []
-
-  merged_eks_addons = {
-    for k, v in var.eks_addons : k => {
-      for attr_name, attr_value in v : attr_name => (lookup(v["customize_common"], attr_name, "default") == "omit" || (local.common_eks_addon[attr_name] == null && attr_value == null) ?
-        null
-        : (lookup(v["customize_common"], attr_name, "default") == "merge" && local.common_eks_addon[attr_name] != null ?
-          merge(local.common_eks_addon[attr_name], coalesce(attr_value, {}))
-          : (lookup(v["customize_common"], attr_name, "default") == "append" && local.common_eks_addon[attr_name] != null && contains(local.eks_addons_set_attrs, attr_name) ?
-            setunion(local.common_eks_addon[attr_name], coalesce(attr_value, toset([])))
-            : (lookup(v["customize_common"], attr_name, "default") == "append" && local.common_eks_addon[attr_name] != null ?
-              concat(local.common_eks_addon[attr_name], coalesce(attr_value, []))
-              : (lookup(v["customize_common"], attr_name, "default") == "prepend" && local.common_eks_addon[attr_name] != null ?
-                concat(coalesce(attr_value, []), local.common_eks_addon[attr_name])
-      : coalesce(attr_value, local.common_eks_addon[attr_name]))))))
-    } if v.enabled && k != "_common"
+  for_each_common = {
+    for input_key, input_value in local.for_each_input : input_key => lookup(input_value["input"], "_common", merge(
+    {
+      enabled = true
+      use_key_as = null
+      customize_common = {}
+    }, {
+      for attr_name in input_value["no_key_attrs"] : attr_name => null
+    }))
   }
-  # merged_eks_addons = {
-  #   for k, v in var.eks_addons : k => merge(local.common_eks_addon, v) if v.enabled && k != "_common"
-  # }
+
+  merged_no_key_attrs = {
+    for input_key, input_value in local.for_each_input : input_key => {
+      for resource_key, resource_value in input_value["input"] : resource_key => {
+        for attr_name, attr_value in resource_value : attr_name => (lookup(resource_value["customize_common"], attr_name, "default") == "omit" || (local.for_each_common[input_key][attr_name] == null && attr_value == null) ?
+          null
+          : (lookup(resource_value["customize_common"], attr_name, "default") == "merge" && local.for_each_common[input_key][attr_name] != null ?
+            merge(local.for_each_common[input_key][attr_name], coalesce(attr_value, {}))
+            : (lookup(resource_value["customize_common"], attr_name, "default") == "append" && local.for_each_common[input_key][attr_name] != null && contains(local.for_each_input[input_key]["set_attrs"], attr_name) ?
+              setunion(local.for_each_common[input_key][attr_name], coalesce(attr_value, toset([])))
+              : (lookup(resource_value["customize_common"], attr_name, "default") == "append" && local.for_each_common[input_key][attr_name] != null ?
+                concat(local.for_each_common[input_key][attr_name], coalesce(attr_value, []))
+                : (lookup(resource_value["customize_common"], attr_name, "default") == "prepend" && local.for_each_common[input_key][attr_name] != null ?
+                  concat(coalesce(attr_value, []), local.for_each_common[input_key][attr_name])
+        : coalesce(attr_value, local.for_each_common[input_key][attr_name]))))))
+      } if resource_value.enabled && resource_key != "_common"
+    }
+  }
+
+  merged_key_attrs = {
+    for input_key, input_value in local.for_each_input : input_key => {
+      for resource_key, resource_value in input_value["input"] : resource_key => {
+        for attr_name in local.for_each_input[input_key]["key_attrs"] : attr_name => (coalesce(resource_value["use_key_as"], local.for_each_common[input_key]["use_key_as"], local.for_each_input[input_key]["key_attrs"][0]) == attr_name ?
+        resource_key
+        : null)
+      }
+    }
+  }
 }
 
-# resource "terraform_data" "local" {
-#   input = local.main
-# }
-
 resource "terraform_data" "eks_addon" {
-  for_each = local.merged_eks_addons
+  for_each = local.merged_no_key_attrs["eks_addons"]
 
   input = {
     cluster_name                = "awesome-cluster"
-    addon_name                  = each.key
+    addon_name                  = local.merged_key_attrs["eks_addons"][each.key].addon_name
     resolve_conflicts_on_create = each.value.resolve_conflicts_on_create
-    resolve_conflicts_on_update = each.value.resolve_conflicts_on_update #   try(coalesce(local.common_eks_addon.resolve_conflicts_on_update, each.value.resolve_conflicts_on_update), null)
-    addon_version               = each.value.addon_version               # try(coalesce(local.common_eks_addon.addon_version, each.value.addon_version), null)
-    configuration_values        = each.value.configuration_values        # try(coalesce(local.common_eks_addon.configuration_values, each.value.configuration_values), null)
-    tags                        = each.value.tags                        # contains(each.value.merge_common, "tags") && local.common_eks_addon.tags != null ? merge(local.common_eks_addon.tags, coalesce(each.value.tags, {})) : each.value.tags
-    preserve                    = each.value.preserve                    # try(coalesce(local.common_eks_addon.preserve, each.value.preserve), null)
-    service_account_role_arn    = each.value.service_account_role_arn    # try(coalesce(local.common_eks_addon.service_account_role_arn, each.value.service_account_role_arn), null)
+    resolve_conflicts_on_update = each.value.resolve_conflicts_on_update
+    addon_version               = each.value.addon_version
+    configuration_values        = each.value.configuration_values
+    tags                        = each.value.tags
+    preserve                    = each.value.preserve
+    service_account_role_arn    = each.value.service_account_role_arn
   }
 }

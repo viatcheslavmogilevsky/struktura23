@@ -1,6 +1,8 @@
 variable "eks_addons" {
   type = map(object({
-    enabled = optional(bool, true)
+    enabled          = optional(bool, true)
+    use_key_as       = optional(string)
+    customize_common = optional(map(string), {})
 
     resolve_conflicts_on_create = optional(string)
     resolve_conflicts_on_update = optional(string)
@@ -9,8 +11,6 @@ variable "eks_addons" {
     tags                        = optional(map(string))
     preserve                    = optional(bool)
     service_account_role_arn    = optional(string)
-
-    customize_common = optional(map(string), {})
   }))
 
   default = {}
@@ -33,6 +33,14 @@ variable "eks_addons" {
 
   validation {
     condition = alltrue([
+      for key, value in var.eks_addons : contains(["addon_name"], coalesce(value.use_key_as, "addon_name"))
+    ])
+
+    error_message = "At least one of var.eks_addons has non-valid value of use_key_as."
+  }
+
+  validation {
+    condition = alltrue([
       for key, value in var.eks_addons : lookup(value, "enabled", true) == true if key == "_common"
     ])
 
@@ -51,7 +59,8 @@ variable "eks_addons" {
 variable "eks_node_groups" {
   type = map(object({
     enabled    = optional(bool, true)
-    use_key_as = optional(string, "node_group_name_prefix")
+    use_key_as = optional(string)
+    customize_common = optional(map(string), {})
 
     node_role_arn = optional(string)
     scaling_config = optional(object({
@@ -89,8 +98,6 @@ variable "eks_node_groups" {
       max_unavailable_percentage = optional(number)
     }))
     version = optional(string)
-
-    customize_common = optional(map(string), {})
   }))
 
   default = {}
@@ -109,6 +116,17 @@ variable "eks_node_groups" {
     ])
 
     error_message = "At least one of var.eks_node_groups has non-valid customization type."
+  }
+
+  validation {
+    condition = alltrue([
+      for key, value in var.eks_node_groups : contains([
+        "node_group_name",
+        "node_group_name_prefix",
+      ], coalesce(value.use_key_as, "node_group_name"))
+    ])
+
+    error_message = "At least one of var.eks_node_groups has non-valid value of use_key_as."
   }
 
   validation {
@@ -132,7 +150,9 @@ variable "eks_node_groups" {
 variable "launch_templates" {
   type = map(object({
     enabled    = optional(bool, true)
-    use_key_as = optional(string, "name_prefix")
+    use_key_as = optional(string)
+    customize_common = optional(map(string), {})
+
 
     # ami
     ami = optional(object({
@@ -357,8 +377,6 @@ variable "launch_templates" {
     # user_data = optional(string)
 
     vpc_security_group_ids = optional(set(string))
-
-    customize_common = optional(map(string), {})
   }))
 
   default = {}
@@ -377,6 +395,17 @@ variable "launch_templates" {
     ])
 
     error_message = "At least one of var.launch_templates has non-valid customization type."
+  }
+
+  validation {
+    condition = alltrue([
+      for key, value in var.launch_templates : contains([
+        "name",
+        "name_prefix",
+      ], coalesce(value.use_key_as, "name"))
+    ])
+
+    error_message = "At least one of var.launch_templates has non-valid value of use_key_as."
   }
 
   validation {
