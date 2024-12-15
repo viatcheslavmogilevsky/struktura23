@@ -112,5 +112,11 @@
 
 ### Goals
 
-* terraform_data root module (testing)
+* terraform_data root module (testing) :white_check_mark:
 
+
+## 16.12.2024 - 22.12.2024
+
+### Goals
+
+* test complex variables in tf-data-root-module
