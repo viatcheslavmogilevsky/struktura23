@@ -130,7 +130,7 @@ locals {
         for attr_name in local.for_each_input[input_key]["key_attrs"] : attr_name => (coalesce(resource_value["use_key_as"], local.for_each_common[input_key]["use_key_as"], local.for_each_input[input_key]["key_attrs"][0]) == attr_name ?
         resource_key
         : null)
-      }
+      } if resource_value.enabled && resource_key != "_common"
     }
   }
 }
