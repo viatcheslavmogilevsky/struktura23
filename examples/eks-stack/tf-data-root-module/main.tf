@@ -52,8 +52,8 @@ locals {
         "vpc_security_group_ids",
       ]
       key_attrs = [
-        "node_group_name",
-        "node_group_name_prefix",
+        "name",
+        "name_prefix",
       ]
       no_key_attrs = [
         "ami",
@@ -141,6 +141,7 @@ resource "terraform_data" "eks_addon" {
   input = {
     cluster_name                = "awesome-cluster"
     addon_name                  = local.merged_key_attrs["eks_addons"][each.key].addon_name
+
     resolve_conflicts_on_create = each.value.resolve_conflicts_on_create
     resolve_conflicts_on_update = each.value.resolve_conflicts_on_update
     addon_version               = each.value.addon_version
@@ -148,5 +149,105 @@ resource "terraform_data" "eks_addon" {
     tags                        = each.value.tags
     preserve                    = each.value.preserve
     service_account_role_arn    = each.value.service_account_role_arn
+  }
+}
+
+resource "terraform_data" "eks_node_group" {
+  for_each = local.merged_no_key_attrs["eks_node_groups"]
+
+  input = {
+    cluster_name = "awesome-cluster"
+
+    # on aws_eks_node_group resource it will look like this:
+    # dynamic "launch_template" {
+    #   for_each = each.value.launch_template != null ? [each.value.launch_template] : []
+    #   content {
+    #     name    = launch_template.launch_template_key != null ? aws_launch_template.main[launch_template.value.launch_template_key].name : launch_template.name
+    #     version = launch_template.launch_template_key != null ? aws_launch_template.main[launch_template.value.launch_template_key].latest_version : launch_template.version
+    #   }
+    # }
+    launch_template = (each.value.launch_template != null ? {
+      name = (each.value.launch_template.launch_template_key != null ?
+        "${lookup(terraform_data.launch_template[each.value.launch_template.launch_template_key].output, "name", "")}${lookup(terraform_data.launch_template[each.value.launch_template.launch_template_key].output, "name_prefix", "")}"
+        : each.value.launch_template.name)
+      version = (each.value.launch_template.launch_template_key != null ?
+        length(jsonencode(terraform_data.launch_template[each.value.launch_template_key].output))
+        : each.value.launch_template.version)
+    } : null)
+
+    node_group_name        = local.merged_key_attrs["eks_node_groups"][each.key].node_group_name
+    node_group_name_prefix = local.merged_key_attrs["eks_node_groups"][each.key].node_group_name_prefix
+
+    node_role_arn          = each.value.node_role_arn
+    scaling_config         = each.value.scaling_config
+    subnet_ids             = each.value.subnet_ids
+    ami_type               = each.value.ami_type
+    capacity_type          = each.value.capacity_type
+    disk_size              = each.value.disk_size
+    force_update_version   = each.value.force_update_version
+    instance_types         = each.value.instance_types
+    labels                 = each.value.labels
+    release_version        = each.value.release_version
+
+    # on aws_eks_node_group resource it will look like this:
+    # dynamic "remote_access" {
+    #   for_each = each.value.remote_access != null ? [each.value.remote_access] : []
+    #   content {
+    #     ec2_ssh_key = remote_access.value.ec2_ssh_key
+    #     source_security_group_ids = remote_access.value.source_security_group_ids
+    #   }
+    # }
+    remote_access          = each.value.remote_access
+
+    tags                   = each.value.tags
+    taint                  = each.value.taint
+
+    # on aws_eks_node_group resource it will look like this:
+    # dynamic "update_config" {
+    #   for_each = each.value.update_config != null ? [each.value.update_config] : []
+    #   content {
+    #     max_unavailable = update_config.value.max_unavailable
+    #     max_unavailable_percentage = update_config.value.max_unavailable_percentage
+    #   }
+    # }
+    update_config          = each.value.update_config
+
+    version                = each.value.version
+  }
+}
+
+
+resource "terraform_data" "ami" {
+  for_each = {for key, value in local.merged_no_key_attrs["launch_templates"] : key => value.ami if value.ami != null}
+
+  input = {
+    owners             = each.value.owners
+    most_recent        = each.value.most_recent
+    executable_users   = each.value.executable_users
+    include_deprecated = each.value.include_deprecated
+    name_regex         = each.value.name_regex
+
+    # on aws_ami datasource it will look like this:
+    # dynamic "filter" {
+    #   for_each = each.value.filter != null ? each.value.filter : []
+    #   content {
+    #     name = filter.value.name
+    #     values = filter.value.values
+    #   }
+    # }
+    filter = each.value.filter
+  }
+}
+
+resource "terraform_data" "launch_template" {
+  for_each = local.merged_no_key_attrs["launch_templates"]
+
+  input = {
+    # on aws_launch_template resource it will look like this:
+    # image_id = each.value.aws_ami != null ? data.aws_ami.this[each.key].image_id : each.value.image_id
+    image_id = each.value.ami != null ? sha256(jsonencode(terraform_data.ami[each.key].output)) : each.value.image_id
+
+    name        = local.merged_key_attrs["launch_templates"][each.key].name
+    name_prefix = local.merged_key_attrs["launch_templates"][each.key].name_prefix
   }
 }
