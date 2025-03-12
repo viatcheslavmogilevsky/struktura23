@@ -168,10 +168,10 @@ resource "terraform_data" "eks_node_group" {
     # }
     launch_template = (each.value.launch_template != null ? {
       name = (each.value.launch_template.launch_template_key != null ?
-        "${lookup(terraform_data.launch_template[each.value.launch_template.launch_template_key].output, "name", "")}${lookup(terraform_data.launch_template[each.value.launch_template.launch_template_key].output, "name_prefix", "")}"
+        "${coalesce(terraform_data.launch_template[each.value.launch_template.launch_template_key].output["name"], "_")}${coalesce(terraform_data.launch_template[each.value.launch_template.launch_template_key].output["name_prefix"], "_")}"
         : each.value.launch_template.name)
       version = (each.value.launch_template.launch_template_key != null ?
-        length(jsonencode(terraform_data.launch_template[each.value.launch_template_key].output))
+        length(jsonencode(terraform_data.launch_template[each.value.launch_template.launch_template_key].output))
         : each.value.launch_template.version)
     } : null)
 
@@ -249,5 +249,52 @@ resource "terraform_data" "launch_template" {
 
     name        = local.merged_key_attrs["launch_templates"][each.key].name
     name_prefix = local.merged_key_attrs["launch_templates"][each.key].name_prefix
+
+    ebs_optimized          = each.value.ebs_optimized
+    instance_type          = each.value.instance_type
+    key_name               = each.value.key_name
+    vpc_security_group_ids = each.value.vpc_security_group_ids
+
+    # 0..N blocks:
+    # block_device_mappings
+    # elastic_gpu_specifications
+    # license_specification
+    # network_interfaces
+    # tag_specifications
+
+    # 0..1 blocks:
+    # capacity_reservation_specification
+    # cpu_options
+    # credit_specification
+    # elastic_inference_accelerator
+    # enclave_options
+    # hibernation_options
+    # iam_instance_profile
+    # instance_market_options
+    # instance_requirements
+    # maintenance_options
+    # metadata_options
+    # monitoring
+    # placement
+    # private_dns_name_options
+
+    # on aws_launch_template resource it will look like this:
+    # dynamic "tag_specifications" {
+    #   for_each = each.value.tag_specifications != null ? each.value.tag_specifications : []
+    #   content {
+    #     resource_type = tag_specifications.value.resource_type
+    #     tags          = tag_specifications.value.tags
+    #   }
+    # }
+    tag_specifications = each.value.tag_specifications
+
+    # on aws_launch_template resource it will look like this:
+    # dynamic "monitoring" {
+    #   for_each = each.value.monitoring != null ? [each.value.monitoring] : []
+    #   content {
+    #     enabled = monitoring.value.enabled
+    #   }
+    # }
+    monitoring = each.value.monitoring
   }
 }
