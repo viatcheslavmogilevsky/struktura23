@@ -44,10 +44,19 @@ launch_templates = {
 }
 
 eks_node_groups = {
+  "_common" = {
+    "node_role_arn" = "abc123"
+  },
   "main" = {
-    node_group_name = "main"
     launch_template = {
       launch_template_key = "main"
+    }
+  }
+  "extra" = {
+    use_key_as = "node_group_name_prefix"
+    launch_template = {
+      name = "additional"
+      version = "10"
     }
   }
 }
