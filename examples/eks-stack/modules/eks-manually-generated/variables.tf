@@ -102,7 +102,9 @@ variable "iam_openid_connect_provider" {
 
 variable "eks_addons" {
   type = map(object({
-    enabled = optional(bool, true)
+    enabled          = optional(bool, true)
+    use_key_as       = optional(string)
+    customize_common = optional(map(string), {})
 
     resolve_conflicts_on_create = optional(string)
     resolve_conflicts_on_update = optional(string)
@@ -111,70 +113,141 @@ variable "eks_addons" {
     tags                        = optional(map(string))
     preserve                    = optional(bool)
     service_account_role_arn    = optional(string)
-
-    merge_common = optional(list(string), [])
   }))
 
   default = {}
+
+  validation {
+    condition = alltrue([
+      for key, value in var.eks_addons : alltrue([
+        for customize_type in values(lookup(value, "customize_common", {})) : contains([
+          "omit",
+          "merge",
+          "append",
+          "prepend",
+          "default",
+        ], customize_type)
+      ])
+    ])
+
+    error_message = "At least one of var.eks_addons has non-valid customization type."
+  }
+
+  validation {
+    condition = alltrue([
+      for key, value in var.eks_addons : contains(["addon_name"], coalesce(value.use_key_as, "addon_name"))
+    ])
+
+    error_message = "At least one of var.eks_addons has non-valid value of use_key_as."
+  }
+
+  validation {
+    condition = alltrue([
+      for key, value in var.eks_addons : lookup(value, "enabled", true) == true if key == "_common"
+    ])
+
+    error_message = "The value of var.eks_addons[\"_common\"].enabled is non-default."
+  }
+
+  validation {
+    condition = alltrue([
+      for key, value in var.eks_addons : length(lookup(value, "customize_common", {})) == 0 if key == "_common"
+    ])
+
+    error_message = "The value of var.eks_addons[\"_common\"].customize_common is non-default."
+  }
 }
 
 # eks_node_group
 
-# use preconditions?
-# https://developer.hashicorp.com/terraform/language/expressions/custom-conditions#preconditions-and-postconditions
-
 variable "eks_node_groups" {
   type = map(object({
-    enabled = optional(bool, true)
-    use_key_as = optional(string, "node_group_name_prefix")
+    enabled    = optional(bool, true)
+    use_key_as = optional(string)
+    customize_common = optional(map(string), {})
 
     node_role_arn = optional(string)
     scaling_config = optional(object({
       desired_size = number
-      max_size = number
-      min_size = number
+      max_size     = number
+      min_size     = number
     }))
     subnet_ids = optional(list(string))
 
-    ami_type = optional(string)
-    capacity_type = optional(string)
-    disk_size = optional(number)
+    ami_type             = optional(string)
+    capacity_type        = optional(string)
+    disk_size            = optional(number)
     force_update_version = optional(bool)
-    instance_types = optional(list(string))
-    labels = optional(map(string))
+    instance_types       = optional(list(string))
+    labels               = optional(map(string))
     launch_template = optional(object({
       # id = optional(string) - name is enforced
-      name = optional(string)
-      version = optional(string) # because it is enforced
+      name                = optional(string)
+      version             = optional(string) # because it is enforced
       launch_template_key = optional(string) # belongs_to
     }))
     release_version = optional(string)
     remote_access = optional(object({
-      ec2_ssh_key = optional(string)
+      ec2_ssh_key               = optional(string)
       source_security_group_ids = optional(list(string))
     }))
     tags = optional(map(string))
     taint = optional(set(object({
-      key = string
-      value = optional(string)
+      key    = string
+      value  = optional(string)
       effect = optional(string)
     })))
     update_config = optional(object({
-      max_unavailable = optional(number)
+      max_unavailable            = optional(number)
       max_unavailable_percentage = optional(number)
     }))
     version = optional(string)
-
-    # override_subnet_ids = optional(bool, false)
-    # override_instance_types = optional(bool, false)
-    # override_taint = optional(bool, false)
-    # override_labels = optional(bool, false)
-    # override_tags = optional(bool, false)
-    concat_common = optional(list(string), [])
-    merge_common = optional(list(string), [])
   }))
 
   default = {}
+
+  validation {
+    condition = alltrue([
+      for key, value in var.eks_node_groups : alltrue([
+        for customize_type in values(lookup(value, "customize_common", {})) : contains([
+          "omit",
+          "merge",
+          "append",
+          "prepend",
+          "default",
+        ], customize_type)
+      ])
+    ])
+
+    error_message = "At least one of var.eks_node_groups has non-valid customization type."
+  }
+
+  validation {
+    condition = alltrue([
+      for key, value in var.eks_node_groups : contains([
+        "node_group_name",
+        "node_group_name_prefix",
+      ], coalesce(value.use_key_as, "node_group_name"))
+    ])
+
+    error_message = "At least one of var.eks_node_groups has non-valid value of use_key_as."
+  }
+
+  validation {
+    condition = alltrue([
+      for key, value in var.eks_node_groups : lookup(value, "enabled", true) == true if key == "_common"
+    ])
+
+    error_message = "The value of var.eks_node_groups[\"_common\"].enabled is non-default."
+  }
+
+  validation {
+    condition = alltrue([
+      for key, value in var.eks_node_groups : length(lookup(value, "customize_common", {})) == 0 if key == "_common"
+    ])
+
+    error_message = "The value of var.eks_node_groups[\"_common\"].customize_common is non-default."
+  }
 }
 
 variable "launch_templates" {

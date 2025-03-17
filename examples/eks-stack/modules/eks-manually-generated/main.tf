@@ -1,12 +1,12 @@
-locals {
-  launch_templates = {
-    for k, v in var.launch_templates : k => merge(var.launch_templates_common, v) if v.enabled
-  }
+# locals {
+#   launch_templates = {
+#     for k, v in var.launch_templates : k => merge(var.launch_templates_common, v) if v.enabled
+#   }
 
-  amis = {
-    for k, v in local.launch_templates : k => v.ami if v.ami != null
-  }
-}
+#   amis = {
+#     for k, v in local.launch_templates : k => v.ami if v.ami != null
+#   }
+# }
 
 
 # https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/eks_cluster
@@ -111,17 +111,15 @@ resource "aws_iam_openid_connect_provider" "this" {
 # https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/eks/addon.go
 
 resource "aws_eks_addon" "this" {
-  for_each = {
-    for k, v in var.eks_addons : k => merge(var.eks_addons["_common"], v) if v.enabled && k != "_common"
-  }
+  for_each = local.merged_no_key_attrs["eks_addons"]
 
   cluster_name                = aws_eks_cluster.this.id
-  addon_name                  = each.key
+  addon_name                  = local.merged_key_attrs["eks_addons"][each.key].addon_name
   resolve_conflicts_on_create = each.value.resolve_conflicts_on_create
   resolve_conflicts_on_update = each.value.resolve_conflicts_on_update
   addon_version               = each.value.addon_version
   configuration_values        = each.value.configuration_values
-  tags                        = contains(var.eks_addons[each.key].merge_common, "tags") && var.eks_addons["_common"].tags != null ? merge(var.eks_addons["_common"], var.eks_addons[each.key].tags) : var.eks_addons[each.key].tags
+  tags                        = each.value.tags
   preserve                    = each.value.preserve
   service_account_role_arn    = each.value.service_account_role_arn
 
@@ -135,9 +133,7 @@ resource "aws_eks_addon" "this" {
 
 
 resource "aws_eks_node_group" "this" {
-  for_each = {
-    for k, v in var.eks_node_groups : k => merge(var.eks_node_groups_common, v) if v.enabled
-  }
+  for_each = local.merged_no_key_attrs["eks_node_groups"]
 
   cluster_name = aws_eks_cluster.this.id
 
