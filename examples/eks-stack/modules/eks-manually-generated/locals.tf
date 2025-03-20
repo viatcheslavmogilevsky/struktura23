@@ -44,55 +44,55 @@ locals {
         "version",
       ]
     },
-    # launch_templates = {
-    #   input = var.launch_templates
-    #   set_attrs = [
-    #     "license_specification",
-    #     "security_group_names",
-    #     "vpc_security_group_ids",
-    #   ]
-    #   key_attrs = [
-    #     "name",
-    #     "name_prefix",
-    #   ]
-    #   no_key_attrs = [
-    #     "ami",
-    #     "block_device_mappings",
-    #     "capacity_reservation_specification",
-    #     "cpu_options",
-    #     "credit_specification",
-    #     "default_version",
-    #     "description",
-    #     "disable_api_stop",
-    #     "disable_api_termination",
-    #     "ebs_optimized",
-    #     "elastic_gpu_specifications",
-    #     "elastic_inference_accelerator",
-    #     "enclave_options",
-    #     "hibernation_options",
-    #     "iam_instance_profile",
-    #     "image_id",
-    #     "instance_initiated_shutdown_behavior",
-    #     "instance_market_options",
-    #     "instance_requirements",
-    #     "instance_type",
-    #     "kernel_id",
-    #     "key_name",
-    #     "license_specification",
-    #     "maintenance_options",
-    #     "metadata_options",
-    #     "monitoring",
-    #     "network_interfaces",
-    #     "placement",
-    #     "private_dns_name_options",
-    #     "ram_disk_id",
-    #     "security_group_names",
-    #     "tag_specifications",
-    #     "tags",
-    #     "update_default_version",
-    #     "vpc_security_group_ids",
-    #   ]
-    # },
+    launch_templates = {
+      input = var.launch_templates
+      set_attrs = [
+        "license_specification",
+        "security_group_names",
+        "vpc_security_group_ids",
+      ]
+      key_attrs = [
+        "name",
+        "name_prefix",
+      ]
+      no_key_attrs = [
+        "ami",
+        "block_device_mappings",
+        "capacity_reservation_specification",
+        "cpu_options",
+        "credit_specification",
+        "default_version",
+        "description",
+        "disable_api_stop",
+        "disable_api_termination",
+        "ebs_optimized",
+        "elastic_gpu_specifications",
+        "elastic_inference_accelerator",
+        "enclave_options",
+        "hibernation_options",
+        "iam_instance_profile",
+        "image_id",
+        "instance_initiated_shutdown_behavior",
+        "instance_market_options",
+        "instance_requirements",
+        "instance_type",
+        "kernel_id",
+        "key_name",
+        "license_specification",
+        "maintenance_options",
+        "metadata_options",
+        "monitoring",
+        "network_interfaces",
+        "placement",
+        "private_dns_name_options",
+        "ram_disk_id",
+        "security_group_names",
+        "tag_specifications",
+        "tags",
+        "update_default_version",
+        "vpc_security_group_ids",
+      ]
+    },
   }
 
   for_each_common = {

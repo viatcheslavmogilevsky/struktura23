@@ -140,9 +140,20 @@ resource "aws_eks_node_group" "this" {
   # ..name_prefix can be found from ..name
   # suffix example: 20241118090004730600000001
 
-  node_group_name        = each.value.use_key_as == "node_group_name" ? each.key : null
-  node_group_name_prefix = each.value.use_key_as == "node_group_name_prefix" ? each.key : null
+  node_group_name        = local.merged_key_attrs["eks_node_groups"][each.key].node_group_name
+  node_group_name_prefix = local.merged_key_attrs["eks_node_groups"][each.key].node_group_name_prefix
   node_role_arn          = each.value.node_role_arn
+  subnet_ids             = each.value.subnet_ids
+  ami_type               = each.value.ami_type
+  capacity_type          = each.value.capacity_type
+  disk_size              = each.value.disk_size
+  force_update_version   = each.value.force_update_version
+  instance_types         = each.value.instance_types
+  labels                 = each.value.labels
+  release_version        = each.value.release_version
+  tags                   = each.value.tags
+  taint                  = each.value.taint
+  version                = each.value.version
 
   scaling_config {
     desired_size = try(each.value.scaling_config.desired_size)
@@ -150,26 +161,13 @@ resource "aws_eks_node_group" "this" {
     min_size     = try(each.value.scaling_config.min_size)
   }
 
-  subnet_ids = each.value.override_subnet_ids ? var.eks_node_groups[each.key].subnet_ids : concat(coalesce(var.eks_node_groups[each.key].subnet_ids, []), coalesce(var.eks_node_groups_common.subnet_ids, []))
-
-
-
-  ami_type = each.value.ami_type
-  capacity_type = each.value.capacity_type
-  disk_size = each.value.disk_size
-  force_update_version = each.value.force_update_version
-  instance_types  = each.value.instance_types != null ? concat(each.value.instance_types, each.value.additional_instance_types) : null
-  labels          = each.value.labels != null ? merge(each.value.labels, each.value.additional_labels) : null
-
   dynamic "launch_template" {
     for_each = each.value.launch_template != null ? [each.value.launch_template] : []
     content {
-      name    = launch_template.value.name != null ? launch_template.value.name : (launch_template.value.launch_template_key != null ? aws_launch_template.this[launch_template.value.launch_template_key] : null)
-      version = launch_template.value.version != null ? launch_template.value.version : (launch_template.value.launch_template_key != null ? aws_launch_template.this[launch_template.value.launch_template_key].latest_version : null)
+      name    = launch_template.launch_template_key != null ? aws_launch_template.main[launch_template.value.launch_template_key].name : launch_template.name
+      version = launch_template.launch_template_key != null ? aws_launch_template.main[launch_template.value.launch_template_key].latest_version : launch_template.version
     }
   }
-
-  release_version = each.value.release_version
 
   dynamic "remote_access" {
     for_each = each.value.remote_access != null ? [each.value.remote_access] : []
@@ -179,9 +177,6 @@ resource "aws_eks_node_group" "this" {
     }
   }
 
-  tags = each.value.tags != null ? merge(each.value.tags, each.value.additional_tags) : null
-  taint = each.value.taint != null ? toset(concat(each.value.taint, each.value.additional_taint)) : null
-
   dynamic "update_config" {
     for_each = each.value.update_config != null ? [each.value.update_config] : []
     content {
@@ -189,8 +184,6 @@ resource "aws_eks_node_group" "this" {
       max_unavailable_percentage = update_config.value.max_unavailable_percentage
     }
   }
-
-  version = each.value.version
 
   lifecycle {
     ignore_changes = [scaling_config[0].desired_size]
@@ -201,7 +194,7 @@ resource "aws_eks_node_group" "this" {
 # https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/ec2/ec2_ami_data_source.go
 
 data "aws_ami" "this" {
-  for_each = local.amis
+  for_each = {for key, value in local.merged_no_key_attrs["launch_templates"] : key => value.ami if value.ami != null}
 
   owners      = each.value.owners
   most_recent = each.value.most_recent
@@ -209,6 +202,7 @@ data "aws_ami" "this" {
   include_deprecated = each.value.include_deprecated
   name_regex  =  each.value.name_regex
 
+  # IAMHERE: what's dynamic block internal structure in statefile?
   dynamic "filter" {
     for_each = each.value.filter != null ? each.value.filter : []
     content {
@@ -222,7 +216,7 @@ data "aws_ami" "this" {
 # https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/ec2/ec2_launch_template.go
 
 resource "aws_launch_template" "this" {
-  for_each = local.launch_templates
+  for_each = local.merged_no_key_attrs["eks_node_groups"]
   # WIP
 }
 
