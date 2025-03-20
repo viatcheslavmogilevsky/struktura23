@@ -1,14 +1,3 @@
-# locals {
-#   launch_templates = {
-#     for k, v in var.launch_templates : k => merge(var.launch_templates_common, v) if v.enabled
-#   }
-
-#   amis = {
-#     for k, v in local.launch_templates : k => v.ami if v.ami != null
-#   }
-# }
-
-
 # https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/resources/eks_cluster
 # https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/eks/cluster.go
 
@@ -216,8 +205,81 @@ data "aws_ami" "this" {
 # https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/ec2/ec2_launch_template.go
 
 resource "aws_launch_template" "this" {
-  for_each = local.merged_no_key_attrs["eks_node_groups"]
-  # WIP
+  for_each = local.merged_no_key_attrs["launch_templates"]
+
+  name        = local.merged_key_attrs["launch_templates"][each.key].name
+  name_prefix = local.merged_key_attrs["launch_templates"][each.key].name_prefix
+  image_id    = each.value.aws_ami != null ? data.aws_ami.this[each.key].image_id : each.value.image_id
+
+
+    # 0..N blocks:
+    # block_device_mappings
+    # elastic_gpu_specifications
+    # license_specification
+    # network_interfaces
+    # tag_specifications
+
+    # 0..1 blocks:
+    # capacity_reservation_specification
+    # cpu_options
+    # credit_specification
+    # elastic_inference_accelerator
+    # enclave_options
+    # hibernation_options
+    # iam_instance_profile
+    # instance_market_options
+    # instance_requirements
+    # maintenance_options
+    # metadata_options
+    # monitoring
+    # placement
+    # private_dns_name_options
+
+      # set_attrs = [
+      #   "license_specification",
+      #   "security_group_names",
+      #   "vpc_security_group_ids",
+      # ]
+      # key_attrs = [
+      #   "name",
+      #   "name_prefix",
+      # ]
+      # no_key_attrs = [
+      #   "ami",
+      #   "block_device_mappings",
+      #   "capacity_reservation_specification",
+      #   "cpu_options",
+      #   "credit_specification",
+      #   "default_version",
+      #   "description",
+      #   "disable_api_stop",
+      #   "disable_api_termination",
+      #   "ebs_optimized",
+      #   "elastic_gpu_specifications",
+      #   "elastic_inference_accelerator",
+      #   "enclave_options",
+      #   "hibernation_options",
+      #   "iam_instance_profile",
+      #   "image_id",
+      #   "instance_initiated_shutdown_behavior",
+      #   "instance_market_options",
+      #   "instance_requirements",
+      #   "instance_type",
+      #   "kernel_id",
+      #   "key_name",
+      #   "license_specification",
+      #   "maintenance_options",
+      #   "metadata_options",
+      #   "monitoring",
+      #   "network_interfaces",
+      #   "placement",
+      #   "private_dns_name_options",
+      #   "ram_disk_id",
+      #   "security_group_names",
+      #   "tag_specifications",
+      #   "tags",
+      #   "update_default_version",
+      #   "vpc_security_group_ids",
 }
 
 # resource "aws_launch_template" "this" {
