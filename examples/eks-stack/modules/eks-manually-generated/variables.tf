@@ -162,8 +162,8 @@ variable "eks_addons" {
 
 variable "eks_node_groups" {
   type = map(object({
-    enabled    = optional(bool, true)
-    use_key_as = optional(string)
+    enabled          = optional(bool, true)
+    use_key_as       = optional(string)
     customize_common = optional(map(string), {})
 
     node_role_arn = optional(string)
@@ -254,8 +254,8 @@ variable "eks_node_groups" {
 
 variable "launch_templates" {
   type = map(object({
-    enabled    = optional(bool, true)
-    use_key_as = optional(string)
+    enabled          = optional(bool, true)
+    use_key_as       = optional(string)
     customize_common = optional(map(string), {})
 
 

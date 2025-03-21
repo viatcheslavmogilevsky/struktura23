@@ -1,7 +1,7 @@
 locals {
   for_each_input = {
     eks_addons = {
-      input = var.eks_addons
+      input     = var.eks_addons
       set_attrs = []
       key_attrs = [
         "addon_name",
@@ -97,12 +97,12 @@ locals {
 
   for_each_common = {
     for input_key, input_value in local.for_each_input : input_key => lookup(input_value["input"], "_common", merge(
-    {
-      enabled = true
-      use_key_as = null
-      customize_common = {}
-    }, {
-      for attr_name in input_value["no_key_attrs"] : attr_name => null
+      {
+        enabled          = true
+        use_key_as       = null
+        customize_common = {}
+        }, {
+        for attr_name in input_value["no_key_attrs"] : attr_name => null
     }))
   }
 
@@ -128,7 +128,7 @@ locals {
     for input_key, input_value in local.for_each_input : input_key => {
       for resource_key, resource_value in input_value["input"] : resource_key => {
         for attr_name in local.for_each_input[input_key]["key_attrs"] : attr_name => (coalesce(resource_value["use_key_as"], local.for_each_common[input_key]["use_key_as"], local.for_each_input[input_key]["key_attrs"][0]) == attr_name ?
-        resource_key
+          resource_key
         : null)
       } if resource_value.enabled && resource_key != "_common"
     }

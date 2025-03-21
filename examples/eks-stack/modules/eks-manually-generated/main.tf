@@ -161,7 +161,7 @@ resource "aws_eks_node_group" "this" {
   dynamic "remote_access" {
     for_each = each.value.remote_access != null ? [each.value.remote_access] : []
     content {
-      ec2_ssh_key = remote_access.value.ec2_ssh_key
+      ec2_ssh_key               = remote_access.value.ec2_ssh_key
       source_security_group_ids = remote_access.value.source_security_group_ids
     }
   }
@@ -169,7 +169,7 @@ resource "aws_eks_node_group" "this" {
   dynamic "update_config" {
     for_each = each.value.update_config != null ? [each.value.update_config] : []
     content {
-      max_unavailable = update_config.value.max_unavailable
+      max_unavailable            = update_config.value.max_unavailable
       max_unavailable_percentage = update_config.value.max_unavailable_percentage
     }
   }
@@ -183,19 +183,19 @@ resource "aws_eks_node_group" "this" {
 # https://github.com/hashicorp/terraform-provider-aws/blob/v5.72.1/internal/service/ec2/ec2_ami_data_source.go
 
 data "aws_ami" "this" {
-  for_each = {for key, value in local.merged_no_key_attrs["launch_templates"] : key => value.ami if value.ami != null}
+  for_each = { for key, value in local.merged_no_key_attrs["launch_templates"] : key => value.ami if value.ami != null }
 
-  owners      = each.value.owners
-  most_recent = each.value.most_recent
-  executable_users = each.value.executable_users
+  owners             = each.value.owners
+  most_recent        = each.value.most_recent
+  executable_users   = each.value.executable_users
   include_deprecated = each.value.include_deprecated
-  name_regex  =  each.value.name_regex
+  name_regex         = each.value.name_regex
 
   # IAMHERE: what's dynamic block internal structure in statefile?
   dynamic "filter" {
     for_each = each.value.filter != null ? each.value.filter : []
     content {
-      name = filter.value.name
+      name   = filter.value.name
       values = filter.value.values
     }
   }
