@@ -102,15 +102,20 @@ resource "aws_iam_openid_connect_provider" "this" {
 resource "aws_eks_addon" "this" {
   for_each = local.merged_no_key_attrs["eks_addons"]
 
-  cluster_name                = aws_eks_cluster.this.id
-  addon_name                  = local.merged_key_attrs["eks_addons"][each.key].addon_name
-  resolve_conflicts_on_create = each.value.resolve_conflicts_on_create
-  resolve_conflicts_on_update = each.value.resolve_conflicts_on_update
-  addon_version               = each.value.addon_version
-  configuration_values        = each.value.configuration_values
-  tags                        = each.value.tags
-  preserve                    = each.value.preserve
-  service_account_role_arn    = each.value.service_account_role_arn
+  cluster_name = aws_eks_cluster.this.id
+  addon_name   = local.merged_key_attrs["eks_addons"][each.key].addon_name
+
+  # enforced:
+  # resolve_conflicts_on_create = each.value.resolve_conflicts_on_create
+  # resolve_conflicts_on_update = each.value.resolve_conflicts_on_update
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "OVERWRITE"
+
+  addon_version            = each.value.addon_version
+  configuration_values     = each.value.configuration_values
+  tags                     = each.value.tags
+  preserve                 = each.value.preserve
+  service_account_role_arn = each.value.service_account_role_arn
 
   depends_on = [
     aws_iam_openid_connect_provider.this,

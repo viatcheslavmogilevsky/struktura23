@@ -15,7 +15,7 @@ variable "eks_cluster_role_arn" {
 
 variable "eks_cluster_enabled_cluster_log_types" {
   type    = list(string)
-  default = null
+  default = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 }
 
 variable "eks_cluster_tags" {
@@ -28,7 +28,7 @@ variable "eks_cluster_vpc_config" {
     subnet_ids              = list(string)
     endpoint_private_access = optional(bool)
     endpoint_public_access  = optional(bool)
-    public_access_cidrs     = optional(list(string))
+    public_access_cidrs     = optional(list(string), ["0.0.0.0/0"])
     security_group_ids      = optional(list(string))
   })
 }
@@ -106,13 +106,14 @@ variable "eks_addons" {
     use_key_as       = optional(string)
     customize_common = optional(map(string), {})
 
-    resolve_conflicts_on_create = optional(string)
-    resolve_conflicts_on_update = optional(string)
-    addon_version               = optional(string)
-    configuration_values        = optional(string)
-    tags                        = optional(map(string))
-    preserve                    = optional(bool)
-    service_account_role_arn    = optional(string)
+    # enforced:
+    # resolve_conflicts_on_create = optional(string)
+    # resolve_conflicts_on_update = optional(string)
+    addon_version            = optional(string)
+    configuration_values     = optional(string)
+    tags                     = optional(map(string))
+    preserve                 = optional(bool)
+    service_account_role_arn = optional(string)
   }))
 
   default = {}
