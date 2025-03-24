@@ -51,6 +51,8 @@ module "vpc" {
 }
 
 module "eks" {
+  # =============== crafted module ===============
+
   # source = "../modules/eks"
   # # source = "../modules/eks-json"
 
@@ -64,36 +66,6 @@ module "eks" {
   # )
 
   # eks_security_group_ids = []
-
-  source = "../modules/eks-manually-generated"
-
-  eks_cluster_name     = "test"
-  eks_cluster_role_arn = module.eks_cluster_iam_role.iam_role_arn
-  eks_cluster_tags     = {}
-  eks_cluster_version  = "1.29"
-  eks_cluster_vpc_config = {
-    # NOTE: AZ-set cannot be changed
-    subnet_ids = flatten(
-      [for az in ["us-west-2a", "us-west-2b"] : [module.vpc.public_subnet_az_mapping[az], module.vpc.private_subnet_az_mapping[az]]]
-    )
-  }
-
-  iam_openid_connect_provider = {
-    client_id_list = ["sts.amazonaws.com"]
-  }
-
-  eks_addons = {
-    "vpc-cni" = {
-      enabled = true
-    },
-    "kube-proxy" = {
-      enabled = true
-    },
-    "coredns" = {
-      enabled = true
-    },
-  }
-
 
   # eks_node_role_arn                   = module.ec2_instance_worker_iam_role.iam_role_arn
   # eks_node_group_name                 = "main"
@@ -132,4 +104,95 @@ module "eks" {
   # ]
 
   # eks_node_group_ssh_key = null
+
+  # =============== manually generated module ===============
+
+  source = "../modules/eks-manually-generated"
+
+  eks_cluster_name     = "test"
+  eks_cluster_role_arn = module.eks_cluster_iam_role.iam_role_arn
+  eks_cluster_tags     = {}
+  eks_cluster_version  = "1.29"
+  eks_cluster_vpc_config = {
+    # NOTE: AZ-set cannot be changed
+    subnet_ids = flatten(
+      [for az in ["us-west-2a", "us-west-2b"] : [module.vpc.public_subnet_az_mapping[az], module.vpc.private_subnet_az_mapping[az]]]
+    )
+  }
+
+  iam_openid_connect_provider = {
+    client_id_list = ["sts.amazonaws.com"]
+  }
+
+  eks_addons = {
+    "vpc-cni" = {
+      enabled = true
+    },
+    "kube-proxy" = {
+      enabled = true
+    },
+    "coredns" = {
+      enabled = true
+    },
+  }
+
+  eks_node_groups = {
+    "main" = {
+      node_role_arn = module.ec2_instance_worker_iam_role.iam_role_arn
+
+      scaling_config = {
+        desired_size = 2
+        max_size     = 3
+        min_size     = 2
+      }
+
+      subnet_ids    = values(module.vpc.private_subnet_az_mapping)
+      labels        = {}
+      capacity_type = "SPOT"
+
+      launch_template = {
+        launch_template_key = "main"
+      }
+
+      instance_types = [
+        "a1.medium",
+        "a1.large",
+        "c6g.medium",
+        "c6g.large",
+        "c6gd.medium",
+        "c6gd.large",
+        "c6gn.medium",
+        "c6gn.large",
+        "c7g.medium",
+        "c7g.large",
+        "c7gd.medium",
+        "c7gd.large",
+        "c7gn.medium",
+        "c7gn.large",
+        "c8g.medium",
+        "c8g.large",
+        "m6g.medium",
+        "m6gd.medium",
+        "m7g.medium",
+        "m7gd.medium",
+        "m8g.medium",
+      ]
+    }
+  }
+
+  launch_templates = {
+    "main" = {
+      use_key_as    = "name_prefix"
+      ebs_optimized = true
+
+      ami = {
+        most_recent = true
+        name_regex  = "amazon-eks-arm64-node-1.29-v*"
+        owners      = ["amazon"]
+      }
+
+      instance_type = null
+      key_name      = null
+    }
+  }
 }

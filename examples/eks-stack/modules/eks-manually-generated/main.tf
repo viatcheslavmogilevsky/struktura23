@@ -141,7 +141,6 @@ resource "aws_eks_node_group" "this" {
   labels                 = each.value.labels
   release_version        = each.value.release_version
   tags                   = each.value.tags
-  taint                  = each.value.taint
   version                = each.value.version
 
   scaling_config {
@@ -153,8 +152,8 @@ resource "aws_eks_node_group" "this" {
   dynamic "launch_template" {
     for_each = each.value.launch_template != null ? [each.value.launch_template] : []
     content {
-      name    = launch_template.launch_template_key != null ? aws_launch_template.main[launch_template.value.launch_template_key].name : launch_template.name
-      version = launch_template.launch_template_key != null ? aws_launch_template.main[launch_template.value.launch_template_key].latest_version : launch_template.version
+      name    = launch_template.value.launch_template_key != null ? aws_launch_template.this[launch_template.value.launch_template_key].name : launch_template.value.name
+      version = launch_template.value.launch_template_key != null ? aws_launch_template.this[launch_template.value.launch_template_key].latest_version : launch_template.value.version
     }
   }
 
@@ -163,6 +162,15 @@ resource "aws_eks_node_group" "this" {
     content {
       ec2_ssh_key               = remote_access.value.ec2_ssh_key
       source_security_group_ids = remote_access.value.source_security_group_ids
+    }
+  }
+
+  dynamic "taint" {
+    for_each = each.value.taint != null ? each.value.taint : []
+    content {
+      key    = taint.value.key
+      value  = taint.value.value
+      effect = taint.value.effect
     }
   }
 
@@ -209,7 +217,7 @@ resource "aws_launch_template" "this" {
 
   name        = local.merged_key_attrs["launch_templates"][each.key].name
   name_prefix = local.merged_key_attrs["launch_templates"][each.key].name_prefix
-  image_id    = each.value.aws_ami != null ? data.aws_ami.this[each.key].image_id : each.value.image_id
+  image_id    = each.value.ami != null ? data.aws_ami.this[each.key].image_id : each.value.image_id
 
   lifecycle {
     ignore_changes = [

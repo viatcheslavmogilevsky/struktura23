@@ -20,10 +20,10 @@ To initialize and run opentofu, please run:
 
 ```bash
 # export AWS_PROFILE=example-aws-profile
-cd ./root-module
-tofu init --backend-config=backend.tfvars
-tofu plan
-tofu apply
+tofu -chdir=root-module init --backend-config=backend.tfvars
+tofu -chdir=root-module validate
+tofu -chdir=root-module plan
+tofu -chdir=root-module apply
 ```
 
 ### How to use k8s cluster
@@ -40,18 +40,15 @@ KUBECONFIG=$(pwd)/kubeconfig.yaml k9s -A
 
 ```bash
 # export AWS_PROFILE=example-aws-profile
-cd ./root-module
-tofu destroy
+tofu -chdir=root-module destroy
 ```
 
 ### Miscellaneous
 
 ```bash
 # export AWS_PROFILE=example-aws-profile
-cd ./root-module
-
-tofu init --backend-config=backend.tfvars
-tofu plan --out binary-plan
-tofu show -json binary-plan > plan.json
-tofu show -no-color binary-plan > plan.txt 2>&1
+tofu -chdir=root-module init --backend-config=backend.tfvars
+tofu -chdir=root-module plan --out binary.tfplan
+tofu -chdir=root-module show -json binary.tfplan > plan.tfplan.json
+tofu -chdir=root-module show -no-color binary.tfplan > plan.tfplan.txt 2>&1
 ```

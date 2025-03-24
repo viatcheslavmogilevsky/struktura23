@@ -195,7 +195,7 @@ variable "eks_node_groups" {
     taint = optional(set(object({
       key    = string
       value  = optional(string)
-      effect = optional(string)
+      effect = string
     })))
     update_config = optional(object({
       max_unavailable            = optional(number)
