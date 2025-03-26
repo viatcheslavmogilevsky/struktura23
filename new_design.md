@@ -15,6 +15,9 @@ str23 class -> opentofu code (module)
 ```rb
 class ExampleStruktura < Struktura23::ModuleSpec
   eks_cluster = module_itself.has_one(:aws_eks_cluster).identify_by(:name)
+  eks_cluster.default(:enabled_cluster_log_types, ["api", "audit", "authenticator", "controllerManager", "scheduler"])
+  eks_cluster.default(:bootstrap_self_managed_addons, true)
+  eks_cluster.override_block(:vpc_config).default(:public_access_cidrs, ["0.0.0.0/0"])
 
   connect_provider = eks_cluster.has_optional(:aws_iam_openid_connect_provider).where(url: eks_cluster.resolved.identity[0].oidc[0].issuer)
   tls_certificate = connect_provider.has_one_data(:tls_certificate).where(url: eks_cluster.resolved.identity[0].oidc[0].issuer)
@@ -24,6 +27,9 @@ class ExampleStruktura < Struktura23::ModuleSpec
   eks_addons.enforce(depends_on: [connect_provider.meta])
 
   node_groups = eks_cluster.has_many(:aws_eks_node_group).where(cluster_name: eks_cluster.resolved.id).identify_by(:node_group_name)
+  node_groups.enforce(:resolve_conflicts_on_create, "OVERWRITE")
+  node_groups.enforce(:resolve_conflicts_on_update, "OVERWRITE")
+  node_groups.enforce(:lifecycle, ignore_changes: [node_groups.meta.scaling_config[0].desired_size])
 
   # _prefix attributes detected automatically, to specify behaviour use .has_prefix
   # provide block to specify how to recover prefix if standard way is not suitable
@@ -35,8 +41,6 @@ class ExampleStruktura < Struktura23::ModuleSpec
     .where(name: launch_template_blk.resolved.name)
     .identify_by(:name)
   launch_template_blk.enforce(version: launch_template.resolved.latest_version)
-
-  node_groups.enforce(:lifecycle, ignore_changes: [node_groups.meta.scaling_config[0].desired_size])
 
   ami = launch_template.has_optional_data(:aws_ami)
   launch_template.enforce(image_id: ami.resolved.image_id)
