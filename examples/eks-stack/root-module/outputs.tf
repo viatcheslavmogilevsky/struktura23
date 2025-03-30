@@ -84,6 +84,10 @@ output "iam_openid_connect_provider_tags_all" {
   value = module.eks.iam_openid_connect_provider_tags_all
 }
 
+output "iam_openid_connect_provider_id" {
+  value = module.eks.iam_openid_connect_provider_id
+}
+
 # eks_addon
 
 output "eks_addon_arn_map" {

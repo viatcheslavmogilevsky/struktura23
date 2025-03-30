@@ -57,7 +57,7 @@ output "eks_cluster_vpc_config" {
 }
 
 output "eks_cluster_id" {
-  value = aws_eks_cluster.this.id
+  value = lookup(aws_eks_cluster.this, "id", null)
 }
 
 # certificate
@@ -72,6 +72,7 @@ output "certificate_certificates" {
 
 # iam_openid_connect_provider
 
+## because it's enforced:
 output "iam_openid_connect_provider_thumbprint_list" {
   value = one(aws_iam_openid_connect_provider.this[*].thumbprint_list)
 }
@@ -84,34 +85,38 @@ output "iam_openid_connect_provider_tags_all" {
   value = one(aws_iam_openid_connect_provider.this[*].tags_all)
 }
 
+output "iam_openid_connect_provider_id" {
+  value = one([for elem in aws_iam_openid_connect_provider.this : lookup(elem, "id", null)])
+}
+
 # eks_addon
 
 output "eks_addon_arn_map" {
-  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].arn if v.enabled }
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].arn if v.enabled && k != "_common" }
 }
 
 output "eks_addon_id_map" {
-  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].id if v.enabled }
+  value = { for k, v in var.eks_addons : k => lookup(aws_eks_addon.this[k], "id", null) if v.enabled && k != "_common" }
 }
 
 output "eks_addon_created_at_map" {
-  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].created_at if v.enabled }
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].created_at if v.enabled && k != "_common" }
 }
 
 output "eks_addon_modified_at_map" {
-  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].modified_at if v.enabled }
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].modified_at if v.enabled && k != "_common" }
 }
 
 output "eks_addon_tags_all_map" {
-  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].tags_all if v.enabled }
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].tags_all if v.enabled && k != "_common" }
 }
 
 output "eks_addon_addon_version_map" {
-  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].addon_version if v.enabled }
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].addon_version if v.enabled && k != "_common" }
 }
 
 output "eks_addon_configuration_values_map" {
-  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].configuration_values if v.enabled }
+  value = { for k, v in var.eks_addons : k => aws_eks_addon.this[k].configuration_values if v.enabled && k != "_common" }
 }
 
 

@@ -298,3 +298,9 @@ resource "terraform_data" "launch_template" {
     monitoring = each.value.monitoring
   }
 }
+
+module "test" {
+  source = "./outputs-test-module"
+
+  for_each_key_val = local.merged_no_key_attrs["eks_addons"]
+}
