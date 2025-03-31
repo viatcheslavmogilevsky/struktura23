@@ -120,4 +120,16 @@ output "eks_addon_configuration_values_map" {
 }
 
 
-# WIP: node_groups, launch_templates, AMIs
+# WIP: node_groups
+
+output "eks_nodegroup_arn_map" {
+  value = { for k, v in var.eks_node_groups : k => aws_eks_node_group.this[k].arn if v.enabled && k != "_common" }
+}
+
+# WIP: launch_templates
+
+# TBD
+
+# WIP: AMIs
+
+# TBD
