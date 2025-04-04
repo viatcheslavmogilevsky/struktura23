@@ -23,13 +23,13 @@ output "count_resource_example_putout_safe" {
 }
 
 output "for_each_resource_example_output" {
-  value = { for k, v in var.for_each_key_val : k => terraform_data.for_each_resource_example[k].output }
+  value = { for k, v in terraform_data.for_each_resource_example : k => v.output }
 }
 
 output "for_each_resource_example_output_safe" {
-  value = { for k, v in var.for_each_key_val : k => lookup(terraform_data.for_each_resource_example[k], "output", null) }
+  value = { for k, v in terraform_data.for_each_resource_example : k => lookup(v, "output", null) }
 }
 
 output "for_each_resource_example_putout_safe" {
-  value = { for k, v in var.for_each_key_val : k => lookup(terraform_data.for_each_resource_example[k], "putout", null) }
+  value = { for k, v in terraform_data.for_each_resource_example : k => lookup(v, "putout", null) }
 }
