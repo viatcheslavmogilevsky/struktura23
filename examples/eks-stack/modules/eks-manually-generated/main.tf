@@ -131,6 +131,18 @@ resource "aws_eks_node_group" "this" {
 
   cluster_name = aws_eks_cluster.this.id
 
+  lifecycle {
+    ignore_changes = [scaling_config[0].desired_size]
+  }
+
+  dynamic "launch_template" {
+    for_each = each.value.launch_template != null ? [each.value.launch_template] : []
+    content {
+      name    = launch_template.value.launch_template_key != null ? aws_launch_template.this[launch_template.value.launch_template_key].name : launch_template.value.name
+      version = launch_template.value.launch_template_key != null ? aws_launch_template.this[launch_template.value.launch_template_key].latest_version : launch_template.value.version
+    }
+  }
+
   # ..name_prefix can be found from ..name
   # suffix example: 20241118090004730600000001
 
@@ -152,14 +164,6 @@ resource "aws_eks_node_group" "this" {
     desired_size = try(each.value.scaling_config.desired_size)
     max_size     = try(each.value.scaling_config.max_size)
     min_size     = try(each.value.scaling_config.min_size)
-  }
-
-  dynamic "launch_template" {
-    for_each = each.value.launch_template != null ? [each.value.launch_template] : []
-    content {
-      name    = launch_template.value.launch_template_key != null ? aws_launch_template.this[launch_template.value.launch_template_key].name : launch_template.value.name
-      version = launch_template.value.launch_template_key != null ? aws_launch_template.this[launch_template.value.launch_template_key].latest_version : launch_template.value.version
-    }
   }
 
   dynamic "remote_access" {
@@ -186,10 +190,6 @@ resource "aws_eks_node_group" "this" {
       max_unavailable_percentage = update_config.value.max_unavailable_percentage
     }
   }
-
-  lifecycle {
-    ignore_changes = [scaling_config[0].desired_size]
-  }
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/5.72.1/docs/data-sources/ami
@@ -204,7 +204,6 @@ data "aws_ami" "this" {
   include_deprecated = each.value.include_deprecated
   name_regex         = each.value.name_regex
 
-  # IAMHERE: what's dynamic block internal structure in statefile?
   dynamic "filter" {
     for_each = each.value.filter != null ? each.value.filter : []
     content {
