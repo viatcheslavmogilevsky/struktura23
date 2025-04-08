@@ -14,6 +14,11 @@ str23 class -> opentofu code (module)
 
 ```rb
 class ExampleEksClusterModule < Struktura23::ModuleSpec
+  require_provider(:opentofu, :aws, source: "hashicorp/aws", version: ">= 5.72.1")
+  require_provider(:opentofu, :tls, source: "hashicorp/tls", version: ">= 4.0.6")
+
+  # require_provider(:opentofu, :aws, source: "hashicorp/aws", version: ">= 5.68.0").use_version("5.72.1")
+
   eks_cluster = module_itself.has_one(:aws_eks_cluster).identify_by(:name)
   eks_cluster.default(enabled_cluster_log_types: ["api", "audit", "authenticator", "controllerManager", "scheduler"])
   eks_cluster.default(bootstrap_self_managed_addons: true)
