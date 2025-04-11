@@ -85,10 +85,10 @@ end
 
 ```sh
 # generate opentofu code (modules)
-bundle exec str23 generate
+bundle exec str23 generate ExampleEksClusterModule --out eks-cluster
 
 # run dashboard
-bundle exec str23 server
+# bundle exec str23 server
 ```
 
  
