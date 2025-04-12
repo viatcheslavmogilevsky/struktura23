@@ -13,5 +13,16 @@ module Struktura23
     def self.hcl_blocks
       []
     end
+
+    def self.init_config
+      @config ||= {}
+      @config[:required_providers] ||= {}
+      @config
+    end
+
+    def self.require_provider(_, name, requirement_config)
+      init_config[:required_providers][name] = requirement_config
+      StubTools::Chain.new(self)
+    end
   end
 end
