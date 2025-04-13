@@ -60,10 +60,10 @@ end
 
 describe ExampleEksClusterModule do
   before :each do
-    @opentofu = ExampleEksClusterModule.to_opentofu
+    @example_eks_cluster_module = ExampleEksClusterModule.render
   end
 
   it 'generates some opentofu' do
-    expect(@opentofu).to be_a(Hash)
+    expect(@example_eks_cluster_module).to be_a(Hash)
   end
 end

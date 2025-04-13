@@ -69,11 +69,11 @@ module Struktura23
       end
 
       def all_connected_nodes
-        all_connected_nodes = [self]
+        all_nodes = [self]
         connected_nodes.each do |cn|
-          all_connected_nodes += cn.all_connected_nodes
+          all_nodes += cn.all_connected_nodes
         end
-        all_connected_nodes
+        all_nodes
       end
 
       def reversed_connections
